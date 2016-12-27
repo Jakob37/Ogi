@@ -3,15 +3,25 @@
 import argparse
 import re
 import datetime
+import configparser
+import os
 
 
 def main():
 
     args = parse_arguments()
+    conf = parse_config()
+    print(conf)
+
+    output_path = conf.get("file_paths", "data")
+
 
     time_entry = TimeEntry(args.log_type, args.message, args.focus, args.date, args.time)
 
     print(time_entry)
+
+    with open(output_path, 'a') as append_fh:
+        print(time_entry, file=append_fh)
 
 
 class TimeEntry:
@@ -118,6 +128,13 @@ def parse_arguments():
 
     args = parser.parse_args()
     return args
+
+
+def parse_config():
+
+    config = configparser.ConfigParser()
+    config.read('ogi.conf')
+    return config
 
 
 if __name__ == "__main__":

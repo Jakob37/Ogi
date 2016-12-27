@@ -1,3 +1,6 @@
 # Files
 *.swp
-TODO.txt
+*.conf
+
+# Directories
+data/
