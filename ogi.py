@@ -2,6 +2,7 @@
 
 import argparse
 import re
+import datetime
 
 
 def main():
@@ -17,7 +18,7 @@ class TimeEntry:
 
     VALID_LOG_TYPES = ['pomo', 'block']
     FOCUS_PATTERN = r'^\d+$'
-    DATE_PATTERN = r'^\d{6}$'
+    DATE_PATTERN = r'^\d{8}$'
     TIME_PATTERN = r'^\d{4}$'
     HEADER = ['Date', 'Time', 'Type', 'Focus', 'Duration', 'Message']
 
@@ -52,7 +53,7 @@ class TimeEntry:
         """Get current date, or return existing string"""
 
         if date_str is None:
-            pass
+            return "{0:%Y%m%d}".format(datetime.datetime.now())
         else:
             return date_str
 
@@ -61,7 +62,7 @@ class TimeEntry:
         """Get current time, or return existing string"""
 
         if time_str is None:
-            pass
+            return "{0:%H%M}".format(datetime.datetime.now())
         else:
             return time_str
 
@@ -112,7 +113,7 @@ def parse_arguments():
     parser.add_argument('-t', '--time', default=None,
                         help="Format: HHMM, defaults to current time")
     parser.add_argument('-d', '--date', default=None,
-                        help="Format: YYMMDD, defaults to current date")
+                        help="Format: YYYYMMDD, defaults to current date")
     parser.add_argument('-f', '--focus', default=100, type=int)
 
     args = parser.parse_args()
