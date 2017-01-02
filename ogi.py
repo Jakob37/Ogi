@@ -23,7 +23,8 @@ def main():
                            args.focus,
                            args.date,
                            args.time,
-                           args.project)
+                           args.project,
+                           args.duration)
 
     print(time_entry)
 
@@ -41,7 +42,8 @@ class TimeEntry:
     HEADER = ['Date', 'Time', 'Type', 'Focus', 'Duration', 'Message', 'Project']
 
 
-    def __init__(self, log_type, message, focus=100, date_str=None, time_str=None, project=None):
+    def __init__(self, log_type, message, focus=100, date_str=None, 
+                 time_str=None, project=None, duration=None):
 
         self.log_type = log_type
         self.message = message
@@ -50,19 +52,37 @@ class TimeEntry:
         self.time = self.setup_time(time_str)
         self.project = project
 
-        self.duration = self.get_duration(self.log_type)
+        self.duration = self.get_duration(self.log_type, duration)
 
         self.verify_entry()
 
         print("Entry verification succeeded!")
 
 
-    def get_duration(self, log_type):
+    def get_log_type(self, log_type):
+
+        if log_type in VALID_LOG_TYPES:
+            return log_type
+        else:
+            return 'session'
+
+
+    def get_duration(self, log_type, duration):
 
         if log_type == 'pomo':
+
+            if duration is not None:
+                print('Warning: Duration is {}, but is ignored due to type being {}'.format(log_type))
             return 25
+
         elif log_type == 'block':
+
+            if duration is not None:
+                print('Warning: Duration is {}, but is ignored due to type being {}'.format(log_type))
             return 40
+
+        elif duration is not None:
+            return duration
         else:
             raise Exception("Time not specified for log type: {}".format(log_type))
 
@@ -92,7 +112,7 @@ class TimeEntry:
         print(self.date)
         print(self.time)
 
-        if not self.log_type in self.VALID_LOG_TYPES:
+        if not self.log_type in self.VALID_LOG_TYPES and self.log_type != 'session':
             raise Exception("Invalid log type encountered: {}".format(self.log_type))
 
         if self.message == None:
@@ -131,7 +151,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('log_type', choices=['pomo', 'block', 'session'], 
-                        default='block', nargs='?')
+                        default='session', nargs='?')
     parser.add_argument('-m', '--message',
                         help='Description of performed task during logged time')
 
@@ -140,6 +160,7 @@ def parse_arguments():
     parser.add_argument('-d', '--date', default=None,
                         help="Format: YYYYMMDD, defaults to current date")
     parser.add_argument('-f', '--focus', default=100, type=int)
+    parser.add_argument('-u', '--duration', default=None)
 
     parser.add_argument('-p', '--project', default='unspecified')
 
