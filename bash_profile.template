@@ -1,0 +1,5 @@
+log_path="/path/to/log"
+last_log_time=$(tail -1 ${log_path} | cut -f2)
+last_log_message=$(tail -1 ${log_path} | cut -f6)
+echo "Last log: \"${last_log_message}\" at ${last_log_time}"
+
