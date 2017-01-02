@@ -18,7 +18,12 @@ def main():
 
     output_path = conf.get("file_paths", "data")
 
-    time_entry = TimeEntry(args.log_type, args.message, args.focus, args.date, args.time)
+    time_entry = TimeEntry(args.log_type, 
+                           args.message,
+                           args.focus,
+                           args.date,
+                           args.time,
+                           args.project)
 
     print(time_entry)
 
@@ -32,16 +37,18 @@ class TimeEntry:
     FOCUS_PATTERN = r'^\d+$'
     DATE_PATTERN = r'^\d{8}$'
     TIME_PATTERN = r'^\d{4}$'
-    HEADER = ['Date', 'Time', 'Type', 'Focus', 'Duration', 'Message']
+    PROJECT_PATTERN = r'^.+$'
+    HEADER = ['Date', 'Time', 'Type', 'Focus', 'Duration', 'Message', 'Project']
 
 
-    def __init__(self, log_type, message, focus=100, date_str=None, time_str=None):
+    def __init__(self, log_type, message, focus=100, date_str=None, time_str=None, project=None):
 
         self.log_type = log_type
         self.message = message
         self.focus = focus
         self.date = self.setup_date(date_str)
         self.time = self.setup_time(time_str)
+        self.project = project
 
         self.duration = self.get_duration(self.log_type)
 
@@ -103,22 +110,28 @@ class TimeEntry:
             raise Exception("Time must fulfil pattern: {}, found: {}" \
                 .format(self.TIME_PATTERN, self.time))
 
+        if not re.match(self.PROJECT_PATTERN, str(self.project)):
+            raise Exception("Project must fulfil pattern: {}, found: {}" \
+                .format(self.PROJECT_PATTERN, self.project))
+
     def __str__(self):
 
-        return '{date}\t{time}\t{log_type}\t{focus}\t{duration}\t{message}' \
+        return '{date}\t{time}\t{log_type}\t{focus}\t{duration}\t{message}\t{project}' \
             .format(date=self.date,
                     time=self.time,
                     log_type=self.log_type,
                     focus=self.focus,
                     duration=self.duration,
-                    message=self.message)
+                    message=self.message,
+                    project=self.project)
 
 
 def parse_arguments():
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('log_type', choices=['pomo', 'block'])
+    parser.add_argument('log_type', choices=['pomo', 'block', 'session'], 
+                        default='block', nargs='?')
     parser.add_argument('-m', '--message',
                         help='Description of performed task during logged time')
 
@@ -127,6 +140,8 @@ def parse_arguments():
     parser.add_argument('-d', '--date', default=None,
                         help="Format: YYYYMMDD, defaults to current date")
     parser.add_argument('-f', '--focus', default=100, type=int)
+
+    parser.add_argument('-p', '--project', default='unspecified')
 
     args = parser.parse_args()
     return args
