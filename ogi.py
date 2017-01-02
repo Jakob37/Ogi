@@ -6,15 +6,17 @@ import datetime
 import configparser
 import os
 
+CONF_NAME = "ogi.conf"
+
 
 def main():
 
     args = parse_arguments()
-    conf = parse_config()
-    print(conf)
+
+    my_dir = os.path.dirname(os.path.realpath(__file__))
+    conf = parse_config("{}/{}".format(my_dir, CONF_NAME))
 
     output_path = conf.get("file_paths", "data")
-
 
     time_entry = TimeEntry(args.log_type, args.message, args.focus, args.date, args.time)
 
@@ -130,12 +132,13 @@ def parse_arguments():
     return args
 
 
-def parse_config():
+def parse_config(conf_path):
 
     config = configparser.ConfigParser()
-    config.read('ogi.conf')
+    config.read(conf_path)
     return config
 
 
 if __name__ == "__main__":
     main()
+
