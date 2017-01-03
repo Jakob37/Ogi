@@ -29,7 +29,9 @@ log_mod_name = "modules.ogi_log"
 log_mod_path = "{}/{}".format(sysdir, "modules/ogi_log.py")
 ogi_log_mod = load_module(log_mod_name, log_mod_path)
 
-
+list_mod_name = "modules.list"
+list_mod_path = "{}/{}".format(sysdir, "modules/list.py")
+list_mod = load_module(list_mod_name, list_mod_path)
 
  
 def parse_arguments():
@@ -42,9 +44,10 @@ def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.set_defaults(func=default_func)
 
-    subparsers = parser.add_subparsers(help='Commands: log')
+    subparsers = parser.add_subparsers(help='Commands: log list')
 
     parse_ogi_log(subparsers)
+    parse_list(subparsers)
 
     args = parser.parse_args()
     conf = parse_config()
@@ -77,6 +80,15 @@ def parse_ogi_log(subparsers_object):
     subparser.add_argument('-p', '--project', required=True)
 
     subparser.add_argument('--testrun', action='store_true')
+
+
+def parse_list(subparsers_object):
+
+    def ogi_list(args, conf):
+        list_mod.main(args, conf)
+
+    subparser = subparsers_object.add_parser('list')
+    subparser.set_defaults(func=ogi_list)
 
 
 def parse_config():
