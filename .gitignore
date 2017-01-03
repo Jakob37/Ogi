@@ -1,6 +1,7 @@
 # Files
 *.swp
 *.conf
+*.pyc
 
 # Directories
 data/
