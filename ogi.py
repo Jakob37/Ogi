@@ -11,7 +11,11 @@ CONF_NAME = "ogi.conf"
 
 def main():
 
+    print("in main")
+
     args = parse_arguments()
+
+    print("args parsed")
 
     my_dir = os.path.dirname(os.path.realpath(__file__))
     conf = parse_config("{}/{}".format(my_dir, CONF_NAME))
@@ -151,9 +155,10 @@ def parse_arguments():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('log_type', choices=['pomo', 'block', 'session'], 
-                        default='session', nargs='?')
+                        default='block', nargs='?')
     parser.add_argument('-m', '--message',
-                        help='Description of performed task during logged time')
+                        help='Description of performed task during logged time',
+                        required=True)
 
     parser.add_argument('-t', '--time', default=None,
                         help="Format: HHMM, defaults to current time")
@@ -162,7 +167,7 @@ def parse_arguments():
     parser.add_argument('-f', '--focus', default=100, type=int)
     parser.add_argument('-u', '--duration', default=None)
 
-    parser.add_argument('-p', '--project', default='unspecified')
+    parser.add_argument('-p', '--project', required=True)
 
     args = parser.parse_args()
     return args
