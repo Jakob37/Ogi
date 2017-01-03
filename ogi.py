@@ -34,7 +34,7 @@ ogi_log_mod = load_module(log_mod_name, log_mod_path)
  
 def parse_arguments():
 
-    def default_func(args):
+    def default_func(args, conf):
         print("Must specify tool (ogi <tool>)")
         parser.print_help()
         exit(1)
@@ -50,8 +50,6 @@ def parse_arguments():
     conf = parse_config()
 
     args.func(args, conf)
-
-    print("parsed")
 
 
 
@@ -77,6 +75,8 @@ def parse_ogi_log(subparsers_object):
     subparser.add_argument('-u', '--duration', default=None)
 
     subparser.add_argument('-p', '--project', required=True)
+
+    subparser.add_argument('--testrun', action='store_true')
 
 
 def parse_config():
