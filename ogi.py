@@ -9,31 +9,12 @@ import sys
 
 CONF_NAME = "ogi.conf"
 
-
-def load_module(modname, modpath):
-
-    if sys.version_info.minor >= 5:
-        import importlib.util
-        spec = importlib.util.spec_from_file_location(modname, modpath)
-        module_exec = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module_exec)
-        return module_exec
-    else:
-        from importlib.machinery import SourceFileLoader
-        return SourceFileLoader(modname, modpath).load_module()
-
+from modules import ogi_log
+from modules import ogi_list
 
 sysdir = os.path.dirname(os.path.realpath(__file__))
 
-log_mod_name = "modules.ogi_log"
-log_mod_path = "{}/{}".format(sysdir, "modules/ogi_log.py")
-ogi_log_mod = load_module(log_mod_name, log_mod_path)
 
-list_mod_name = "modules.list"
-list_mod_path = "{}/{}".format(sysdir, "modules/list.py")
-list_mod = load_module(list_mod_name, list_mod_path)
-
- 
 def parse_arguments():
 
     def default_func(args, conf):
@@ -58,11 +39,11 @@ def parse_arguments():
 
 def parse_ogi_log(subparsers_object):
 
-    def ogi_log(args, conf):
-        ogi_log_mod.main(args, conf)
+    def ogi_log_func(args, conf):
+        ogi_log.main(args, conf)
 
     subparser = subparsers_object.add_parser('log')
-    subparser.set_defaults(func=ogi_log)
+    subparser.set_defaults(func=ogi_log_func)
 
     subparser.add_argument('log_type', choices=['pomo', 'block', 'session'], 
                         default='block', nargs='?')
@@ -84,11 +65,11 @@ def parse_ogi_log(subparsers_object):
 
 def parse_list(subparsers_object):
 
-    def ogi_list(args, conf):
-        list_mod.main(args, conf)
+    def ogi_list_func(args, conf):
+        ogi_list.main(args, conf)
 
     subparser = subparsers_object.add_parser('list')
-    subparser.set_defaults(func=ogi_list)
+    subparser.set_defaults(func=ogi_list_func)
 
 
 def parse_config():
