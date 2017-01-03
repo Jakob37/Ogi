@@ -71,6 +71,8 @@ def parse_list(subparsers_object):
     subparser = subparsers_object.add_parser('list')
     subparser.set_defaults(func=ogi_list_func)
 
+    subparser.add_argument('list_type', choices=['project', 'today'])
+
 
 def parse_config():
 
