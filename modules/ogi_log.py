@@ -11,10 +11,6 @@ def main(args, conf):
 
     output_path = conf.get("file_paths", "data")
 
-    print("In other!")
-    print("Stopping for now!")
-    stop(1)
-
     time_entry = TimeEntry(args.log_type, 
                            args.message,
                            args.focus,

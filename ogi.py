@@ -27,16 +27,8 @@ sysdir = os.path.dirname(os.path.realpath(__file__))
 
 log_mod_name = "modules.ogi_log"
 log_mod_path = "{}/{}".format(sysdir, "modules/ogi_log.py")
-ogi_log = load_module(log_mod_name, log_mod_path)
+ogi_log_mod = load_module(log_mod_name, log_mod_path)
 
-
-
-def main():
-
-    args = parse_arguments()
-
-    my_dir = os.path.dirname(os.path.realpath(__file__))
-    conf = parse_config("{}/{}".format(my_dir, CONF_NAME))
 
 
  
@@ -54,13 +46,19 @@ def parse_arguments():
 
     parse_ogi_log(subparsers)
 
+    args = parser.parse_args()
+    conf = parse_config()
+
+    args.func(args, conf)
+
     print("parsed")
+
 
 
 def parse_ogi_log(subparsers_object):
 
-    def ogi_log(args):
-        ogi_log.main(args, conf)
+    def ogi_log(args, conf):
+        ogi_log_mod.main(args, conf)
 
     subparser = subparsers_object.add_parser('log')
     subparser.set_defaults(func=ogi_log)
@@ -81,7 +79,10 @@ def parse_ogi_log(subparsers_object):
     subparser.add_argument('-p', '--project', required=True)
 
 
-def parse_config(conf_path):
+def parse_config():
+
+    my_dir = os.path.dirname(os.path.realpath(__file__))
+    conf_path = "{}/{}".format(my_dir, CONF_NAME)
 
     config = configparser.ConfigParser()
     config.read(conf_path)
