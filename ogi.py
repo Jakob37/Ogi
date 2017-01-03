@@ -9,6 +9,20 @@ import os
 CONF_NAME = "ogi.conf"
 
 
+def load_module(modname, modpath):
+    if sys.version_info.minor >= 5:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(modname, modpath)
+        module_exec = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module_exec)
+        return module_exec
+    else:
+        from importlib.machinery import SourceFileLoader
+        return SourceFileLoader(modname, modpath).load_module()
+
+
+
+
 def main():
 
     print("in main")
