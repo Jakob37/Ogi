@@ -25,6 +25,8 @@ def main(args, conf):
     if not args.testrun:
         with open(output_path, 'a') as append_fh:
             print(time_entry, file=append_fh)
+            print("Following entry written to {}".format(output_path))
+            print(time_entry)
     else:
         print("Test entry written")
         print(time_entry)
