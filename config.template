@@ -1,2 +1,3 @@
 [file_paths]
 data=/path/to/data.tsv
+test_data=/path/to/testdata.tsv
