@@ -1,3 +1,12 @@
+import datetime
+import re
+
+"""
+Main class representing a log entry performed in Ogi
+Can either be created directly, or from a string represented
+a printed TimeEntry-object
+"""
+
 class TimeEntry:
 
     VALID_LOG_TYPES = ['pomo', 'block']
