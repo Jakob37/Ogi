@@ -2,24 +2,14 @@
 
 import datetime
 from modules.time_entry import TimeEntry
+from modules import utils
 
 def main(args, conf):
 
     output_path = conf.get("file_paths", "data")
 
-    time_entries = list()
+    time_entries = utils.parse_log_to_entries(output_path)
     header_line = None
-
-    with open(output_path) as in_fh:
-        for line in in_fh:
-            line = line.rstrip()
-            
-            if header_line is None:
-                header_line = line
-                continue
-
-            test_obj = TimeEntry.load_from_string(line)
-            time_entries.append(test_obj)
 
 
     if args.list_type == "project":
