@@ -24,3 +24,25 @@ def parse_log_to_entries(log_path):
     return time_entries
 
 
+def prompt_yes_no(prompt_string):
+
+    """Return True or False based on if user responds with yes or no"""
+
+    # Empty string is counted as 'no'
+    yes = set(['yes', 'ye', 'y'])
+    no = set(['no', 'n', ''])
+
+    while True:
+    
+        choice = input(prompt_string).lower()
+
+        if choice in yes:
+            return True
+        elif choice in no:
+            return False
+        else:
+            print("Invalid response, try again")
+
+
+
+
