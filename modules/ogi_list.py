@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 
 import datetime
+from modules.time_entry import TimeEntry
 
 def main(args, conf):
 
     output_path = conf.get("file_paths", "data")
 
-    proj_dict = dict()
-    day_dict = dict()
-
+    time_entries = list()
     header_line = None
 
     with open(output_path) as in_fh:
@@ -19,50 +18,55 @@ def main(args, conf):
                 header_line = line
                 continue
 
-            fields = line.split('\t')
+            test_obj = TimeEntry.load_from_string(line)
+            time_entries.append(test_obj)
 
-            date = fields[0]
-            time = fields[1]
-            log_type = fields[2]
-            focus = fields[3]
-            duration = int(fields[4])
-            message = fields[5]
-            project = fields[6]
-            
-            if proj_dict.get(project) is None:
-                proj_dict[project] = duration
-                day_dict[project] = [(message, duration, date)]
-                
-            else:
-                proj_dict[project] += duration
-                day_dict[project].append((message, duration, date))
 
     if args.list_type == "project":
-        list_projects(proj_dict)
+        list_projects(time_entries)
     elif args.list_type == "today":
-        list_day(day_dict)
+        list_day(time_entries)
     else:
         print("Unknown list type: {}".format(args.list_type))
 
 
-def list_projects(proj_dict):
+def list_projects(time_entries):
+
+    proj_dict = dict()
+
+    for entry in time_entries:
+        if proj_dict.get(entry.project) is None:
+            proj_dict[entry.project] = entry.duration
+        else:
+            proj_dict[entry.project] += entry.duration
 
     print("Logged projects")
-    print("Projects\tTime")
+    print("Projects\tTime".expandtabs(20))
+    print("-" * 30)
     for proj in sorted(proj_dict, key=lambda x:proj_dict[x], reverse=True):
-        print("{}\t{}".format(proj, proj_dict[proj]))
+        print("{0}\t{1}".format(proj, proj_dict[proj]).expandtabs(20))
 
-def list_day(day_dict):
+def list_day(time_entries):
+
+    day_dict = dict()
+
+    today = "{0:%Y%m%d}".format(datetime.datetime.now())
+
+    for entry in time_entries:
+        
+        if entry.date == today:
+            if day_dict.get(entry.project) is None:
+                day_dict[entry.project] = [(entry.message, entry.duration, entry.date)]
+            else:
+                day_dict[entry.project].append((entry.message, entry.duration, entry.date))
 
     print("Logged today")
-    print("Project", "Entries")
-
     for proj in sorted(day_dict):
 
         if len(day_dict[proj]) == 0:
             continue
 
-        print("> Project: {}".format(proj))
+        print("Project: {}".format(proj))
 
         for entry in day_dict[proj]:
             message = entry[0]
@@ -71,7 +75,6 @@ def list_day(day_dict):
 
             if date == "{0:%Y%m%d}".format(datetime.datetime.now()):
 
-
-                print("{} ({} minutes)".format(message, duration))
+                print("* {} ({} minutes)".format(message, duration))
 
 

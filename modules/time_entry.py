@@ -18,7 +18,7 @@ class TimeEntry:
 
 
     def __init__(self, log_type, message, focus=100, date_str=None, 
-                 time_str=None, project=None, duration=None):
+                 time_str=None, project=None, duration=None, quiet=False):
 
         self.log_type = log_type
         self.message = message
@@ -27,11 +27,33 @@ class TimeEntry:
         self.time = self.setup_time(time_str)
         self.project = project
 
-        self.duration = self.get_duration(self.log_type, duration)
+        self.duration = self.get_duration(log_type, duration, quiet=quiet)
 
         self.verify_entry()
 
-        print("Entry verification succeeded!")
+    @classmethod 
+    def load_from_string(cls, ogi_string):
+
+        """Generate object from printed string"""
+
+        fields = ogi_string.split('\t')
+
+        date = fields[0]
+        time = fields[1]
+        log_type = fields[2]
+        focus = fields[3]
+        duration = int(fields[4])
+        message = fields[5]
+        project = fields[6]
+
+        new_obj = cls(log_type, message,
+                      focus=focus,
+                      date_str=date,
+                      time_str=time,
+                      project=project,
+                      duration=duration,
+                      quiet=True)
+        return new_obj
 
 
     def get_log_type(self, log_type):
@@ -42,18 +64,20 @@ class TimeEntry:
             return 'session'
 
 
-    def get_duration(self, log_type, duration):
+    def get_duration(self, log_type, duration, quiet=False):
 
         if log_type == 'pomo':
 
-            if duration is not None:
-                print('Warning: Duration is {}, but is ignored due to type being {}'.format(log_type))
+            if duration is not None and not quiet:
+                print('Warning: Duration is {}, but is ignored due to type being {}'
+                      .format(duration, log_type))
             return 25
 
         elif log_type == 'block':
 
-            if duration is not None:
-                print('Warning: Duration is {}, but is ignored due to type being {}'.format(log_type))
+            if duration is not None and not quiet:
+                print('Warning: Duration is {}, but is ignored due to type being {}'
+                      .format(duration, log_type))
             return 40
 
         elif duration is not None:
@@ -81,11 +105,6 @@ class TimeEntry:
             return time_str
 
     def verify_entry(self):
-
-        print(self.message)
-        print(self.focus)
-        print(self.date)
-        print(self.time)
 
         if not self.log_type in self.VALID_LOG_TYPES and self.log_type != 'session':
             raise Exception("Invalid log type encountered: {}".format(self.log_type))
