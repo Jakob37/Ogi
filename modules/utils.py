@@ -1,9 +1,9 @@
-#/usr/bin/env python3
+#!/usr/bin/env python3
 
 from modules.time_entry import TimeEntry
 
 
-def parse_log_to_entries(log_path):
+def parse_log_to_entries(log_path, project=None):
 
     """Return list of entries based on log file"""
 
@@ -19,7 +19,9 @@ def parse_log_to_entries(log_path):
                 continue
 
             entry = TimeEntry.load_from_string(line)
-            time_entries.append(entry)
+            if project is None or project == entry.project:
+                time_entries.append(entry)
+            
 
     return time_entries
 

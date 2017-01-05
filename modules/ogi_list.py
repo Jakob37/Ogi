@@ -4,13 +4,13 @@ import datetime
 from modules.time_entry import TimeEntry
 from modules import utils
 
+
 def main(args, conf):
 
     output_path = conf.get("file_paths", "data")
 
     time_entries = utils.parse_log_to_entries(output_path)
     header_line = None
-
 
     if args.list_type == "project":
         list_projects(time_entries)
@@ -35,6 +35,7 @@ def list_projects(time_entries):
     print("-" * 30)
     for proj in sorted(proj_dict, key=lambda x:proj_dict[x], reverse=True):
         print("{0}\t{1}".format(proj, proj_dict[proj]).expandtabs(20))
+
 
 def list_day(time_entries):
 
