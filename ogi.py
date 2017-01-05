@@ -26,10 +26,11 @@ def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.set_defaults(func=default_func)
 
-    subparsers = parser.add_subparsers(help='Commands: log list')
+    subparsers = parser.add_subparsers(help='Commands: log list new')
 
-    parse_ogi_log(subparsers)
+    parse_log(subparsers)
     parse_list(subparsers)
+    parse_new(subparsers)
 
     args = parser.parse_args()
     conf = parse_config()
@@ -38,7 +39,7 @@ def parse_arguments():
 
 
 
-def parse_ogi_log(subparsers_object):
+def parse_log(subparsers_object):
 
     def ogi_log_func(args, conf):
         ogi_log.main(args, conf)
@@ -72,7 +73,7 @@ def parse_list(subparsers_object):
     subparser = subparsers_object.add_parser('list')
     subparser.set_defaults(func=ogi_list_func)
 
-    subparser.add_argument('list_type', choices=['project', 'today'], required=True)
+    subparser.add_argument('list_type', choices=['project', 'today'])
 
 
 def parse_new(subparsers_object):
@@ -85,7 +86,7 @@ def parse_new(subparsers_object):
     subparser = subparsers_object.add_parser('new')
     subparser.set_defaults(func=ogi_new_func)
 
-    subparser.add_argument('object_type', choices=['project', 'category'], required=True)
+    subparser.add_argument('object_type', choices=['project', 'category'])
     subparser.add_argument('-n', '--name', required=True)
     subparser.add_argument('-c', '--category')
 

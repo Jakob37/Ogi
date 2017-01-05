@@ -36,7 +36,7 @@ def new_project(projects_path, category_path, new_project, category):
     else:
         cats = get_categories(category_path)
         
-        if category not None and category not in cats:
+        if category is not None and category not in cats:
             print("Unvalid category, try again")
             print("Valid categories:")
             print_categories(category_path)
