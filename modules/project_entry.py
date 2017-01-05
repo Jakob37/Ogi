@@ -4,7 +4,7 @@
 Main class representing a project entry
 """
 
-from modules import utils
+import modules.utils
 
 class ProjectEntry:
 
@@ -17,7 +17,7 @@ class ProjectEntry:
 
     def load_entries(self, entry_path):
         
-         self.entries = utils.parse_log_to_entries(entry_path, project=self.name)
+         self.entries = modules.utils.parse_log_to_entries(entry_path, project=self.name)
 
 
     def get_total_time(self):
