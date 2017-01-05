@@ -11,6 +11,7 @@ CONF_NAME = "ogi.conf"
 
 from modules import ogi_log
 from modules import ogi_list
+from modules import ogi_new
 
 sysdir = os.path.dirname(os.path.realpath(__file__))
 
@@ -71,7 +72,22 @@ def parse_list(subparsers_object):
     subparser = subparsers_object.add_parser('list')
     subparser.set_defaults(func=ogi_list_func)
 
-    subparser.add_argument('list_type', choices=['project', 'today'])
+    subparser.add_argument('list_type', choices=['project', 'today'], required=True)
+
+
+def parse_new(subparsers_object):
+
+    """Subparser for new command"""
+
+    def ogi_new_func(args, conf):
+        ogi_new.main(args, conf)
+
+    subparser = subparsers_object.add_parser('new')
+    subparser.set_defaults(func=ogi_new_func)
+
+    subparser.add_argument('object_type', choices=['project', 'category'], required=True)
+    subparser.add_argument('-n', '--name', required=True)
+    subparser.add_argument('-c', '--category')
 
 
 def parse_config():
@@ -82,6 +98,7 @@ def parse_config():
     config = configparser.ConfigParser()
     config.read(conf_path)
     return config
+
 
 
 if __name__ == "__main__":
