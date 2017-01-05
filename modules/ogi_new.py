@@ -23,8 +23,7 @@ def main(args, conf):
 
 def new_project(projects_path, category_path, new_project, category):
     
-    current_projects = []
-
+    current_projects = utils.check_project_exists(new_project, projects_path)
 
     with open(projects_path) as in_fh:
         for line in in_fh:

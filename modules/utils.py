@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from modules.time_entry import TimeEntry
+from modules.project_entry import ProjectEntry
 
 
 def parse_log_to_entries(log_path, project=None):
@@ -24,6 +25,30 @@ def parse_log_to_entries(log_path, project=None):
             
 
     return time_entries
+
+
+def parse_log_to_projects(log_path):
+
+    """Return list of project objects based on log path"""
+    
+    projects = list()
+
+    with open(log_path) as in_fh:
+        for line in in_fh:
+            line = line.rstrip()
+
+            project, category = line.split('\t')
+            proj_entry = ProjectEntry(project, category)
+
+            projects.append(project)
+    return projects
+
+
+def check_project_exists(project_name, project_path):
+
+    project_entries = parse_log_to_projects(project_path)
+    project_names = [project.name for project in project_entries]
+    return project_name in project_names
 
 
 def prompt_yes_no(prompt_string):
