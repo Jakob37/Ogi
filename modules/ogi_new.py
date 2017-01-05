@@ -23,14 +23,14 @@ def main(args, conf):
 
 def new_project(projects_path, category_path, new_project, category):
     
-    current_projects = utils.check_project_exists(new_project, projects_path)
+    project_exists = utils.check_project_exists(new_project, projects_path)
 
-    with open(projects_path) as in_fh:
-        for line in in_fh:
-            line = line.rstrip()
-            current_projects.append(line.split('\t')[0])
+#    with open(projects_path) as in_fh:
+#        for line in in_fh:
+#            line = line.rstrip()
+#            current_projects.append(line.split('\t')[0])
 
-    if new_project in current_projects:
+    if project_exists:
         print("Project already exists!")
     else:
         cats = get_categories(category_path)
