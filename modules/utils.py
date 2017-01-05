@@ -15,14 +15,13 @@ def parse_log_to_entries(log_path, project=None):
         for line in in_fh:
             line = line.rstrip()
 
-            if header == None:
+            if header is None:
                 header = line
                 continue
 
             entry = TimeEntry.load_from_string(line)
             if project is None or project == entry.project:
                 time_entries.append(entry)
-            
 
     return time_entries
 
@@ -40,7 +39,7 @@ def parse_log_to_projects(log_path):
             project, category = line.split('\t')
             proj_entry = ProjectEntry(project, category)
 
-            projects.append(project)
+            projects.append(proj_entry)
     return projects
 
 
@@ -48,6 +47,7 @@ def check_project_exists(project_name, project_path):
 
     project_entries = parse_log_to_projects(project_path)
     project_names = [project.name for project in project_entries]
+
     return project_name in project_names
 
 
@@ -56,8 +56,8 @@ def prompt_yes_no(prompt_string):
     """Return True or False based on if user responds with yes or no"""
 
     # Empty string is counted as 'no'
-    yes = set(['yes', 'ye', 'y'])
-    no = set(['no', 'n', ''])
+    yes = {'yes', 'ye', 'y'}
+    no = {'no', 'n', ''}
 
     while True:
     

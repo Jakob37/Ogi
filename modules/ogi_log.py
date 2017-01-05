@@ -12,6 +12,7 @@ from modules.time_entry import TimeEntry
 from modules import utils
 from modules import ogi_new
 
+
 def main(args, conf):
 
     output_path = conf.get("file_paths", "data")
@@ -27,10 +28,9 @@ def main(args, conf):
                            args.project,
                            args.duration)
 
-
     if not args.testrun:
 
-        project_exists = utils.check_project_exists(time_entry, project_path)
+        project_exists = utils.check_project_exists(time_entry.project, project_path)
         if not project_exists:
             create_string = "{} does not exist, do you want to create it? [y/N]: ".format(time_entry.project)
             create_project = utils.prompt_yes_no(create_string)
@@ -55,15 +55,5 @@ def main(args, conf):
         print(time_entry)
         with open(test_output_path, 'a') as append_fh:
             print(time_entry, file=append_fh)
-
-
-#def check_project_exists(project_name, project_path):
-#
-#    """Check whether project exists, if no, prompt whether it should be added"""
-#
-#    project_entries = utils.parse_log_to_projects(project_path)
-#
-#    project_names = [project.name for project in project_entries]
-#    return project_name in project_names
 
 

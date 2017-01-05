@@ -2,18 +2,18 @@
 
 from modules import utils
 
+
 def main(args, conf):
 
-    time_entries_path = conf.get("file_paths", "data")
+    # time_entries_path = conf.get("file_paths", "data")
     projects_path = conf.get("file_paths", "projects")
+    cat_path = conf.get("file_paths", "categories")
 
     if args.object_type == "project":
-        pass
 
+        new_project(projects_path, cat_path, args.name, args.category)
 
     elif args.object_type == "category":
-        
-        cat_path = conf.get("file_paths", "categories")
         
         if args.category:
             print("--category flag ignored as it only is applicable for projects")
@@ -21,14 +21,9 @@ def main(args, conf):
         new_category(cat_path, args.name)
 
 
-def new_project(projects_path, category_path, new_project, category):
+def new_project(projects_path, category_path, project_name, category=None):
     
-    project_exists = utils.check_project_exists(new_project, projects_path)
-
-#    with open(projects_path) as in_fh:
-#        for line in in_fh:
-#            line = line.rstrip()
-#            current_projects.append(line.split('\t')[0])
+    project_exists = utils.check_project_exists(project_name, projects_path)
 
     if project_exists:
         print("Project already exists!")
@@ -39,22 +34,36 @@ def new_project(projects_path, category_path, new_project, category):
             print("Unvalid category, try again")
             print("Valid categories:")
             print_categories(category_path)
+        elif category is None:
+            prompt = utils.prompt_yes_no("No category specified, will be categorized as 'uncategorized' [y/N]: ")
+
+            if not prompt:
+                print("User aborted, try again")
+                exit(0)
+            else:
+                write_new_project(project_name, 'uncategorized', projects_path)
+
         else:
-            with open(projects_path, 'a') as append_fh:
-                print("Adding project {} with category {} to {}".format(new_project, category, projects_path))
-                print("{}\t{}".format(new_project, category), file=append_fh)
+            write_new_project(project_name, category, projects_path)
 
 
-def new_category(category_path, new_category):
+def write_new_project(project_name, category_name, project_path):
+
+    with open(project_path, 'a') as append_fh:
+        print("Adding project {} with category {} to {}".format(project_name, category_name, project_path))
+        print("{}\t{}".format(project_name, category_name), file=append_fh)
+
+
+def new_category(category_path, category_name):
     
     current_categories = get_categories(category_path)
 
-    if new_category in current_categories:
+    if category_name in current_categories:
         print("Category already exists!")
     else:
         with open(category_path, 'a') as append_fh:
-            print("Adding new category {} to {}".format(new_category, category_path))
-            print(new_category, file=append_fh)
+            print("Adding new category {} to {}".format(category_name, category_path))
+            print(category_name, file=append_fh)
 
 
 def get_categories(cat_path):
@@ -73,9 +82,4 @@ def print_categories(cat_path):
     categories = get_categories(cat_path)
     for cat in categories:
         print(cat)
-
-
-
-
-
 
