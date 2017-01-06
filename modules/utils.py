@@ -9,15 +9,10 @@ def parse_log_to_entries(log_path, project=None):
     """Return list of entries based on log file"""
 
     time_entries = list()
-    header = None
 
     with open(log_path) as in_fh:
         for line in in_fh:
             line = line.rstrip()
-
-            if header is None:
-                header = line
-                continue
 
             entry = TimeEntry.load_from_string(line)
             if project is None or project == entry.project:

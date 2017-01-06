@@ -10,7 +10,6 @@ def main(args, conf):
     output_path = conf.get("file_paths", "data")
 
     time_entries = utils.parse_log_to_entries(output_path)
-    header_line = None
 
     if args.list_type == "project":
         list_projects(time_entries)
