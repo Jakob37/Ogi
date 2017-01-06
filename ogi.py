@@ -48,15 +48,15 @@ def parse_log(subparsers_object):
     subparser.set_defaults(func=ogi_log_func)
 
     subparser.add_argument('log_type', choices=['pomo', 'block', 'session'], 
-                        default='block', nargs='?')
+                           default='block', nargs='?')
     subparser.add_argument('-m', '--message',
-                        help='Description of performed task during logged time',
-                        required=True)
+                           help='Description of performed task during logged time',
+                           required=True)
 
     subparser.add_argument('-t', '--time', default=None,
-                        help="Format: HHMM, defaults to current time")
+                           help="Format: HHMM, defaults to current time")
     subparser.add_argument('-d', '--date', default=None,
-                        help="Format: YYYYMMDD, defaults to current date")
+                           help="Format: YYYYMMDD, defaults to current date")
     subparser.add_argument('-f', '--focus', default=100, type=int)
     subparser.add_argument('-u', '--duration', default=None)
 

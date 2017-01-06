@@ -44,7 +44,10 @@ def new_project(projects_path, category_path, project_name=None, category=None, 
         cats = get_categories(category_path)
         
         if category not in cats:
-            create_cat_string = "Category does not exist, do you want to create it?"
+
+            print("Attempting category: {}".format(category))
+
+            create_cat_string = "Category does not exist, do you want to create it? "
             create_cat = utils.prompt_yes_no(create_cat_string, yes_default=True)
 
             if create_cat:

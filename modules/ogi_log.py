@@ -33,19 +33,19 @@ def main(args, conf):
 
     project_exists = utils.check_project_exists(time_entry.project, project_path)
     if not project_exists:
-        create_string = "{} does not exist, do you want to create it? [y/N]: ".format(time_entry.project)
+        create_string = "{} does not exist, do you want to create it? ".format(time_entry.project)
         create_project = utils.prompt_yes_no(create_string)
 
         if not create_project:
             print("User aborted, try again")
             sys.exit(0)
 
-        category = input("What category? (Empty for uncategorized): ")
+        category = utils.prompt_for_name("What category? (Empty for uncategorized): ", default='uncategorized')
 
         if category is None:
             category = "uncategorized"
 
-        ogi_new.new_project(project_path, category_path, category, time_entry.project)
+        ogi_new.new_project(project_path, category_path, category=category, project_name=time_entry.project)
 
     with open(output_path, 'a') as append_fh:
 
