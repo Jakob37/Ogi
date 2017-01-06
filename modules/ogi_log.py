@@ -11,9 +11,12 @@ import sys
 from modules.time_entry import TimeEntry
 from modules import utils
 from modules import ogi_new
+import ogi_config
 
 
-def main(args, conf):
+def main(args):
+
+    conf = ogi_config.get_config()
 
     if args.dry_run:
         print("DRY RUN - Simulated run, but nothing written")
@@ -24,8 +27,7 @@ def main(args, conf):
     project_path = conf.get("file_paths", "projects")
     category_path = conf.get("file_paths", "categories")
 
-    time_entry = TimeEntry(conf,
-                           log_type,
+    time_entry = TimeEntry(log_type,
                            args.message,
                            args.focus,
                            args.date,

@@ -1,5 +1,8 @@
 import datetime
 import re
+import sys
+
+import ogi_config
 
 """
 Main class representing a log entry performed in Ogi
@@ -18,10 +21,10 @@ class TimeEntry:
     PROJECT_PATTERN = r'^.+$'
     HEADER = ['Date', 'Time', 'Type', 'Focus', 'Duration', 'Message', 'Project']
 
-    def __init__(self, conf, log_type, message, focus=100, date_str=None,
+    def __init__(self, log_type, message, focus=100, date_str=None,
                  time_str=None, project=None, duration=None, quiet=False):
 
-        self.conf = conf
+        self.conf = ogi_config.get_config()
 
         self.log_type = log_type
         self.message = message
@@ -35,7 +38,7 @@ class TimeEntry:
         self.verify_entry()
 
     @classmethod 
-    def load_from_string(cls, conf, ogi_string):
+    def load_from_string(cls, ogi_string):
 
         """Generate object from printed string"""
 
@@ -49,7 +52,7 @@ class TimeEntry:
         message = fields[5]
         project = fields[6]
 
-        new_obj = cls(conf, log_type, message,
+        new_obj = cls(log_type, message,
                       focus=focus,
                       date_str=date,
                       time_str=time,
@@ -85,12 +88,16 @@ class TimeEntry:
             if not re.match(self.DURATION_PATTERN, duration):
                 raise Exception("Focus must fulfil pattern: {}, found: {}"
                                 .format(self.DURATION_PATTERN, duration))
-            return duration
+            return int(duration)
 
         elif duration is not None:
             return duration
         else:
-            raise Exception("Time not specified for log type: {}".format(log_type))
+            if log_type == 'session':
+                print("You need to specify duration with --duration or -u flag when logging sessions")
+                sys.exit(0)
+            else:
+                raise Exception("Time not specified for log type: {}".format(log_type))
 
     @staticmethod
     def setup_date(date_str):

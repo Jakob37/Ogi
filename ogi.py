@@ -36,15 +36,15 @@ def parse_arguments():
     # conf = parse_config()
     # GLOBAL_CONF = conf
 
-    conf = ogi_config.get_config()
+    # conf = ogi_config.get_config()
 
-    args.func(args, conf)
+    args.func(args)
 
 
 def parse_log(subparsers_object):
 
-    def ogi_log_func(args, conf):
-        ogi_log.main(args, conf)
+    def ogi_log_func(args):
+        ogi_log.main(args)
 
     subparser = subparsers_object.add_parser('log')
     subparser.set_defaults(func=ogi_log_func)
@@ -70,8 +70,8 @@ def parse_log(subparsers_object):
 
 def parse_list(subparsers_object):
 
-    def ogi_list_func(args, conf):
-        ogi_list.main(args, conf)
+    def ogi_list_func(args):
+        ogi_list.main(args)
 
     subparser = subparsers_object.add_parser('list')
     subparser.set_defaults(func=ogi_list_func)
@@ -83,8 +83,8 @@ def parse_new(subparsers_object):
 
     """Subparser for new command"""
 
-    def ogi_new_func(args, conf):
-        ogi_new.main(args, conf)
+    def ogi_new_func(args):
+        ogi_new.main(args)
 
     subparser = subparsers_object.add_parser('new')
     subparser.set_defaults(func=ogi_new_func)
@@ -95,14 +95,14 @@ def parse_new(subparsers_object):
     subparser.add_argument('--dry_run', action='store_true')
 
 
-def parse_config():
-
-    my_dir = os.path.dirname(os.path.realpath(__file__))
-    conf_path = "{}/{}".format(my_dir, CONF_NAME)
-
-    config = configparser.ConfigParser()
-    config.read(conf_path)
-    return config
+# def parse_config():
+#
+#     my_dir = os.path.dirname(os.path.realpath(__file__))
+#     conf_path = "{}/{}".format(my_dir, CONF_NAME)
+#
+#     config = configparser.ConfigParser()
+#     config.read(conf_path)
+#     return config
 
 if __name__ == "__main__":
     parse_arguments()

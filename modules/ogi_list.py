@@ -1,18 +1,16 @@
 #!/usr/bin/env python3
 
 import datetime
-from modules.time_entry import TimeEntry
+
 from modules import utils
+import ogi_config
 
 
-def main(args, conf):
+def main(args):
 
+    conf = ogi_config.get_config()
     output_path = conf.get("file_paths", "data")
-
-    time_entries = utils.parse_log_to_entries(conf, output_path)
-
-
-# =['project_summary', 'today', 'projects', 'categories'])
+    time_entries = utils.parse_log_to_entries(output_path)
 
     if args.list_type == "project_summary":
         list_project_summary(time_entries)

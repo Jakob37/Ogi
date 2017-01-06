@@ -5,19 +5,20 @@ Main class representing a project entry
 """
 
 import modules.utils
+import ogi_config
 
 
 class ProjectEntry:
 
-    def __init__(self, conf, name, category=None):
+    def __init__(self, name, category=None):
         
-        self.conf = conf
+        self.conf = ogi_config.get_config()
         self.name = name
         self.category = category
         self.entries = []
 
     def load_entries(self, entry_path):
-        self.entries = modules.utils.parse_log_to_entries(self.conf, entry_path, project=self.name)
+        self.entries = modules.utils.parse_log_to_entries(entry_path, project=self.name)
 
     def get_total_time(self):
 

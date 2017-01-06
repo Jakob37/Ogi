@@ -7,10 +7,10 @@ import configparser
 from modules.time_entry import TimeEntry
 from modules.project_entry import ProjectEntry
 
-CONF_NAME = 'ogi.conf'
+# CONF_NAME = 'ogi.conf'
 
 
-def parse_log_to_entries(conf, log_path, project=None):
+def parse_log_to_entries(log_path, project=None):
 
     """Return list of entries based on log file"""
 
@@ -20,14 +20,14 @@ def parse_log_to_entries(conf, log_path, project=None):
         for line in in_fh:
             line = line.rstrip()
 
-            entry = TimeEntry.load_from_string(conf, line)
+            entry = TimeEntry.load_from_string(line)
             if project is None or project == entry.project:
                 time_entries.append(entry)
 
     return time_entries
 
 
-def parse_log_to_projects(conf, log_path):
+def parse_log_to_projects(log_path):
 
     """Return list of project objects based on log path"""
     
@@ -38,7 +38,7 @@ def parse_log_to_projects(conf, log_path):
             line = line.rstrip()
 
             project, category = line.split('\t')
-            proj_entry = ProjectEntry(conf, project, category)
+            proj_entry = ProjectEntry(project, category)
 
             projects.append(proj_entry)
     return projects
@@ -46,17 +46,8 @@ def parse_log_to_projects(conf, log_path):
 
 def check_project_exists(project_name, project_path):
 
-    print(project_name)
-    print(project_path)
-
-
-    project_entries = parse_log_to_projects(conf, project_path)
-
-    print(project_entries)
-
+    project_entries = parse_log_to_projects(project_path)
     project_names = [project.name for project in project_entries]
-
-    print(project_names)
 
     return project_name in project_names
 
@@ -87,7 +78,7 @@ def prompt_yes_no(prompt_string, yes_default=False):
             print("Invalid response, try again")
 
 
-def prompt_for_name(prompt_string, default=None):
+def prompt_for_name(prompt_string, default=None, prompt_confirmation=False):
 
     """Ask user to provide name, or leave empty to abort"""
 
@@ -102,12 +93,14 @@ def prompt_for_name(prompt_string, default=None):
             else:
                 choice = default
 
-        yes_no_string = "{}, is that correct? ".format(choice)
-        yes_answer = prompt_yes_no(yes_no_string, yes_default=True)
+        if prompt_confirmation:
 
-        if yes_answer:
-            return choice
-        else:
-            print("No name provided, try again")
-            sys.exit(0)
+            yes_no_string = "{}, is that correct? ".format(choice)
+            yes_answer = prompt_yes_no(yes_no_string, yes_default=True)
+
+            if not yes_answer:
+                print("No name provided, try again")
+                sys.exit(0)
+
+        return choice
 
