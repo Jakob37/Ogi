@@ -5,23 +5,25 @@ from modules import utils
 
 def main(args, conf):
 
-    # time_entries_path = conf.get("file_paths", "data")
+    if args.dry_run:
+        print("DRY RUN - Simulated run, but nothing written")
+
     projects_path = conf.get("file_paths", "projects")
     cat_path = conf.get("file_paths", "categories")
 
     if args.object_type == "project":
 
-        new_project(projects_path, cat_path, args.name, args.category)
+        new_project(projects_path, cat_path, args.name, args.category, dry_run=args.dry_run)
 
     elif args.object_type == "category":
         
         if args.category:
             print("--category flag ignored as it only is applicable for projects")
 
-        new_category(cat_path, args.name)
+        new_category(cat_path, args.name, dry_run=args.dry_run)
 
 
-def new_project(projects_path, category_path, project_name, category=None):
+def new_project(projects_path, category_path, project_name, category=None, dry_run=False):
     
     project_exists = utils.check_project_exists(project_name, projects_path)
 
@@ -41,20 +43,26 @@ def new_project(projects_path, category_path, project_name, category=None):
                 print("User aborted, try again")
                 exit(0)
             else:
-                write_new_project(project_name, 'uncategorized', projects_path)
+                write_new_project(project_name, 'uncategorized', projects_path, dry_run=dry_run)
 
         else:
-            write_new_project(project_name, category, projects_path)
+            write_new_project(project_name, category, projects_path, dry_run=dry_run)
 
 
-def write_new_project(project_name, category_name, project_path):
+def write_new_project(project_name, category_name, project_path, dry_run=False):
 
     with open(project_path, 'a') as append_fh:
         print("Adding project {} with category {} to {}".format(project_name, category_name, project_path))
-        print("{}\t{}".format(project_name, category_name), file=append_fh)
+
+        out_string = "{}\t{}".format(project_name, category_name)
+
+        if not dry_run:
+            print(out_string, file=append_fh)
+        else:
+            print("{}: {} to {}".format("Dry run", out_string, project_path))
 
 
-def new_category(category_path, category_name):
+def new_category(category_path, category_name, dry_run=False):
     
     current_categories = get_categories(category_path)
 
@@ -63,7 +71,11 @@ def new_category(category_path, category_name):
     else:
         with open(category_path, 'a') as append_fh:
             print("Adding new category {} to {}".format(category_name, category_path))
-            print(category_name, file=append_fh)
+
+            if not dry_run:
+                print(category_name, file=append_fh)
+            else:
+                print("{}: {} to {}".format("Dry run", category_name, category_path))
 
 
 def get_categories(cat_path):
@@ -82,4 +94,3 @@ def print_categories(cat_path):
     categories = get_categories(cat_path)
     for cat in categories:
         print(cat)
-

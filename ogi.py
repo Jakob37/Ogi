@@ -63,6 +63,7 @@ def parse_log(subparsers_object):
     subparser.add_argument('-p', '--project', required=True)
 
     subparser.add_argument('--testrun', action='store_true')
+    subparser.add_argument('--dry_run', action='store_true')
 
 
 def parse_list(subparsers_object):
@@ -89,6 +90,7 @@ def parse_new(subparsers_object):
     subparser.add_argument('object_type', choices=['project', 'category'])
     subparser.add_argument('-n', '--name', required=True)
     subparser.add_argument('-c', '--category')
+    subparser.add_argument('--dry_run', action='store_true')
 
 
 def parse_config():
