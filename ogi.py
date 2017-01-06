@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 
 import argparse
-import re
-import datetime
 import configparser
 import os
-import sys
 
 CONF_NAME = "ogi.conf"
 
@@ -46,8 +43,8 @@ def parse_log(subparsers_object):
     subparser = subparsers_object.add_parser('log')
     subparser.set_defaults(func=ogi_log_func)
 
-    subparser.add_argument('log_type', choices=['pomo', 'block', 'session'], 
-                           default='block', nargs='?')
+    subparser.add_argument('log_type', choices=['pomo', 'block', 'session'],
+                           nargs='?')
     subparser.add_argument('-m', '--message',
                            help='Description of performed task during logged time',
                            required=True)

@@ -9,13 +9,12 @@ a printed TimeEntry-object
 
 class TimeEntry:
 
-    VALID_LOG_TYPES = ['pomo', 'block']
+    VALID_LOG_TYPES = ['pomo', 'block', 'session']
     FOCUS_PATTERN = r'^\d+$'
     DATE_PATTERN = r'^\d{8}$'
     TIME_PATTERN = r'^\d{4}$'
     PROJECT_PATTERN = r'^.+$'
     HEADER = ['Date', 'Time', 'Type', 'Focus', 'Duration', 'Message', 'Project']
-
 
     def __init__(self, log_type, message, focus=100, date_str=None, 
                  time_str=None, project=None, duration=None, quiet=False):

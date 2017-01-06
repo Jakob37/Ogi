@@ -18,12 +18,13 @@ def main(args, conf):
     if args.dry_run:
         print("DRY RUN - Simulated run, but nothing written")
 
+    log_type = setup_log_type(conf, args.log_type)
+
     output_path = conf.get("file_paths", "data")
-    # test_output_path = conf.get("file_paths", "test_data")
     project_path = conf.get("file_paths", "projects")
     category_path = conf.get("file_paths", "categories")
 
-    time_entry = TimeEntry(args.log_type, 
+    time_entry = TimeEntry(log_type,
                            args.message,
                            args.focus,
                            args.date,
@@ -57,3 +58,16 @@ def main(args, conf):
         print("Following entry written to {}".format(output_path))
         print(time_entry)
 
+
+def setup_log_type(conf, args_log_type=None):
+
+    if args_log_type is None:
+
+        conf_log_type = conf.get('settings', 'default_log_type')
+        print("Reading log type from config {}".format(conf_log_type))
+        if conf_log_type not in TimeEntry.VALID_LOG_TYPES:
+            raise Exception("Log type in config ({}) not valid log type ({})".format(conf_log_type, TimeEntry.VALID_LOG_TYPES))
+        else:
+            return conf_log_type
+    else:
+        return args_log_type

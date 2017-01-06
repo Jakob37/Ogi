@@ -4,3 +4,6 @@ test_data=%(data_base)s/testdata.tsv
 projects=%(data_base)s/projects.tsv
 categories=%(data_base)s/categories.tsv
 data_base=/path/to/ogi/data
+[settings]
+default_log_type=block
+block_duration=40
