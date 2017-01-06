@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import sys
+
 from modules.time_entry import TimeEntry
 from modules.project_entry import ProjectEntry
 
@@ -46,17 +48,23 @@ def check_project_exists(project_name, project_path):
     return project_name in project_names
 
 
-def prompt_yes_no(prompt_string):
+def prompt_yes_no(prompt_string, yes_default=False):
 
     """Return True or False based on if user responds with yes or no"""
 
     # Empty string is counted as 'no'
     yes = {'yes', 'ye', 'y'}
-    no = {'no', 'n', ''}
+    no = {'no', 'n'}
+
+    if yes_default:
+        yes.add('')
+        yes_no_string = '[Y/n] '
+    else:
+        no.add('')
+        yes_no_string = '[y/N] '
 
     while True:
-    
-        choice = input(prompt_string).lower()
+        choice = input(prompt_string + yes_no_string).lower()
 
         if choice in yes:
             return True
@@ -66,5 +74,27 @@ def prompt_yes_no(prompt_string):
             print("Invalid response, try again")
 
 
+def prompt_for_name(prompt_string, default=None):
 
+    """Ask user to provide name, or leave empty to abort"""
+
+    while True:
+
+        choice = input(prompt_string)
+
+        if choice == '':
+            if default is None:
+                print("User aborted")
+                sys.exit(0)
+            else:
+                choice = default
+
+        yes_no_string = "{}, is that correct? ".format(choice)
+        yes_answer = prompt_yes_no(yes_no_string, yes_default=True)
+
+        if yes_answer:
+            return choice
+        else:
+            print("No name provided, try again")
+            sys.exit(0)
 

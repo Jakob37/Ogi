@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import sys
+
 from modules import utils
 
 
@@ -23,30 +25,36 @@ def main(args, conf):
         new_category(cat_path, args.name, dry_run=args.dry_run)
 
 
-def new_project(projects_path, category_path, project_name, category=None, dry_run=False):
-    
+def new_project(projects_path, category_path, project_name=None, category=None, dry_run=False):
+
+    if project_name is None:
+        proj_string = "Enter project name (empty to abort): "
+        project_name = utils.prompt_for_name(proj_string)
+
+    if category is None:
+        cat_string = "Enter category (empty for 'uncategorized'): "
+        category = utils.prompt_for_name(cat_string, default='uncategorized')
+
     project_exists = utils.check_project_exists(project_name, projects_path)
 
     if project_exists:
-        print("Project already exists!")
+        print("Project already exists! Try again with another name.")
+        sys.exit(0)
     else:
         cats = get_categories(category_path)
         
-        if category is not None and category not in cats:
-            print("Unvalid category, try again")
-            print("Valid categories:")
-            print_categories(category_path)
-        elif category is None:
-            prompt = utils.prompt_yes_no("No category specified, will be categorized as 'uncategorized' [y/N]: ")
+        if category not in cats:
+            create_cat_string = "Category does not exist, do you want to create it?"
+            create_cat = utils.prompt_yes_no(create_cat_string, yes_default=True)
 
-            if not prompt:
-                print("User aborted, try again")
-                exit(0)
+            if create_cat:
+                pass
             else:
-                write_new_project(project_name, 'uncategorized', projects_path, dry_run=dry_run)
+                print("User aborted")
+                sys.exit(0)
 
-        else:
-            write_new_project(project_name, category, projects_path, dry_run=dry_run)
+        new_category(category_path, category, silent_fail=True)
+        write_new_project(project_name, 'uncategorized', projects_path, dry_run=dry_run)
 
 
 def write_new_project(project_name, category_name, project_path, dry_run=False):
@@ -62,12 +70,18 @@ def write_new_project(project_name, category_name, project_path, dry_run=False):
             print("{}: {} to {}".format("Dry run", out_string, project_path))
 
 
-def new_category(category_path, category_name, dry_run=False):
+def new_category(category_path, category_name, dry_run=False, silent_fail=False):
     
     current_categories = get_categories(category_path)
 
+    if category_name is None:
+        cat_string = "Enter category name (empty to abort): "
+        category_name = utils.prompt_for_name(cat_string)
+
     if category_name in current_categories:
-        print("Category already exists!")
+        if not silent_fail:
+            print("Category already exists!")
+            sys.exit(0)
     else:
         with open(category_path, 'a') as append_fh:
             print("Adding new category {} to {}".format(category_name, category_path))
