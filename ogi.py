@@ -38,7 +38,6 @@ def parse_arguments():
     args.func(args, conf)
 
 
-
 def parse_log(subparsers_object):
 
     def ogi_log_func(args, conf):

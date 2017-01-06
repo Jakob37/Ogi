@@ -45,8 +45,6 @@ def new_project(projects_path, category_path, project_name=None, category=None, 
         
         if category not in cats:
 
-            print("Attempting category: {}".format(category))
-
             create_cat_string = "Category does not exist, do you want to create it? "
             create_cat = utils.prompt_yes_no(create_cat_string, yes_default=True)
 
@@ -56,8 +54,8 @@ def new_project(projects_path, category_path, project_name=None, category=None, 
                 print("User aborted")
                 sys.exit(0)
 
-        new_category(category_path, category, silent_fail=True)
-        write_new_project(project_name, 'uncategorized', projects_path, dry_run=dry_run)
+        new_category(category_path, category, silent_fail=True, dry_run=dry_run)
+        write_new_project(project_name, category, projects_path, dry_run=dry_run)
 
 
 def write_new_project(project_name, category_name, project_path, dry_run=False):
