@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 
 import sys
+import os
+import configparser
 
 from modules.time_entry import TimeEntry
 from modules.project_entry import ProjectEntry
 
+CONF_NAME = 'ogi.conf'
 
-def parse_log_to_entries(log_path, project=None):
+
+def parse_log_to_entries(conf, log_path, project=None):
 
     """Return list of entries based on log file"""
 
@@ -16,14 +20,14 @@ def parse_log_to_entries(log_path, project=None):
         for line in in_fh:
             line = line.rstrip()
 
-            entry = TimeEntry.load_from_string(line)
+            entry = TimeEntry.load_from_string(conf, line)
             if project is None or project == entry.project:
                 time_entries.append(entry)
 
     return time_entries
 
 
-def parse_log_to_projects(log_path):
+def parse_log_to_projects(conf, log_path):
 
     """Return list of project objects based on log path"""
     
@@ -34,7 +38,7 @@ def parse_log_to_projects(log_path):
             line = line.rstrip()
 
             project, category = line.split('\t')
-            proj_entry = ProjectEntry(project, category)
+            proj_entry = ProjectEntry(conf, project, category)
 
             projects.append(proj_entry)
     return projects
@@ -42,8 +46,17 @@ def parse_log_to_projects(log_path):
 
 def check_project_exists(project_name, project_path):
 
-    project_entries = parse_log_to_projects(project_path)
+    print(project_name)
+    print(project_path)
+
+
+    project_entries = parse_log_to_projects(conf, project_path)
+
+    print(project_entries)
+
     project_names = [project.name for project in project_entries]
+
+    print(project_names)
 
     return project_name in project_names
 

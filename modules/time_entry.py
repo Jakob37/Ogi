@@ -7,17 +7,21 @@ Can either be created directly, or from a string represented
 a printed TimeEntry-object
 """
 
+
 class TimeEntry:
 
     VALID_LOG_TYPES = ['pomo', 'block', 'session']
     FOCUS_PATTERN = r'^\d+$'
+    DURATION_PATTERN = r'^\d+$'
     DATE_PATTERN = r'^\d{8}$'
     TIME_PATTERN = r'^\d{4}$'
     PROJECT_PATTERN = r'^.+$'
     HEADER = ['Date', 'Time', 'Type', 'Focus', 'Duration', 'Message', 'Project']
 
-    def __init__(self, log_type, message, focus=100, date_str=None, 
+    def __init__(self, conf, log_type, message, focus=100, date_str=None,
                  time_str=None, project=None, duration=None, quiet=False):
+
+        self.conf = conf
 
         self.log_type = log_type
         self.message = message
@@ -31,7 +35,7 @@ class TimeEntry:
         self.verify_entry()
 
     @classmethod 
-    def load_from_string(cls, ogi_string):
+    def load_from_string(cls, conf, ogi_string):
 
         """Generate object from printed string"""
 
@@ -45,7 +49,7 @@ class TimeEntry:
         message = fields[5]
         project = fields[6]
 
-        new_obj = cls(log_type, message,
+        new_obj = cls(conf, log_type, message,
                       focus=focus,
                       date_str=date,
                       time_str=time,
@@ -54,14 +58,12 @@ class TimeEntry:
                       quiet=True)
         return new_obj
 
-
     def get_log_type(self, log_type):
 
-        if log_type in VALID_LOG_TYPES:
+        if log_type in self.VALID_LOG_TYPES:
             return log_type
         else:
             return 'session'
-
 
     def get_duration(self, log_type, duration, quiet=False):
 
@@ -77,15 +79,21 @@ class TimeEntry:
             if duration is not None and not quiet:
                 print('Warning: Duration is {}, but is ignored due to type being {}'
                       .format(duration, log_type))
-            return 40
+
+            duration = self.conf.get('settings', 'block_duration')
+
+            if not re.match(self.DURATION_PATTERN, duration):
+                raise Exception("Focus must fulfil pattern: {}, found: {}"
+                                .format(self.DURATION_PATTERN, duration))
+            return duration
 
         elif duration is not None:
             return duration
         else:
             raise Exception("Time not specified for log type: {}".format(log_type))
 
-
-    def setup_date(self, date_str):
+    @staticmethod
+    def setup_date(date_str):
 
         """Get current date, or return existing string"""
 
@@ -94,7 +102,8 @@ class TimeEntry:
         else:
             return date_str
 
-    def setup_time(self, time_str):
+    @staticmethod
+    def setup_time(time_str):
 
         """Get current time, or return existing string"""
 
@@ -105,27 +114,27 @@ class TimeEntry:
 
     def verify_entry(self):
 
-        if not self.log_type in self.VALID_LOG_TYPES and self.log_type != 'session':
+        if self.log_type not in self.VALID_LOG_TYPES and self.log_type != 'session':
             raise Exception("Invalid log type encountered: {}".format(self.log_type))
 
-        if self.message == None:
+        if not self.message:
             raise Exception("No description found. This field is mandatory.")
 
         if not re.match(self.FOCUS_PATTERN, str(self.focus)):
-            raise Exception("Focus must fulfil pattern: {}, found: {}" \
-                .format(self.FOCUS_PATTERN, self.focus))
+            raise Exception("Focus must fulfil pattern: {}, found: {}"
+                            .format(self.FOCUS_PATTERN, self.focus))
 
         if not re.match(self.DATE_PATTERN, str(self.date)):
-            raise Exception("Date must fulfil pattern: {}, found: {}" \
-                .format(self.DATE_PATTERN, self.date))
+            raise Exception("Date must fulfil pattern: {}, found: {}"
+                            .format(self.DATE_PATTERN, self.date))
 
         if not re.match(self.TIME_PATTERN, str(self.time)):
-            raise Exception("Time must fulfil pattern: {}, found: {}" \
-                .format(self.TIME_PATTERN, self.time))
+            raise Exception("Time must fulfil pattern: {}, found: {}"
+                            .format(self.TIME_PATTERN, self.time))
 
         if not re.match(self.PROJECT_PATTERN, str(self.project)):
-            raise Exception("Project must fulfil pattern: {}, found: {}" \
-                .format(self.PROJECT_PATTERN, self.project))
+            raise Exception("Project must fulfil pattern: {}, found: {}"
+                            .format(self.PROJECT_PATTERN, self.project))
 
     def __str__(self):
 

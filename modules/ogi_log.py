@@ -24,7 +24,8 @@ def main(args, conf):
     project_path = conf.get("file_paths", "projects")
     category_path = conf.get("file_paths", "categories")
 
-    time_entry = TimeEntry(log_type,
+    time_entry = TimeEntry(conf,
+                           log_type,
                            args.message,
                            args.focus,
                            args.date,

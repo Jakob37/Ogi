@@ -9,7 +9,7 @@ def main(args, conf):
 
     output_path = conf.get("file_paths", "data")
 
-    time_entries = utils.parse_log_to_entries(output_path)
+    time_entries = utils.parse_log_to_entries(conf, output_path)
 
 
 # =['project_summary', 'today', 'projects', 'categories'])

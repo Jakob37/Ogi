@@ -9,8 +9,11 @@ CONF_NAME = "ogi.conf"
 from modules import ogi_log
 from modules import ogi_list
 from modules import ogi_new
+from modules import utils
+import ogi_config
 
 sysdir = os.path.dirname(os.path.realpath(__file__))
+
 
 
 def parse_arguments():
@@ -30,7 +33,10 @@ def parse_arguments():
     parse_new(subparsers)
 
     args = parser.parse_args()
-    conf = parse_config()
+    # conf = parse_config()
+    # GLOBAL_CONF = conf
+
+    conf = ogi_config.get_config()
 
     args.func(args, conf)
 
@@ -97,8 +103,6 @@ def parse_config():
     config = configparser.ConfigParser()
     config.read(conf_path)
     return config
-
-
 
 if __name__ == "__main__":
     parse_arguments()
