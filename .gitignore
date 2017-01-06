@@ -2,6 +2,7 @@
 *.swp
 *.conf
 *.pyc
+*.old
 
 # Directories
 data/

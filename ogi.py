@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import argparse
-import configparser
 import os
 
 CONF_NAME = "ogi.conf"
@@ -9,16 +8,14 @@ CONF_NAME = "ogi.conf"
 from modules import ogi_log
 from modules import ogi_list
 from modules import ogi_new
-from modules import utils
-import ogi_config
+from modules import ogi_setup
 
 sysdir = os.path.dirname(os.path.realpath(__file__))
 
 
-
 def parse_arguments():
 
-    def default_func(args, conf):
+    def default_func(args):
         print("Must specify tool (ogi <tool>)")
         parser.print_help()
         exit(1)
@@ -31,12 +28,9 @@ def parse_arguments():
     parse_log(subparsers)
     parse_list(subparsers)
     parse_new(subparsers)
+    parse_setup(subparsers)
 
     args = parser.parse_args()
-    # conf = parse_config()
-    # GLOBAL_CONF = conf
-
-    # conf = ogi_config.get_config()
 
     args.func(args)
 
@@ -95,15 +89,16 @@ def parse_new(subparsers_object):
     subparser.add_argument('--dry_run', action='store_true')
 
 
-# def parse_config():
-#
-#     my_dir = os.path.dirname(os.path.realpath(__file__))
-#     conf_path = "{}/{}".format(my_dir, CONF_NAME)
-#
-#     config = configparser.ConfigParser()
-#     config.read(conf_path)
-#     return config
+def parse_setup(subparsers_object):
+
+    """Setup command"""
+
+    def ogi_setup_func(args):
+        ogi_setup.main(args)
+
+    subparser = subparsers_object.add_parser('setup')
+    subparser.set_defaults(func=ogi_setup_func)
+
 
 if __name__ == "__main__":
     parse_arguments()
-
