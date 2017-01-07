@@ -1,4 +1,4 @@
-# Ogi - Efficient time loggging for terminal users
+# Ogi - Efficient time logging for terminal users
 
 The idea with Ogi is to provide a as-simple-as-possible logging utility for people who do a 
 large part of their work at a computer with a terminal open. It should be as easy as 
