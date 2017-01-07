@@ -95,11 +95,11 @@ Now we come to the actual purpose of Ogi. For now, this part is somewhat limited
 but will still prove to be useful. Keep your eyes out for the later Pogi if you
 are a sucker for nice plots.
 
-You can list logged entries from today by running `ogi list today`.
+You can list logged entries from today by running `ogi list day`. The 'day' can be replaced by 'week',
+'year' or 'date_range'.
 
 ```
-ogi list today
-logged today
+ogi list day
 my_great_project
 * Descriptive message (40 minutes)
 * This time, I worked an entire block (40 minutes)
@@ -110,15 +110,15 @@ new_project
 * Working on new project! (40 minutes)
 ```
 
-You can get an overview of your projects by running `ogi list project_summary`.
+You can get an overview of your project by adding the '--summary' or '-s' flag.
 
 ```
-ogi list project_summary
+ogi list week --summary
 Projects                 Time
 ------------------------------------
-my_great_project         140 minutes
+my_great_project         525 minutes
+my_other_great_project   230 minutes
 new_project              40 minutes
-my_other_great_project   25 minutes
 ```
 
 Finally, you can list present projects and categories.
