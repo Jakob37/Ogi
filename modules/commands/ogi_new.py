@@ -5,6 +5,7 @@ import sys
 from modules.utils import prompt_utils
 from modules.utils import utils
 import ogi_config
+from modules.entries.project_entry import ProjectEntry
 
 
 def main(args):
@@ -35,7 +36,7 @@ def new_project(projects_path, category_path, project_name=None, category=None, 
         proj_string = "Enter project name (empty to abort): "
         project_name = prompt_utils.prompt_for_name(proj_string)
 
-    project_exists = utils.check_project_exists(project_name, projects_path)
+    project_exists = ProjectEntry.check_project_exists(project_name, projects_path)
 
     if project_exists:
         print("Project already exists! Try again with another name.")

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-import datetime
 import sys
 
 import ogi_config
 
 from modules.utils import utils
+from modules.entries.project_entry import TimeEntry
 
 
 def main(args):
@@ -34,7 +34,7 @@ def main(args):
     else:
         end_date = utils.get_current_date()
 
-    time_entries = utils.parse_log_to_entries(output_path, start_date=start_date, end_date=end_date)
+    time_entries = TimeEntry.parse_log_to_entries(output_path, start_date=start_date, end_date=end_date)
 
     print("Number time entries: {}".format(len(time_entries)))
 

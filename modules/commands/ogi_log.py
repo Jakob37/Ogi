@@ -5,6 +5,7 @@ import sys
 import ogi_config
 from modules.commands import ogi_new
 from modules.entries.time_entry import TimeEntry
+from modules.entries.project_entry import ProjectEntry
 from modules.utils import prompt_utils
 from modules.utils import utils
 
@@ -30,7 +31,7 @@ def main(args):
                            args.project,
                            args.duration)
 
-    project_exists = utils.check_project_exists(time_entry.project, project_path)
+    project_exists = ProjectEntry.check_project_exists(time_entry.project, project_path)
     if not project_exists:
         create_string = "{} does not exist, do you want to create it? ".format(time_entry.project)
         create_project = prompt_utils.prompt_yes_no(create_string)

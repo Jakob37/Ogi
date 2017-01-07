@@ -3,6 +3,7 @@ import re
 import sys
 
 import ogi_config
+from modules.utils import utils
 
 """
 Main class representing a log entry performed in Ogi
@@ -154,4 +155,21 @@ class TimeEntry:
                     message=self.message,
                     project=self.project)
 
+    @staticmethod
+    def parse_log_to_entries(log_path, project=None, start_date=None, end_date=None):
 
+        """Return list of entries based on log file"""
+
+        time_entries = list()
+
+        with open(log_path) as in_fh:
+            for line in in_fh:
+                line = line.rstrip()
+
+                entry = TimeEntry.load_from_string(line)
+                if project is None or project == entry.project:
+
+                    if utils.is_date_in_range(entry.date, start_date, end_date):
+                        time_entries.append(entry)
+
+        return time_entries
