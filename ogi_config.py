@@ -31,3 +31,7 @@ def get_config():
                         .format(conf_path))
 
     return config
+
+
+def get_base_dir():
+    return my_dir

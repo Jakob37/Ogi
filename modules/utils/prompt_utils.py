@@ -52,9 +52,11 @@ def prompt_for_path(prompt_text, prompt_confirmation=True, return_none_for_empty
 
     """Ask user to provide name, or leave empty to abort"""
 
-    choice = prompt_for_string(prompt_text)
+    choice = prompt_for_string(prompt_text, return_none_for_empty=return_none_for_empty)
 
-    if choice == '' and return_none_for_empty:
+    if choice is None and return_none_for_empty:
+
+        print("Returning none for empty")
         return None
 
     full_path = os.path.abspath(choice)

@@ -99,11 +99,12 @@ def setup_config_file(base_save_dir, dry_run=False):
     config.set('file_paths', 'projects', '%(data_base)s/projects.tsv')
     config.set('file_paths', 'categories', '%(data_base)s/categories.tsv')
 
-    config.add_section('settings')
-    config.set('settings', 'default_log_type', 'block')
-    config.set('settings', 'block_duration', '40')
+    setup_config_file_settings(config)
 
-    conf_path = '{}/{}'.format(base_save_dir, 'ogi.conf')
+    ogi_base_dir = ogi_config.get_base_dir()
+    print("BASE DIR: {}".format(ogi_base_dir))
+
+    conf_path = '{}/{}'.format(ogi_base_dir, 'ogi.conf')
 
     print("Writing config file to {}".format(conf_path))
 
@@ -112,3 +113,32 @@ def setup_config_file(base_save_dir, dry_run=False):
             config.write(config_fh)
         else:
             print(config)
+
+
+def setup_config_file_settings(config):
+
+    log_type_string = "\nWhat is your preferred default logging unit? pomo (25 minutes) or block (custom length): "
+    chosen_log_type = prompt_utils.prompt_for_name(log_type_string)
+
+    if chosen_log_type not in ['pomo', 'block']:
+        print("Only valid are 'pomo' and 'block', set to block for now")
+        print("You can adjust this later by editing the ogi.conf configuration file")
+        chosen_log_type = 'block'
+
+    if chosen_log_type == 'block':
+        block_length_string = "What duration should your default work session be? (default 40): "
+        work_length = prompt_utils.prompt_for_string(block_length_string, default="40")
+    else:
+        work_length = '40'
+
+    try:
+        int(work_length)
+    except ValueError:
+        print("Block duration must be integer number! Set to default value.")
+        print("You can adjust this later by editing the ogi.conf configuration file")
+        work_length = '40'
+
+    config.add_section('settings')
+    config.set('settings', 'default_log_type', chosen_log_type)
+    config.set('settings', 'block_duration', work_length)
+
