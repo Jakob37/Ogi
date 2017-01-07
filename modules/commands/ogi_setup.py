@@ -74,7 +74,8 @@ def ensure_dir(dir_path):
 def create_synlink():
 
     symlink_message = "\nProvide directory for symlink for easy access to 'ogi' command. " \
-                      "Leave empty if not desired.\nSymlink path: "
+                      "Leave empty if not desired (or on Windows system, for which symlinks aren't implemented yet." \
+                      "Symlink path: "
 
     symlink_path = prompt_utils.prompt_for_path(symlink_message, return_none_for_empty=True)
 
