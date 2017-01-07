@@ -59,22 +59,21 @@ def ensure_dir(dir_path):
 
 def create_synlink():
 
-    symlink_message = "\nProvide directory for symlink for easy access to 'ogi' command." \
+    symlink_message = "\nProvide directory for symlink for easy access to 'ogi' command. " \
                       "Leave empty if not desired.\nSymlink path: "
 
-    symlink_path = utils.prompt_for_name(symlink_message)
-
-    current_dir = os.path.dirname(os.path.realpath(__file__))
-    top_dir = '/'.join(current_dir.split('/')[:-1])
+    symlink_path = utils.prompt_for_name(symlink_message, return_none_for_empty=True)
 
     if symlink_path:
+        current_dir = os.path.dirname(os.path.realpath(__file__))
+        top_dir = '/'.join(current_dir.split('/')[:-1])
         print("\nCreating symlink at: {}".format(symlink_path + "/ogi"))
         os.symlink(top_dir + "/ogi.py", symlink_path + "/ogi")
+    else:
+        print("\nNo symlink created")
 
 
 def setup_config_file(base_save_dir):
-
-    print("Setting up config file...")
 
     config = configparser.RawConfigParser()
 
@@ -88,5 +87,9 @@ def setup_config_file(base_save_dir):
     config.set('settings', 'default_log_type', 'block')
     config.set('settings', 'block_duration', '40')
 
-    with open(base_save_dir + '/ogi.conf', 'wb') as config_fh:
+    conf_path = '{}/{}'.format(base_save_dir, 'ogi.conf')
+
+    print("Writing config file to {}".format(conf_path))
+
+    with open(conf_path, 'w') as config_fh:
         config.write(config_fh)

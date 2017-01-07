@@ -78,7 +78,7 @@ def prompt_yes_no(prompt_string, yes_default=False):
             print("Invalid response, try again")
 
 
-def prompt_for_name(prompt_string, default=None, prompt_confirmation=False):
+def prompt_for_name(prompt_string, default=None, prompt_confirmation=False, return_none_for_empty=False):
 
     """Ask user to provide name, or leave empty to abort"""
 
@@ -87,7 +87,13 @@ def prompt_for_name(prompt_string, default=None, prompt_confirmation=False):
         choice = input(prompt_string)
 
         if choice == '':
-            if default is None:
+
+            if return_none_for_empty:
+
+                print("return none for empty")
+
+                return None
+            elif default is None:
                 print("User aborted")
                 sys.exit(0)
             else:
@@ -103,4 +109,3 @@ def prompt_for_name(prompt_string, default=None, prompt_confirmation=False):
                 sys.exit(0)
 
         return choice
-
