@@ -2,12 +2,11 @@
 
 import sys
 
-
-from modules.time_entry import TimeEntry
-from modules.utils import utils
-from modules.utils import prompt_utils
-from modules import ogi_new
 import ogi_config
+from modules.commands import ogi_new
+from modules.entries.time_entry import TimeEntry
+from modules.utils import prompt_utils
+from modules.utils import utils
 
 
 def main(args):
@@ -65,7 +64,8 @@ def setup_log_type(conf, args_log_type=None):
         conf_log_type = conf.get('settings', 'default_log_type')
         print("Reading log type from config {}".format(conf_log_type))
         if conf_log_type not in TimeEntry.VALID_LOG_TYPES:
-            raise Exception("Log type in config ({}) not valid log type ({})".format(conf_log_type, TimeEntry.VALID_LOG_TYPES))
+            raise Exception("Log type in config ({}) not valid log type ({})"
+                            .format(conf_log_type, TimeEntry.VALID_LOG_TYPES))
         else:
             return conf_log_type
     else:

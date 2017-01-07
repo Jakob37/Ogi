@@ -3,10 +3,10 @@
 import argparse
 import os
 
-from modules import ogi_log
-from modules import ogi_list
-from modules import ogi_new
-from modules import ogi_setup
+from modules.commands import ogi_log
+from modules.commands import ogi_new
+from modules.commands import ogi_setup
+from modules.commands import ogi_list
 
 CONF_NAME = "ogi.conf"
 sysdir = os.path.dirname(os.path.realpath(__file__))
@@ -69,7 +69,12 @@ def parse_list(subparsers_object):
     subparser = subparsers_object.add_parser('list')
     subparser.set_defaults(func=ogi_list_func)
 
-    subparser.add_argument('list_type', choices=['project_summary', 'today', 'projects', 'categories'])
+    list_options = ['day', 'week', 'year', 'projects', 'categories', 'date_range']
+    subparser.add_argument('list_type', choices=list_options)
+
+    subparser.add_argument('--summary', '-s', help='Show a condensed format', action='store_true')
+    subparser.add_argument('--start_date', help='Show a condensed format')
+    subparser.add_argument('--end_date', help='Show a condensed format')
 
 
 def parse_new(subparsers_object):

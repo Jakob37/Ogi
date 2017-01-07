@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
-from modules.time_entry import TimeEntry
-from modules.project_entry import ProjectEntry
+import datetime
+
+from modules.entries.project_entry import ProjectEntry
+from modules.entries.time_entry import TimeEntry
 
 
-def parse_log_to_entries(log_path, project=None):
+def parse_log_to_entries(log_path, project=None, start_date=None, end_date=None):
 
     """Return list of entries based on log file"""
 
@@ -16,7 +18,9 @@ def parse_log_to_entries(log_path, project=None):
 
             entry = TimeEntry.load_from_string(line)
             if project is None or project == entry.project:
-                time_entries.append(entry)
+
+                if is_date_in_range(entry.date, start_date, end_date):
+                    time_entries.append(entry)
 
     return time_entries
 
@@ -46,3 +50,39 @@ def check_project_exists(project_name, project_path):
     return project_name in project_names
 
 
+def get_current_date():
+
+    return "{0:%Y%m%d}".format(datetime.datetime.now())
+
+
+def get_previous_date(number_days_previous):
+
+    today = datetime.datetime.now()
+    delta = datetime.timedelta(days=number_days_previous)
+    previous_day = today - delta
+
+    return "{0:%Y%m%d}".format(previous_day)
+
+
+def is_date_in_range(target, start=None, end=None, debug=False):
+
+    if start:
+        in_start_range = int(target) >= int(start)
+    else:
+        in_start_range = True
+
+    if end:
+        in_end_range = int(target) <= int(end)
+    else:
+        in_end_range = True
+
+    if debug:
+        print("{} in [{} {}] - {}/{}".format(target, start, end, in_start_range, in_end_range))
+
+    return in_start_range and in_end_range
+
+
+def is_today_in_range(start, end):
+
+    today = get_current_date()
+    return is_date_in_range(today, start, end)
