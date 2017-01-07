@@ -3,13 +3,12 @@
 import argparse
 import os
 
-CONF_NAME = "ogi.conf"
-
 from modules import ogi_log
 from modules import ogi_list
 from modules import ogi_new
 from modules import ogi_setup
 
+CONF_NAME = "ogi.conf"
 sysdir = os.path.dirname(os.path.realpath(__file__))
 
 
