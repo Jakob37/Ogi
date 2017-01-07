@@ -100,10 +100,7 @@ def setup_config_file(base_save_dir, dry_run=False):
     config.set('file_paths', 'categories', '%(data_base)s/categories.tsv')
 
     setup_config_file_settings(config)
-
     ogi_base_dir = ogi_config.get_base_dir()
-    print("BASE DIR: {}".format(ogi_base_dir))
-
     conf_path = '{}/{}'.format(ogi_base_dir, 'ogi.conf')
 
     print("Writing config file to {}".format(conf_path))
