@@ -5,10 +5,18 @@ import sys
 import configparser
 
 import ogi_config
-from modules import utils
+from modules.utils import prompt_utils
+
+DRY_RUN = False
 
 
 def main(args):
+
+    if args.dry_run:
+        print("DRY RUN - Simulated run, but nothing written")
+
+    global DRY_RUN
+    DRY_RUN = args.dry_run
 
     check_config_exists()
 
@@ -28,7 +36,7 @@ def check_config_exists():
     if config_exists:
 
         force_setup_message = "Configuration file already exists, do you want to overwrite? "
-        force_setup = utils.prompt_yes_no(force_setup_message)
+        force_setup = prompt_utils.prompt_yes_no(force_setup_message)
 
         if not force_setup:
             print("Not forcing setup, aborting")
@@ -36,7 +44,9 @@ def check_config_exists():
         else:
             conf_path = ogi_config.get_config_path()
             print("Forcing setup, moving previous config file to: {}".format(conf_path + ".old"))
-            os.rename(conf_path, conf_path + ".old")
+
+            if not DRY_RUN:
+                os.rename(conf_path, conf_path + ".old")
 
 
 def get_save_directory():
@@ -45,16 +55,20 @@ def get_save_directory():
                        "If you are planning on using Ogi on multiple devices, it is recommended" \
                        "to specify a synced folder, such as a Dropbox-folder.\nSave path: "
 
-    save_dir = utils.prompt_for_name(save_dir_message, prompt_confirmation=True)
+    save_dir = prompt_utils.prompt_for_path(save_dir_message, prompt_confirmation=True)
     return save_dir
 
 
 def ensure_dir(dir_path):
 
+    print("Abspath: {}".format(os.path.abspath(dir_path)))
+
     d = os.path.dirname(dir_path + "/")
     if not os.path.exists(d):
         print("\nCreating directory at: {}".format(d))
-        os.makedirs(d)
+
+        if not DRY_RUN:
+            os.makedirs(d)
 
 
 def create_synlink():
@@ -62,18 +76,20 @@ def create_synlink():
     symlink_message = "\nProvide directory for symlink for easy access to 'ogi' command. " \
                       "Leave empty if not desired.\nSymlink path: "
 
-    symlink_path = utils.prompt_for_name(symlink_message, return_none_for_empty=True)
+    symlink_path = prompt_utils.prompt_for_path(symlink_message, return_none_for_empty=True)
 
     if symlink_path:
         current_dir = os.path.dirname(os.path.realpath(__file__))
         top_dir = '/'.join(current_dir.split('/')[:-1])
         print("\nCreating symlink at: {}".format(symlink_path + "/ogi"))
-        os.symlink(top_dir + "/ogi.py", symlink_path + "/ogi")
+
+        if not DRY_RUN:
+            os.symlink(top_dir + "/ogi.py", symlink_path + "/ogi")
     else:
         print("\nNo symlink created")
 
 
-def setup_config_file(base_save_dir):
+def setup_config_file(base_save_dir, dry_run=False):
 
     config = configparser.RawConfigParser()
 
@@ -92,4 +108,7 @@ def setup_config_file(base_save_dir):
     print("Writing config file to {}".format(conf_path))
 
     with open(conf_path, 'w') as config_fh:
-        config.write(config_fh)
+        if not dry_run:
+            config.write(config_fh)
+        else:
+            print(config)

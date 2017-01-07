@@ -99,6 +99,8 @@ def parse_setup(subparsers_object):
     subparser = subparsers_object.add_parser('setup')
     subparser.set_defaults(func=ogi_setup_func)
 
+    subparser.add_argument('--dry_run', action='store_true')
+
 
 if __name__ == "__main__":
     parse_arguments()

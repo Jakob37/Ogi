@@ -2,8 +2,9 @@
 
 import datetime
 
-from modules import utils
 import ogi_config
+
+from modules.utils import utils
 
 
 def main(args):
@@ -95,5 +96,3 @@ def list_categories(conf):
         for line in in_fh:
             line = line.rstrip()
             print(line)
-
-

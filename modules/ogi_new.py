@@ -2,7 +2,8 @@
 
 import sys
 
-from modules import utils
+from modules.utils import prompt_utils
+from modules.utils import utils
 import ogi_config
 
 
@@ -32,7 +33,7 @@ def new_project(projects_path, category_path, project_name=None, category=None, 
 
     if project_name is None:
         proj_string = "Enter project name (empty to abort): "
-        project_name = utils.prompt_for_name(proj_string)
+        project_name = prompt_utils.prompt_for_name(proj_string)
 
     project_exists = utils.check_project_exists(project_name, projects_path)
 
@@ -42,14 +43,14 @@ def new_project(projects_path, category_path, project_name=None, category=None, 
 
     if category is None:
         cat_string = "Enter category for {} (empty for 'uncategorized'): ".format(project_name)
-        category = utils.prompt_for_name(cat_string, default='uncategorized')
+        category = prompt_utils.prompt_for_name(cat_string, default='uncategorized')
 
     cats = get_categories(category_path)
 
     if category not in cats:
 
         create_cat_string = "Category does not exist, do you want to create it? "
-        create_cat = utils.prompt_yes_no(create_cat_string, yes_default=True)
+        create_cat = prompt_utils.prompt_yes_no(create_cat_string, yes_default=True)
 
         if not create_cat:
             print("User aborted")
@@ -78,7 +79,7 @@ def new_category(category_path, category_name, dry_run=False, silent_fail=False)
 
     if category_name is None:
         cat_string = "Enter category name (empty to abort): "
-        category_name = utils.prompt_for_name(cat_string)
+        category_name = prompt_utils.prompt_for_name(cat_string)
 
     if category_name in current_categories:
         if not silent_fail:

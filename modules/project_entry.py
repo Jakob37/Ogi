@@ -4,7 +4,7 @@
 Main class representing a project entry
 """
 
-import modules.utils
+from modules.utils import utils
 import ogi_config
 
 
@@ -18,7 +18,7 @@ class ProjectEntry:
         self.entries = []
 
     def load_entries(self, entry_path):
-        self.entries = modules.utils.parse_log_to_entries(entry_path, project=self.name)
+        self.entries = utils.parse_log_to_entries(entry_path, project=self.name)
 
     def get_total_time(self):
 
