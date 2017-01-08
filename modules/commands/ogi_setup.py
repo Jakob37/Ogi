@@ -9,11 +9,23 @@ from modules.utils import prompt_utils
 
 DRY_RUN = False
 
+from modules.database import database_utils
+
 
 def main(args):
 
     if args.dry_run:
         print("DRY RUN - Simulated run, but nothing written")
+
+    if args.database_test:
+        print("Database test only")
+
+        test_path = 'test.sqlite3'
+
+        database_utils.setup_database(test_path)
+
+        print("Test done, exiting...")
+        sys.exit(0)
 
     global DRY_RUN
     DRY_RUN = args.dry_run
