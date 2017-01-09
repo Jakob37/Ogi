@@ -3,6 +3,7 @@
 *.conf
 *.pyc
 *.old
+*.sqlite
 *.sqlite3
 
 # Directories
