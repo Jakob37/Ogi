@@ -1,5 +1,7 @@
 import sqlite3
 
+import ogi_config
+
 ENTRY_TABLE = 'time_entries'
 PROJECT_TABLE = 'projects'
 CATEGORY_TABLE = 'categories'
@@ -41,6 +43,23 @@ def setup_database(database_path, dry_run=False):
     conn.close()
 
 
+def get_connection():
+
+    conf = ogi_config.get_config()
+    db_path = conf.get('file_paths', 'database')
+
+    conn = sqlite3.connect(db_path)
+    return conn
+
+
+def close_connection(conn, commit_changes):
+
+    if commit_changes:
+        conn.commit()
+
+    conn.close()
+
+
 def get_create_table_command(table_name, field_tuples, primary_key=None):
 
     """
@@ -70,6 +89,8 @@ def insert_category_into_database(cursor, category_entry):
     command_str = 'INSERT INTO {table_name} VALUES ({values})'\
         .format(table_name=CATEGORY_TABLE, values=category_value_string)
 
+    print("Command: {}".format(command_str))
+
     cursor.execute(command_str)
 
 
@@ -86,15 +107,15 @@ def insert_project_into_database(cursor, project_entry):
     cursor.execute(command_str)
 
 
-def insert_time_entry_into_database(cursor, time_entry):
+def insert_time_entry_into_database(cursor, te, verbose=False):
 
-    values = str(time_entry).split('\t')
-    value_string = ', '.format(values)
+    params = (te.date, te.time, te.log_type, te.focus, te.duration, te.message, te.project)
+    command_str = 'INSERT INTO {table_name} VALUES (?, ?, ?, ?, ?, ?, ?, NULL)'.format(table_name=ENTRY_TABLE)
 
-    command_str = 'INSERT INTO {table_name} VALUES ({values}, NULL)'\
-        .format(table_name=ENTRY_TABLE, values=value_string)
+    if verbose:
+        print("Command to be executed: '{}'".format(command_str))
 
-    cursor.execute(command_str)
+    cursor.execute(command_str, params)
 
 
 def list_entries_in_table(cursor, table_name):
