@@ -10,6 +10,7 @@ from modules.utils import prompt_utils
 DRY_RUN = False
 
 from modules.database import database_utils
+import ogi_config
 
 
 def main(args):
@@ -20,8 +21,10 @@ def main(args):
     if args.database_test:
         print("Database test only")
 
-        test_path = 'test.sqlite3'
+        # test_path = 'test.sqlite3'
 
+        conf = ogi_config.get_config()
+        test_path = conf.get('file_paths', 'database')
         database_utils.setup_database(test_path)
 
         print("Test done, exiting...")
@@ -35,7 +38,7 @@ def main(args):
     save_base_dir = get_save_directory()
     ensure_dir(save_base_dir)
 
-    create_synlink()
+    create_symlink()
 
     setup_config_file(save_base_dir)
 
@@ -83,7 +86,7 @@ def ensure_dir(dir_path):
             os.makedirs(d)
 
 
-def create_synlink():
+def create_symlink():
 
     symlink_message = "\nProvide directory for symlink for easy access to 'ogi' command. " \
                       "Leave empty if not desired (or on Windows system, for which symlinks aren't implemented yet." \
@@ -111,6 +114,8 @@ def setup_config_file(base_save_dir, dry_run=False):
     config.set('file_paths', 'data', '%(data_base)s/ogi_data.tsv')
     config.set('file_paths', 'projects', '%(data_base)s/projects.tsv')
     config.set('file_paths', 'categories', '%(data_base)s/categories.tsv')
+
+    config.set('file_paths', 'database', '%(data_base)s/ogi_data.sqlite')
 
     setup_config_file_settings(config)
     ogi_base_dir = ogi_config.get_base_dir()

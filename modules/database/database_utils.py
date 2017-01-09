@@ -1,6 +1,5 @@
 import sqlite3
 
-
 ENTRY_TABLE = 'time_entries'
 PROJECT_TABLE = 'projects'
 CATEGORY_TABLE = 'categories'
