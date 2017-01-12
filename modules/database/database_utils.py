@@ -131,3 +131,44 @@ def list_entries_in_table(cursor, table_name):
     for row in cursor.execute('SELECT * FROM {}'.format(table_name)):
         string_values = [str(val) for val in row]
         print('\t'.join(string_values))
+
+
+def get_categories_as_strings(sep="\t"):
+
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('SELECT * FROM categories')
+    category_strings = sql_tuples_to_delimited_strings(c.fetchall())
+    return category_strings
+
+
+def get_projects_as_strings(sep="\t"):
+
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('SELECT * FROM projects')
+    project_strings = sql_tuples_to_delimited_strings(c.fetchall())
+    return project_strings
+
+
+def get_time_entries_as_strings(sep="\t"):
+
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('SELECT * FROM time_entries')
+    time_entry_strings = sql_tuples_to_delimited_strings(c.fetchall())
+    return time_entry_strings
+
+
+def sql_tuples_to_delimited_strings(sql_tuples, delim="\t"):
+
+    del_strings = list()
+
+    for tup in sql_tuples:
+        str_tup = [str(elem) for elem in tup]
+        del_string = delim.join(str_tup)
+        del_strings.append(del_string)
+
+    return del_strings
+
+
