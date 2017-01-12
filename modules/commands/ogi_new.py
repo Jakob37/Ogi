@@ -6,6 +6,7 @@ from modules.utils import prompt_utils
 from modules.utils import utils
 import ogi_config
 from modules.entries.project_entry import ProjectEntry
+from modules.database import database_utils
 
 
 def main(args):
@@ -61,7 +62,9 @@ def new_project(projects_path, category_path, project_name=None, category=None, 
     write_new_project(project_name, category, projects_path, dry_run=dry_run)
 
 
-def write_new_project(project_name, category_name, project_path, dry_run=False):
+def write_new_project(project_name, category_name, project_path, dry_run=False, to_sql=True):
+
+    proj_entry = ProjectEntry(project_name, category_name)
 
     with open(project_path, 'a') as append_fh:
         print("Adding project {} with category {} to {}".format(project_name, category_name, project_path))
@@ -69,12 +72,15 @@ def write_new_project(project_name, category_name, project_path, dry_run=False):
         out_string = "{}\t{}".format(project_name, category_name)
 
         if not dry_run:
-            print(out_string, file=append_fh)
+            if not to_sql:
+                print(out_string, file=append_fh)
+            else:
+                database_utils.insert_project_into_database(proj_entry)
         else:
             print("{}: {} to {}".format("Dry run", out_string, project_path))
 
 
-def new_category(category_path, category_name, dry_run=False, silent_fail=False):
+def new_category(category_path, category_name, dry_run=False, silent_fail=False, to_sql=True):
     
     current_categories = get_categories(category_path)
 
@@ -91,7 +97,10 @@ def new_category(category_path, category_name, dry_run=False, silent_fail=False)
             print("Adding new category {} to {}".format(category_name, category_path))
 
             if not dry_run:
-                print(category_name, file=append_fh)
+                if not to_sql:
+                    print(category_name, file=append_fh)
+                else:
+                    database_utils.insert_category_into_database(category_name)
             else:
                 print("{}: {} to {}".format("Dry run", category_name, category_path))
 

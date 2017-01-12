@@ -81,7 +81,10 @@ def get_create_table_command(table_name, field_tuples, primary_key=None):
     return database_str.format(name=table_name, fields=field_str)
 
 
-def insert_category_into_database(cursor, category_entry):
+def insert_category_into_database(category_entry):
+
+    conn = get_connection()
+    cursor = conn.cursor()
 
     category_values = str(category_entry).split('\t')
     category_value_string = ','.format(category_values)
@@ -92,9 +95,13 @@ def insert_category_into_database(cursor, category_entry):
     print("Command: {}".format(command_str))
 
     cursor.execute(command_str)
+    conn.close()
 
 
-def insert_project_into_database(cursor, project_entry):
+def insert_project_into_database(project_entry):
+
+    conn = get_connection()
+    cursor = conn.cursor()
 
     project_name = project_entry.name
     project_cat = project_entry.category
@@ -105,6 +112,7 @@ def insert_project_into_database(cursor, project_entry):
         .format(table_name=PROJECT_TABLE, values=value_string)
 
     cursor.execute(command_str)
+    conn.close()
 
 
 def insert_time_entry_into_database(cursor, te, verbose=False):
