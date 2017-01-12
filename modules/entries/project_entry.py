@@ -8,6 +8,7 @@ Main class representing a project entry
 import ogi_config
 
 from modules.entries.time_entry import TimeEntry
+from modules.database import database_utils
 
 
 class ProjectEntry:
@@ -23,20 +24,27 @@ class ProjectEntry:
         self.entries = TimeEntry.parse_log_to_entries(entry_path, project=self.name)
 
     @staticmethod
-    def parse_log_to_projects(log_path):
+    def parse_log_to_projects(log_path, use_sql=True):
 
         """Return list of project objects based on log path"""
 
         projects = list()
 
-        with open(log_path) as in_fh:
-            for line in in_fh:
-                line = line.rstrip()
+        project_str = list()
+        if not use_sql:
+            with open(log_path) as in_fh:
+                for line in in_fh:
+                    line = line.rstrip()
+                    project_str.append(line)
+        else:
+            project_str = database_utils.get_projects_as_strings()
 
-                project, category = line.split('\t')
-                proj_entry = ProjectEntry(project, category)
+        for line in project_str:
+            project, category = line.split('\t')
+            proj_entry = ProjectEntry(project, category)
 
-                projects.append(proj_entry)
+            projects.append(proj_entry)
+
         return projects
 
     @staticmethod

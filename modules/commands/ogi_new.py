@@ -105,14 +105,18 @@ def new_category(category_path, category_name, dry_run=False, silent_fail=False,
                 print("{}: {} to {}".format("Dry run", category_name, category_path))
 
 
-def get_categories(cat_path):
+def get_categories(cat_path, use_sql=True):
 
     categories = list()
-    with open(cat_path) as in_fh:
-        for line in in_fh:
-            line = line.rstrip()
 
-            categories.append(line)
+    if not use_sql:
+        with open(cat_path) as in_fh:
+            for line in in_fh:
+                line = line.rstrip()
+                categories.append(line)
+    else:
+        categories = database_utils.get_categories_as_strings()
+
     return categories
 
 

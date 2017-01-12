@@ -86,15 +86,13 @@ def insert_category_into_database(category_entry):
     conn = get_connection()
     cursor = conn.cursor()
 
-    category_values = str(category_entry).split('\t')
-    category_value_string = ','.format(category_values)
+    command_str = 'INSERT INTO {table_name} VALUES (?)'\
+        .format(table_name=CATEGORY_TABLE)
 
-    command_str = 'INSERT INTO {table_name} VALUES ({values})'\
-        .format(table_name=CATEGORY_TABLE, values=category_value_string)
+    params = (category_entry,)
 
-    print("Command: {}".format(command_str))
-
-    cursor.execute(command_str)
+    cursor.execute(command_str, params)
+    conn.commit()
     conn.close()
 
 
@@ -103,15 +101,13 @@ def insert_project_into_database(project_entry):
     conn = get_connection()
     cursor = conn.cursor()
 
-    project_name = project_entry.name
-    project_cat = project_entry.category
+    params = (project_entry.name, project_entry.category)
 
-    value_string = '{name}, {category}'.format(name=project_name, category=project_cat)
+    command_str = 'INSERT INTO {table_name} VALUES (?, ?)'\
+        .format(table_name=PROJECT_TABLE)
 
-    command_str = 'INSERT INTO {table_name} VALUES {{values}}'\
-        .format(table_name=PROJECT_TABLE, values=value_string)
-
-    cursor.execute(command_str)
+    cursor.execute(command_str, params)
+    conn.commit()
     conn.close()
 
 
@@ -138,7 +134,7 @@ def get_categories_as_strings(sep="\t"):
     conn = get_connection()
     c = conn.cursor()
     c.execute('SELECT * FROM categories')
-    category_strings = sql_tuples_to_delimited_strings(c.fetchall())
+    category_strings = sql_tuples_to_delimited_strings(c.fetchall(), delim=sep)
     return category_strings
 
 
@@ -147,7 +143,7 @@ def get_projects_as_strings(sep="\t"):
     conn = get_connection()
     c = conn.cursor()
     c.execute('SELECT * FROM projects')
-    project_strings = sql_tuples_to_delimited_strings(c.fetchall())
+    project_strings = sql_tuples_to_delimited_strings(c.fetchall(), delim=sep)
     return project_strings
 
 
@@ -156,7 +152,7 @@ def get_time_entries_as_strings(sep="\t"):
     conn = get_connection()
     c = conn.cursor()
     c.execute('SELECT * FROM time_entries')
-    time_entry_strings = sql_tuples_to_delimited_strings(c.fetchall())
+    time_entry_strings = sql_tuples_to_delimited_strings(c.fetchall(), delim=sep)
     return time_entry_strings
 
 
