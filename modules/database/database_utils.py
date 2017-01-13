@@ -111,15 +111,20 @@ def insert_project_into_database(project_entry):
     conn.close()
 
 
-def insert_time_entry_into_database(cursor, te, verbose=False):
+def insert_time_entry_into_database(time_entry, verbose=False):
 
-    params = (te.date, te.time, te.log_type, te.focus, te.duration, te.message, te.project)
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    params = (time_entry.date, time_entry.time, time_entry.log_type, time_entry.focus, time_entry.duration, time_entry.message, time_entry.project)
     command_str = 'INSERT INTO {table_name} VALUES (?, ?, ?, ?, ?, ?, ?, NULL)'.format(table_name=ENTRY_TABLE)
 
     if verbose:
         print("Command to be executed: '{}'".format(command_str))
 
     cursor.execute(command_str, params)
+    conn.commit()
+    conn.close()
 
 
 def list_entries_in_table(cursor, table_name):

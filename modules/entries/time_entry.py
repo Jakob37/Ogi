@@ -39,7 +39,7 @@ class TimeEntry:
 
         self.verify_entry()
 
-    @classmethod 
+    @classmethod
     def load_from_string(cls, ogi_string):
 
         """Generate object from printed string"""

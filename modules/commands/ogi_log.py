@@ -103,10 +103,10 @@ def write_time_entry(time_entry, conf, write_to_database=False, dry_run=False):
 
         print("In write_time_entry")
 
-        sqlite_conn = database_utils.get_connection()
+        # sqlite_conn = database_utils.get_connection()
 
-        database_utils.insert_time_entry_into_database(sqlite_conn.cursor(), time_entry)
+        database_utils.insert_time_entry_into_database(time_entry)
 
-        database_utils.close_connection(sqlite_conn, commit_changes=True)
+        # database_utils.close_connection(sqlite_conn, commit_changes=True)
 
 

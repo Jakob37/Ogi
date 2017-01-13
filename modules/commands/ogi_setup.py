@@ -10,6 +10,7 @@ from modules.utils import prompt_utils
 DRY_RUN = False
 
 from modules.database import database_utils
+from modules.entries.time_entry import TimeEntry
 import ogi_config
 
 
@@ -26,6 +27,9 @@ def main(args):
         conf = ogi_config.get_config()
         test_path = conf.get('file_paths', 'database')
         database_utils.setup_database(test_path)
+
+        if args.database_from_tsv:
+            load_entries_from_tsv(args.database_from_tsv)
 
         print("Test done, exiting...")
         sys.exit(0)
@@ -156,4 +160,14 @@ def setup_config_file_settings(config):
     config.add_section('settings')
     config.set('settings', 'default_log_type', chosen_log_type)
     config.set('settings', 'block_duration', work_length)
+
+
+def load_entries_from_tsv(tsv_path):
+
+    with open(tsv_path) as in_fh:
+        for line in in_fh:
+            line = line.rstrip()
+            time_entry = TimeEntry.load_from_string(line)
+            database_utils.insert_time_entry_into_database(time_entry)
+
 

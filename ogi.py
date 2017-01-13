@@ -105,6 +105,7 @@ def parse_setup(subparsers_object):
 
     subparser.add_argument('--dry_run', action='store_true')
     subparser.add_argument('--database_test', action='store_true')
+    subparser.add_argument('--database_from_tsv')
 
 
 if __name__ == "__main__":
