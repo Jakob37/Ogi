@@ -11,6 +11,8 @@ DRY_RUN = False
 
 from modules.database import database_utils
 from modules.entries.time_entry import TimeEntry
+from modules.entries.project_entry import ProjectEntry
+from modules.entries.category_entry import CategoryEntry
 import ogi_config
 
 
@@ -22,14 +24,16 @@ def main(args):
     if args.database_test:
         print("Database test only")
 
-        # test_path = 'test.sqlite3'
-
         conf = ogi_config.get_config()
         test_path = conf.get('file_paths', 'database')
         database_utils.setup_database(test_path)
 
-        if args.database_from_tsv:
-            load_entries_from_tsv(args.database_from_tsv)
+        if args.database_from_tsvs:
+
+            time_entry_tsv = conf.get('file_paths', 'data')
+            project_tsv = conf.get('file_paths', 'projects')
+            category_tsv = conf.get('file_paths', 'categories')
+            load_entries_from_tsvs(time_entry_tsv, project_tsv, category_tsv)
 
         print("Test done, exiting...")
         sys.exit(0)
@@ -162,12 +166,18 @@ def setup_config_file_settings(config):
     config.set('settings', 'block_duration', work_length)
 
 
-def load_entries_from_tsv(tsv_path):
+def load_entries_from_tsvs(time_entry_tsv, project_tsv, category_tsv):
 
-    with open(tsv_path) as in_fh:
+    with open(time_entry_tsv) as in_fh:
         for line in in_fh:
             line = line.rstrip()
             time_entry = TimeEntry.load_from_string(line)
             database_utils.insert_time_entry_into_database(time_entry)
 
+    proj_entries = ProjectEntry.parse_log_to_projects(project_tsv, use_sql=False)
+    for proj in proj_entries:
+        database_utils.insert_project_into_database(proj)
 
+    cat_entries = CategoryEntry.parse_log_to_categories(category_tsv)
+    for cat in cat_entries:
+        database_utils.insert_category_into_database(cat)

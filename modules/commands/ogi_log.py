@@ -36,7 +36,7 @@ def main(args):
     write_time_entry(time_entry, conf, write_to_database=True, dry_run=args.dry_run)
 
     print("Entry written, done for now (fix before merging back into master)")
-    sys.exit(0)
+    # sys.exit(0)
 
     project_exists = ProjectEntry.check_project_exists(time_entry.project, project_path)
     if not project_exists:

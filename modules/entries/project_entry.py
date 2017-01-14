@@ -26,8 +26,6 @@ class ProjectEntry:
     @staticmethod
     def parse_log_to_projects(log_path, use_sql=True):
 
-        """Return list of project objects based on log path"""
-
         projects = list()
 
         project_str = list()

@@ -13,6 +13,8 @@ def main(args):
     conf = ogi_config.get_config()
     output_path = conf.get("file_paths", "data")
 
+    print("Path: " + output_path)
+
     if args.list_type == 'projects':
         list_projects(conf)
     elif args.list_type == 'categories':
