@@ -39,7 +39,7 @@ class ProjectEntry:
         return projects
 
     @staticmethod
-    def check_project_exists(project_name, project_path):
+    def check_project_exists(project_name):
 
         project_entries = ProjectEntry.get_project_list()
         project_names = [project.name for project in project_entries]

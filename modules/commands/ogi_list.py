@@ -18,9 +18,10 @@ def main(args):
     print("Path: " + output_path)
 
     if args.list_type == 'projects':
-        list_projects(conf)
+        list_projects()
+        sys.exit(0)
     elif args.list_type == 'categories':
-        list_categories(conf)
+        list_categories()
         sys.exit(0)
     elif args.list_type == 'date_range':
 
@@ -111,7 +112,7 @@ def list_date_range(time_entries, start_date, end_date):
             print("* {} ({} minutes)".format(message, duration))
 
 
-def list_projects(conf):
+def list_projects():
 
     project_list = ProjectEntry.get_project_list()
 
@@ -119,7 +120,7 @@ def list_projects(conf):
         print(proj)
 
 
-def list_categories(conf):
+def list_categories():
 
     print("list_categories")
 
@@ -130,10 +131,3 @@ def list_categories(conf):
     for cat in category_list:
         print(cat)
 
-    # cat_path = conf.get("file_paths", "categories")
-    # print("Categories currently saved in: {}".format(cat_path))
-    #
-    # with open(cat_path) as in_fh:
-    #     for line in in_fh:
-    #         line = line.rstrip()
-    #         print(line)

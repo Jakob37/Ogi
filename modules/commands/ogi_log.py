@@ -19,10 +19,6 @@ def main(args):
 
     log_type = setup_log_type(conf, args.log_type)
 
-    output_path = conf.get("file_paths", "data")
-    project_path = conf.get("file_paths", "projects")
-    category_path = conf.get("file_paths", "categories")
-
     time_entry = TimeEntry(log_type,
                            args.message,
                            args.focus,
@@ -36,9 +32,8 @@ def main(args):
     write_time_entry(time_entry, conf, write_to_database=True, dry_run=args.dry_run)
 
     print("Entry written, done for now (fix before merging back into master)")
-    # sys.exit(0)
 
-    project_exists = ProjectEntry.check_project_exists(time_entry.project, project_path)
+    project_exists = ProjectEntry.check_project_exists(time_entry.project)
     if not project_exists:
         create_string = "{} does not exist, do you want to create it? ".format(time_entry.project)
         create_project = prompt_utils.prompt_yes_no(create_string)
@@ -52,19 +47,7 @@ def main(args):
         if category is None:
             category = "uncategorized"
 
-        ogi_new.new_project(project_path, category_path, category=category, project_name=time_entry.project)
-
-    # write_time_entry(time_entry, conf, write_to_database=True, dry_run=args.dry_run)
-
-    # with open(output_path, 'a') as append_fh:
-    #
-    #     if not args.dry_run:
-    #         print(time_entry, file=append_fh)
-    #     else:
-    #         print("{}: {} to {}".format("Dry run", time_entry, output_path))
-    #
-    #     print("Following entry written to {}".format(output_path))
-    #     print(time_entry)
+        ogi_new.new_project(category=category, project_name=time_entry.project)
 
 
 def setup_log_type(conf, args_log_type=None):
@@ -84,12 +67,9 @@ def setup_log_type(conf, args_log_type=None):
 
 def write_time_entry(time_entry, conf, write_to_database=False, dry_run=False):
 
-    # sql_path = conf.get('file_paths', 'data_base')
-
     if not write_to_database:
 
         output_path = conf.get('file_paths', 'data_base')
-
         with open(output_path, 'a') as append_fh:
 
             if not dry_run:
@@ -103,10 +83,5 @@ def write_time_entry(time_entry, conf, write_to_database=False, dry_run=False):
 
         print("In write_time_entry")
 
-        # sqlite_conn = database_utils.get_connection()
-
         database_utils.insert_time_entry_into_database(time_entry)
-
-        # database_utils.close_connection(sqlite_conn, commit_changes=True)
-
 

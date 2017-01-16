@@ -5,6 +5,7 @@ import sys
 from modules.utils import prompt_utils
 import ogi_config
 from modules.entries.project_entry import ProjectEntry
+from modules.entries.category_entry import CategoryEntry
 from modules.database import database_utils
 
 
@@ -15,28 +16,23 @@ def main(args):
     if args.dry_run:
         print("DRY RUN - Simulated run, but nothing written")
 
-    projects_path = conf.get("file_paths", "projects")
-    cat_path = conf.get("file_paths", "categories")
-
     if args.object_type == "project":
-
-        new_project(projects_path, cat_path, args.name, args.category, dry_run=args.dry_run)
+        new_project(args.name, args.category, dry_run=args.dry_run)
 
     elif args.object_type == "category":
-        
         if args.category:
             print("--category flag ignored as it only is applicable for projects")
 
         new_category(args.name, dry_run=args.dry_run)
 
 
-def new_project(projects_path, category_path, project_name=None, category=None, dry_run=False):
+def new_project(project_name=None, category=None, dry_run=False):
 
     if project_name is None:
         proj_string = "Enter project name (empty to abort): "
         project_name = prompt_utils.prompt_for_name(proj_string)
 
-    project_exists = ProjectEntry.check_project_exists(project_name, projects_path)
+    project_exists = ProjectEntry.check_project_exists(project_name)
 
     if project_exists:
         print("Project already exists! Try again with another name.")
@@ -46,7 +42,7 @@ def new_project(projects_path, category_path, project_name=None, category=None, 
         cat_string = "Enter category for {} (empty for 'uncategorized'): ".format(project_name)
         category = prompt_utils.prompt_for_name(cat_string, default='uncategorized')
 
-    cats = get_categories(category_path)
+    cats = CategoryEntry.get_category_list()
 
     if category not in cats:
 
@@ -58,25 +54,19 @@ def new_project(projects_path, category_path, project_name=None, category=None, 
             sys.exit(0)
 
     new_category(category, silent_fail=True, dry_run=dry_run)
-    write_new_project(project_name, category, projects_path, dry_run=dry_run)
+    write_new_project(project_name, category, dry_run=dry_run)
 
 
-def write_new_project(project_name, category_name, project_path, dry_run=False, to_sql=True):
+def write_new_project(project_name, category_name, dry_run=False):
 
     proj_entry = ProjectEntry(project_name, category_name)
+    print("Adding project {} with category {}".format(project_name, category_name))
+    out_string = "{}\t{}".format(project_name, category_name)
 
-    with open(project_path, 'a') as append_fh:
-        print("Adding project {} with category {} to {}".format(project_name, category_name, project_path))
-
-        out_string = "{}\t{}".format(project_name, category_name)
-
-        if not dry_run:
-            if not to_sql:
-                print(out_string, file=append_fh)
-            else:
-                database_utils.insert_project_into_database(proj_entry)
-        else:
-            print("{}: {} to {}".format("Dry run", out_string, project_path))
+    if not dry_run:
+        database_utils.insert_project_into_database(proj_entry)
+    else:
+        print("{}: {}".format("Dry run", out_string))
 
 
 def new_category(category_name, dry_run=False, silent_fail=False):
