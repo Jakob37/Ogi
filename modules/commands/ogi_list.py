@@ -86,25 +86,25 @@ def list_project_summary(time_entries, start_date, end_date):
 
 def list_date_range(time_entries, start_date, end_date):
 
-    target_entries_dict = dict()
+    target_entries_tuples_dict = dict()
 
     print("Logged entries in date range {} to {}".format(start_date, end_date))
 
     for entry in time_entries:
         
-        if target_entries_dict.get(entry.project) is None:
-            target_entries_dict[entry.project] = [(entry.message, entry.duration, entry.date)]
+        if target_entries_tuples_dict.get(entry.project) is None:
+            target_entries_tuples_dict[entry.project] = [(entry.message, entry.duration, entry.date)]
         else:
-            target_entries_dict[entry.project].append((entry.message, entry.duration, entry.date))
+            target_entries_tuples_dict[entry.project].append((entry.message, entry.duration, entry.date))
 
-    for proj in sorted(target_entries_dict):
+    for proj in sorted(target_entries_tuples_dict):
 
-        if len(target_entries_dict[proj]) == 0:
+        if len(target_entries_tuples_dict[proj]) == 0:
             continue
 
         print("Project: {}".format(proj))
 
-        for entry in target_entries_dict[proj]:
+        for entry in target_entries_tuples_dict[proj]:
             message = entry[0]
             duration = entry[1]
             date = entry[2]
