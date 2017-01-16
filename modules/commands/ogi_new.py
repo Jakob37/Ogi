@@ -57,7 +57,7 @@ def new_project(projects_path, category_path, project_name=None, category=None, 
             print("User aborted")
             sys.exit(0)
 
-    new_category(ategory, silent_fail=True, dry_run=dry_run)
+    new_category(category, silent_fail=True, dry_run=dry_run)
     write_new_project(project_name, category, projects_path, dry_run=dry_run)
 
 
