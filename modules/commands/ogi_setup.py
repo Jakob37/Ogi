@@ -4,7 +4,6 @@ import os
 import sys
 import configparser
 
-import ogi_config
 from modules.utils import prompt_utils
 
 DRY_RUN = False
@@ -174,10 +173,10 @@ def load_entries_from_tsvs(time_entry_tsv, project_tsv, category_tsv):
             time_entry = TimeEntry.load_from_string(line)
             database_utils.insert_time_entry_into_database(time_entry)
 
-    proj_entries = ProjectEntry.parse_log_to_projects(project_tsv, use_sql=False)
+    proj_entries = ProjectEntry.get_project_list()
     for proj in proj_entries:
         database_utils.insert_project_into_database(proj)
 
-    cat_entries = CategoryEntry.parse_log_to_categories(category_tsv)
+    cat_entries = CategoryEntry.get_category_list()
     for cat in cat_entries:
         database_utils.insert_category_into_database(cat)

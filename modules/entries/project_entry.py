@@ -24,18 +24,11 @@ class ProjectEntry:
         self.entries = TimeEntry.parse_log_to_entries(entry_path, project=self.name)
 
     @staticmethod
-    def parse_log_to_projects(log_path, use_sql=True):
+    def get_project_list():
 
         projects = list()
 
-        project_str = list()
-        if not use_sql:
-            with open(log_path) as in_fh:
-                for line in in_fh:
-                    line = line.rstrip()
-                    project_str.append(line)
-        else:
-            project_str = database_utils.get_projects_as_strings()
+        project_str = database_utils.get_projects_as_strings()
 
         for line in project_str:
             project, category = line.split('\t')
@@ -48,7 +41,7 @@ class ProjectEntry:
     @staticmethod
     def check_project_exists(project_name, project_path):
 
-        project_entries = ProjectEntry.parse_log_to_projects(project_path)
+        project_entries = ProjectEntry.get_project_list()
         project_names = [project.name for project in project_entries]
 
         return project_name in project_names

@@ -6,6 +6,8 @@ import ogi_config
 
 from modules.utils import utils
 from modules.entries.project_entry import TimeEntry
+from modules.entries.project_entry import ProjectEntry
+from modules.entries.category_entry import CategoryEntry
 
 
 def main(args):
@@ -19,6 +21,7 @@ def main(args):
         list_projects(conf)
     elif args.list_type == 'categories':
         list_categories(conf)
+        sys.exit(0)
     elif args.list_type == 'date_range':
 
         if not args.start_date:
@@ -110,21 +113,27 @@ def list_date_range(time_entries, start_date, end_date):
 
 def list_projects(conf):
 
-    proj_path = conf.get("file_paths", "projects")
-    print("Projects currently saved in: {}".format(proj_path))
+    project_list = ProjectEntry.get_project_list()
 
-    with open(proj_path) as in_fh:
-        for line in in_fh:
-            line = line.rstrip()
-            print(line)
+    for proj in project_list:
+        print(proj)
 
 
 def list_categories(conf):
 
-    cat_path = conf.get("file_paths", "categories")
-    print("Categories currently saved in: {}".format(cat_path))
+    print("list_categories")
 
-    with open(cat_path) as in_fh:
-        for line in in_fh:
-            line = line.rstrip()
-            print(line)
+    category_list = CategoryEntry.get_category_list()
+
+    print(category_list)
+
+    for cat in category_list:
+        print(cat)
+
+    # cat_path = conf.get("file_paths", "categories")
+    # print("Categories currently saved in: {}".format(cat_path))
+    #
+    # with open(cat_path) as in_fh:
+    #     for line in in_fh:
+    #         line = line.rstrip()
+    #         print(line)
