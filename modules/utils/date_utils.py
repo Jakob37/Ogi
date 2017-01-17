@@ -51,12 +51,21 @@ def get_start_of_week():
     return get_date_as_str(start)
 
 
-def is_month_in_range(start, end):
-    pass
+def get_start_of_month():
+
+    current_month = datetime.datetime.today().month
+    current_year = datetime.datetime.today().year
+    first_day = datetime.datetime(current_year, current_month, 1)
+
+    return get_date_as_str(first_day)
 
 
-def is_year_in_range(start, end):
-    pass
+def get_start_of_year():
+
+    current_year = datetime.datetime.today().year
+    first_day = datetime.datetime(current_year, 1, 1)
+
+    return get_date_as_str(first_day)
 
 
 def is_today_in_range(start, end):

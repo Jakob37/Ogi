@@ -60,9 +60,11 @@ def get_date_range_start(args):
         return date_utils.get_start_of_week()
         # return date_utils.get_previous_date(6)
     elif args.list_type == 'month':
-        return date_utils.get_previous_date(29)
+        return date_utils.get_start_of_month()
+        # return date_utils.get_previous_date(29)
     elif args.list_type == 'year':
-        return date_utils.get_previous_date(364)
+        return date_utils.get_start_of_year()
+        # return date_utils.get_previous_date(364)
     else:
         print("Unknown list type: {}".format(args.list_type))
         sys.exit(1)
