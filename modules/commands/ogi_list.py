@@ -84,7 +84,18 @@ def list_project_summary(time_entries, start_date, end_date):
     print("Projects\tTime".expandtabs(20))
     print("-" * 30)
     for proj in sorted(proj_dict, key=lambda x: proj_dict[x], reverse=True):
-        print("{0}\t{1}".format(proj, proj_dict[proj]).expandtabs(20))
+
+        time = proj_dict[proj]
+        if time < 60:
+            show_time = time
+            unit = "m"
+            prec = 0
+        else:
+            show_time = time / 60
+            unit = "h"
+            prec = 1
+
+        print("{0}\t{1:.{prec}f}{2}".format(proj, show_time, unit, prec=prec).expandtabs(20))
 
 
 def list_date_range(time_entries, start_date, end_date):
