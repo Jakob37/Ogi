@@ -74,7 +74,7 @@ def check_config_exists():
 def get_save_directory():
 
     save_dir_message = "\nPlease provide the directory where your Ogi data should be stored. " \
-                       "If you are planning on using Ogi on multiple devices, it is recommended" \
+                       "If you are planning on using Ogi on multiple devices, it is recommended " \
                        "to specify a synced folder, such as a Dropbox-folder.\nSave path: "
 
     save_dir = prompt_utils.prompt_for_path(save_dir_message, prompt_confirmation=True)
@@ -96,7 +96,7 @@ def ensure_dir(dir_path):
 def create_symlink():
 
     symlink_message = "\nProvide directory for symlink for easy access to 'ogi' command. " \
-                      "Leave empty if not desired (or on Windows system, for which symlinks aren't implemented yet." \
+                      "Leave empty if not desired (or on Windows system, for which symlinks aren't implemented yet. " \
                       "Symlink path: "
 
     symlink_path = prompt_utils.prompt_for_path(symlink_message, return_none_for_empty=True)
