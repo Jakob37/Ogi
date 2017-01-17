@@ -4,7 +4,7 @@ import sys
 
 import ogi_config
 
-from modules.utils import utils
+from modules.utils import date_utils
 from modules.entries.project_entry import TimeEntry
 from modules.entries.project_entry import ProjectEntry
 from modules.entries.category_entry import CategoryEntry
@@ -38,7 +38,7 @@ def main(args):
     if args.end_date:
         end_date = args.end_date
     else:
-        end_date = utils.get_current_date()
+        end_date = date_utils.get_current_date()
 
     time_entries = TimeEntry.parse_log_to_entries(output_path, start_date=start_date, end_date=end_date)
 
@@ -52,16 +52,17 @@ def main(args):
 
 def get_date_range_start(args):
 
-    current_date = utils.get_current_date()
+    current_date = date_utils.get_current_date()
 
     if args.list_type == 'day':
         return current_date
     elif args.list_type == 'week':
-        return utils.get_previous_date(6)
+        return date_utils.get_start_of_week()
+        # return date_utils.get_previous_date(6)
     elif args.list_type == 'month':
-        return utils.get_previous_date(29)
+        return date_utils.get_previous_date(29)
     elif args.list_type == 'year':
-        return utils.get_previous_date(364)
+        return date_utils.get_previous_date(364)
     else:
         print("Unknown list type: {}".format(args.list_type))
         sys.exit(1)

@@ -1,7 +1,7 @@
 import unittest
 import datetime
 
-from modules.utils import utils
+from modules.utils import date_utils
 
 
 class Test(unittest.TestCase):
@@ -13,7 +13,7 @@ class Test(unittest.TestCase):
     def test_get_current_date(self):
 
         current_date_string = "{0:%Y%m%d}".format(datetime.datetime.now())
-        utils_current_date = utils.get_current_date()
+        utils_current_date = date_utils.get_current_date()
         self.assertEqual(current_date_string, utils_current_date)
 
     def test_is_date_in_range(self):
@@ -22,7 +22,7 @@ class Test(unittest.TestCase):
         start = "161212"
         end = "181119"
 
-        self.assertTrue(utils.is_date_in_range(current, start, end))
+        self.assertTrue(date_utils.is_date_in_range(current, start, end))
 
 
 if __name__ == "__main__":

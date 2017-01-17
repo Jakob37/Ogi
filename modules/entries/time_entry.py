@@ -3,7 +3,7 @@ import re
 import sys
 
 import ogi_config
-from modules.utils import utils
+from modules.utils import date_utils
 from modules.database import database_utils
 
 """
@@ -176,7 +176,7 @@ class TimeEntry:
             entry = TimeEntry.load_from_string(line)
             if project is None or project == entry.project:
 
-                if utils.is_date_in_range(entry.date, start_date, end_date):
+                if date_utils.is_date_in_range(entry.date, start_date, end_date):
                     time_entries.append(entry)
 
         return time_entries
