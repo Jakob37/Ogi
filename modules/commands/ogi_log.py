@@ -36,7 +36,7 @@ def main(args):
     project_exists = ProjectEntry.check_project_exists(time_entry.project)
     if not project_exists:
         create_string = "{} does not exist, do you want to create it? ".format(time_entry.project)
-        create_project = prompt_utils.prompt_yes_no(create_string)
+        create_project = prompt_utils.prompt_yes_no(create_string, yes_default=True)
 
         if not create_project:
             print("User aborted, try again")
