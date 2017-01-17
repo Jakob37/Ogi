@@ -73,8 +73,8 @@ def parse_list(subparsers_object):
     subparser.add_argument('list_type', choices=list_options)
 
     subparser.add_argument('--summary', '-s', help='Show a condensed format', action='store_true')
-    subparser.add_argument('--start_date', help='Show a condensed format')
-    subparser.add_argument('--end_date', help='Show a condensed format')
+    subparser.add_argument('--start_date', help='Custom start date for date_range')
+    subparser.add_argument('--end_date', help='Custom end date for date_range')
 
 
 def parse_new(subparsers_object):

@@ -11,8 +11,6 @@ from modules.database import database_utils
 
 def main(args):
 
-    conf = ogi_config.get_config()
-
     if args.dry_run:
         print("DRY RUN - Simulated run, but nothing written")
 

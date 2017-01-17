@@ -120,7 +120,7 @@ def list_projects():
     project_list = ProjectEntry.get_project_list()
 
     for proj in project_list:
-        print(proj)
+        print(str(proj).expandtabs(20))
 
 
 def list_categories():
