@@ -53,13 +53,17 @@ def get_date_range_start(args):
         return current_date
     elif args.list_type == 'week':
         return date_utils.get_start_of_week()
-        # return date_utils.get_previous_date(6)
+    elif args.list_type == 'prev_days':
+
+        if not args.number:
+            print("prev_days option requires you to specify --number or -n flag")
+            sys.exit(1)
+
+        return date_utils.get_previous_date(args.number)
     elif args.list_type == 'month':
         return date_utils.get_start_of_month()
-        # return date_utils.get_previous_date(29)
     elif args.list_type == 'year':
         return date_utils.get_start_of_year()
-        # return date_utils.get_previous_date(364)
     else:
         print("Unknown list type: {}".format(args.list_type))
         sys.exit(1)
