@@ -12,11 +12,6 @@ from modules.entries.category_entry import CategoryEntry
 
 def main(args):
 
-    conf = ogi_config.get_config()
-    output_path = conf.get("file_paths", "data")
-
-    print("Path: " + output_path)
-
     if args.list_type == 'projects':
         list_projects()
         sys.exit(0)
@@ -40,7 +35,7 @@ def main(args):
     else:
         end_date = date_utils.get_current_date()
 
-    time_entries = TimeEntry.parse_log_to_entries(output_path, start_date=start_date, end_date=end_date)
+    time_entries = TimeEntry.parse_log_to_entries(start_date=start_date, end_date=end_date)
 
     print("Number time entries: {}".format(len(time_entries)))
 

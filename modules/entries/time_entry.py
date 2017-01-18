@@ -157,20 +157,20 @@ class TimeEntry:
                     project=self.project)
 
     @staticmethod
-    def parse_log_to_entries(log_path, project=None, start_date=None, end_date=None, from_sql=True):
+    def parse_log_to_entries(project=None, start_date=None, end_date=None):
 
         """Return list of entries based on log file"""
 
-        time_entries_str = list()
-        time_entries = list()
+        # time_entries_str = list()
 
-        if not from_sql:
-            with open(log_path) as in_fh:
-                for line in in_fh:
-                    line = line.rstrip()
-                    time_entries_str.append(line)
-        else:
-            time_entries_str = database_utils.get_time_entries_as_strings()
+        # if not from_sql:
+        #     with open(log_path) as in_fh:
+        #         for line in in_fh:
+        #             line = line.rstrip()
+        #             time_entries_str.append(line)
+        # else:
+        time_entries = list()
+        time_entries_str = database_utils.get_time_entries_as_strings()
 
         for line in time_entries_str:
             entry = TimeEntry.load_from_string(line)

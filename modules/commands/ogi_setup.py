@@ -24,15 +24,8 @@ def main(args):
         print("Database test only")
 
         conf = ogi_config.get_config()
-        test_path = conf.get('file_paths', 'database')
+        test_path = conf.get('file_paths', 'sql_path')
         database_utils.setup_database(test_path)
-
-        if args.database_from_tsvs:
-
-            time_entry_tsv = conf.get('file_paths', 'data')
-            project_tsv = conf.get('file_paths', 'projects')
-            category_tsv = conf.get('file_paths', 'categories')
-            load_entries_from_tsvs(time_entry_tsv, project_tsv, category_tsv)
 
         print("Test done, exiting...")
         sys.exit(0)

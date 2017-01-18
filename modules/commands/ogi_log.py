@@ -69,7 +69,7 @@ def write_time_entry(time_entry, conf, write_to_database=False, dry_run=False):
 
     if not write_to_database:
 
-        output_path = conf.get('file_paths', 'data_base')
+        output_path = conf.get('file_paths', 'sql_path')
         with open(output_path, 'a') as append_fh:
 
             if not dry_run:

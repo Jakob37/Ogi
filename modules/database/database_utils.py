@@ -46,7 +46,7 @@ def setup_database(database_path, dry_run=False):
 def get_connection():
 
     conf = ogi_config.get_config()
-    db_path = conf.get('file_paths', 'database')
+    db_path = conf.get('file_paths', 'sql_path')
 
     conn = sqlite3.connect(db_path)
     return conn
