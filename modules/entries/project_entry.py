@@ -20,8 +20,8 @@ class ProjectEntry:
         self.category = category
         self.entries = []
 
-    def load_entries(self, entry_path):
-        self.entries = TimeEntry.parse_log_to_entries(entry_path, project=self.name)
+    def load_entries(self):
+        self.entries = TimeEntry.parse_log_to_entries(project=self.name)
 
     @staticmethod
     def get_project_list():
@@ -48,6 +48,9 @@ class ProjectEntry:
 
     def get_total_time(self, start_date=None, end_date=None):
 
+        if len(self.entries) == 0:
+            self.load_entries()
+
         if start_date is None:
             start_date = '00000000'
 
@@ -60,7 +63,7 @@ class ProjectEntry:
                 time_entries.append(entry)
 
         # time_entries = [entry.duration for entry in self.entries]
-        return sum(time_entries)
+        return sum([entry.duration for entry in time_entries])
 
     def __str__(self):
 

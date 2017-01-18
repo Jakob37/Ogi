@@ -85,3 +85,17 @@ def get_week_from_str(date_str):
 
     date_obj = get_datestr_as_date(date_str)
     return date_obj.isocalendar()[1]
+
+
+def get_nice_time_string(minutes):
+
+    if minutes < 60:
+        show_time = minutes
+        unit = "m"
+        prec = 0
+    else:
+        show_time = minutes / 60
+        unit = "h"
+        prec = 1
+
+    return '{time:.{prec}f}{unit}'.format(time=show_time, prec=prec, unit=unit)

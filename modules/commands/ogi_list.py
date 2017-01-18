@@ -85,16 +85,8 @@ def list_project_summary(time_entries, start_date, end_date):
     for proj in sorted(proj_dict, key=lambda x: proj_dict[x], reverse=True):
 
         time = proj_dict[proj]
-        if time < 60:
-            show_time = time
-            unit = "m"
-            prec = 0
-        else:
-            show_time = time / 60
-            unit = "h"
-            prec = 1
-
-        print("{0}\t{1:.{prec}f}{2}".format(proj, show_time, unit, prec=prec).expandtabs(20))
+        time_string = date_utils.get_nice_time_string(time)
+        print('{}\t{}'.format(proj, time_string).expandtabs(20))
 
 
 def list_date_range(time_entries, start_date, end_date):
@@ -129,8 +121,12 @@ def list_projects():
 
     project_list = ProjectEntry.get_project_list()
 
-    for proj in project_list:
-        print(str(proj).expandtabs(20))
+    print('{}\t{}\t{}'.format('Project', 'Category', 'Spent time').expandtabs(20))
+    print('-' * 50)
+
+    for proj in sorted(project_list, key=lambda x: x.get_total_time(), reverse=True):
+        time_string = date_utils.get_nice_time_string(proj.get_total_time())
+        print("{}\t{}".format(str(proj), time_string).expandtabs(20))
 
 
 def list_categories():
