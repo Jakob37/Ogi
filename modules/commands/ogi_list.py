@@ -42,7 +42,7 @@ def main(args):
     if args.summary:
         list_project_summary(time_entries, start_date, end_date)
     else:
-        list_date_range(time_entries, start_date, end_date)
+        list_date_range(start_date, end_date)
 
 
 def get_date_range_start(args):
@@ -89,32 +89,23 @@ def list_project_summary(time_entries, start_date, end_date):
         print('{}\t{}'.format(proj, time_string).expandtabs(20))
 
 
-def list_date_range(time_entries, start_date, end_date):
-
-    target_entries_tuples_dict = dict()
+def list_date_range(start_date, end_date):
 
     print("Logged entries in date range {} to {}".format(start_date, end_date))
 
-    for entry in time_entries:
-        
-        if target_entries_tuples_dict.get(entry.project) is None:
-            target_entries_tuples_dict[entry.project] = [(entry.message, entry.duration, entry.date)]
-        else:
-            target_entries_tuples_dict[entry.project].append((entry.message, entry.duration, entry.date))
+    projects = ProjectEntry.get_project_list()
 
-    for proj in sorted(target_entries_tuples_dict):
+    for proj in sorted(projects, key=lambda x: x.get_total_time(start_date, end_date), reverse=True):
 
-        if len(target_entries_tuples_dict[proj]) == 0:
-            continue
+        if proj.get_total_time(start_date, end_date) > 0:
 
-        print("Project: {}".format(proj))
+            proj_tot_time = date_utils.get_nice_time_string(proj.get_total_time(start_date, end_date))
+            print("Project: {} ({})".format(proj.name, proj_tot_time))
+            time_entries = proj.get_entries(start_date, end_date)
 
-        for entry in target_entries_tuples_dict[proj]:
-            message = entry[0]
-            duration = entry[1]
-            date = entry[2]
-
-            print("* {} ({} minutes)".format(message, duration))
+            for entry in sorted(time_entries, key=lambda x: x.date + x.time):
+                nice_time = date_utils.get_nice_time_string(entry.duration)
+                print("* {}\t{}\t{}\t{}".format(nice_time, entry.date, entry.time, entry.message).expandtabs(10))
 
 
 def list_projects():

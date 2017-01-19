@@ -23,11 +23,23 @@ class ProjectEntry:
     def load_entries(self):
         self.entries = TimeEntry.parse_log_to_entries(project=self.name)
 
+    def get_entries(self, start_date=None, end_date=None):
+        if len(self.entries) == 0:
+            self.load_entries()
+
+        if start_date is None:
+            start_date = "0000000000"
+
+        if end_date is None:
+            end_date = "9999999999"
+
+        filtered_list = [entry for entry in self.entries if start_date <= entry.date <= end_date]
+        return filtered_list
+
     @staticmethod
     def get_project_list():
 
         projects = list()
-
         project_str = database_utils.get_projects_as_strings()
 
         for line in project_str:
@@ -59,7 +71,7 @@ class ProjectEntry:
 
         time_entries = list()
         for entry in self.entries:
-            if start_date < entry.date < end_date:
+            if start_date <= entry.date <= end_date:
                 time_entries.append(entry)
 
         # time_entries = [entry.duration for entry in self.entries]

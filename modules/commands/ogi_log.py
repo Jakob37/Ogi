@@ -82,8 +82,4 @@ def write_time_entry(time_entry, conf, write_to_database=False, dry_run=False):
             print("Following entry written to {}".format(output_path))
             print(time_entry)
     else:
-
-        print("In write_time_entry")
-
         database_utils.insert_time_entry_into_database(time_entry)
-
