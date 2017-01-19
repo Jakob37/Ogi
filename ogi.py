@@ -46,7 +46,7 @@ def parse_log(subparsers_object):
                            nargs='?')
     subparser.add_argument('-m', '--message',
                            help='Description of performed task during logged time',
-                           required=True)
+                           default="")
 
     subparser.add_argument('-t', '--time', default=None,
                            help="Format: HHMM, defaults to current time")

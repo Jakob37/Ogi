@@ -27,12 +27,6 @@ def main(args):
                            args.project,
                            args.duration)
 
-    print("Ready to attempt writing time entry")
-
-    write_time_entry(time_entry, conf, write_to_database=True, dry_run=args.dry_run)
-
-    print("Entry written, done for now (fix before merging back into master)")
-
     project_exists = ProjectEntry.check_project_exists(time_entry.project)
     if not project_exists:
         create_string = "{} does not exist, do you want to create it? ".format(time_entry.project)
@@ -47,7 +41,15 @@ def main(args):
         if category is None:
             category = "uncategorized"
 
-        ogi_new.new_project(category=category, project_name=time_entry.project)
+        if not args.dry_run:
+            ogi_new.new_project(category=category, project_name=time_entry.project)
+        else:
+            print("Dry run, would write project {} with category {}".format(time_entry.project, category))
+
+    if not args.dry_run:
+        write_time_entry(time_entry, conf, write_to_database=True, dry_run=args.dry_run)
+    else:
+        print("DR, would write {}".format(time_entry))
 
 
 def setup_log_type(conf, args_log_type=None):
