@@ -57,7 +57,7 @@ def setup_log_type(conf, args_log_type=None):
     if args_log_type is None:
 
         conf_log_type = conf.get('settings', 'default_log_type')
-        print("Reading log type from config {}".format(conf_log_type))
+
         if conf_log_type not in TimeEntry.VALID_LOG_TYPES:
             raise Exception("Log type in config ({}) not valid log type ({})"
                             .format(conf_log_type, TimeEntry.VALID_LOG_TYPES))
@@ -82,4 +82,6 @@ def write_time_entry(time_entry, conf, write_to_database=False, dry_run=False):
             print("Following entry written to {}".format(output_path))
             print(time_entry)
     else:
+        print('Writing new time entry to project "{}" at time {} with message "{}"'
+              .format(time_entry.project, time_entry.time, time_entry.message))
         database_utils.insert_time_entry_into_database(time_entry)
