@@ -142,17 +142,6 @@ class TimeEntry:
             raise Exception("Project must fulfil pattern: {}, found: {}"
                             .format(self.PROJECT_PATTERN, self.project))
 
-    def __str__(self):
-
-        return '{date}\t{time}\t{log_type}\t{focus}\t{duration}\t{message}\t{project}' \
-            .format(date=self.date,
-                    time=self.time,
-                    log_type=self.log_type,
-                    focus=self.focus,
-                    duration=self.duration,
-                    message=self.message,
-                    project=self.project)
-
     @staticmethod
     def get_time_entries(project=None, start_date=None, end_date=None):
 
@@ -169,3 +158,18 @@ class TimeEntry:
                     time_entries.append(entry)
 
         return time_entries
+
+    def __str__(self):
+        self.str(delim="\t")
+
+    def str(self, delim="\t"):
+
+        return '{date}{d}{time}{d}{log_type}{d}{focus}{d}{duration}{d}{message}{d}{project}' \
+            .format(date=self.date,
+                    time=self.time,
+                    log_type=self.log_type,
+                    focus=self.focus,
+                    duration=self.duration,
+                    message=self.message,
+                    project=self.project,
+                    d=delim)

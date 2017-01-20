@@ -74,9 +74,12 @@ class ProjectEntry:
             if start_date <= entry.date <= end_date:
                 time_entries.append(entry)
 
-        # time_entries = [entry.duration for entry in self.entries]
         return sum([entry.duration for entry in time_entries])
 
     def __str__(self):
+        return self.str(delim="\t")
 
-        return '{name}\t{category}'.format(name=self.name, category=self.category)
+    def str(self, delim="\t"):
+
+        return '{name}{delim}{category}'.format(name=self.name,
+                                                delim=delim, category=self.category)

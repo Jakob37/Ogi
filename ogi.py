@@ -7,6 +7,7 @@ from modules.commands import ogi_log
 from modules.commands import ogi_new
 from modules.commands import ogi_setup
 from modules.commands import ogi_list
+from modules.commands import ogi_write
 
 CONF_NAME = "ogi.conf"
 sysdir = os.path.dirname(os.path.realpath(__file__))
@@ -28,6 +29,7 @@ def parse_arguments():
     parse_list(subparsers)
     parse_new(subparsers)
     parse_setup(subparsers)
+    parse_write(subparsers)
 
     args = parser.parse_args()
 
@@ -93,6 +95,22 @@ def parse_new(subparsers_object):
     subparser.add_argument('-n', '--name')
     subparser.add_argument('-c', '--category')
     subparser.add_argument('--dry_run', action='store_true')
+
+
+def parse_write(subparsers_object):
+
+    """Subparser for output writing command"""
+
+    def ogi_write_func(args):
+        ogi_write.main(args)
+
+    subparser = subparsers_object.add_parser('write')
+    subparser.set_defaults(func=ogi_write_func)
+
+    subparser.add_argument('--time_entries')
+    subparser.add_argument('--projects')
+    subparser.add_argument('--categories')
+    subparser.add_argument('--delim', default='\t')
 
 
 def parse_setup(subparsers_object):
