@@ -158,6 +158,7 @@ def get_time_entries_as_strings(sep="\t"):
     c = conn.cursor()
     c.execute('SELECT * FROM time_entries')
     time_entry_strings = sql_tuples_to_delimited_strings(c.fetchall(), delim=sep)
+    conn.close()
     return time_entry_strings
 
 
@@ -173,3 +174,20 @@ def sql_tuples_to_delimited_strings(sql_tuples, delim="\t"):
     return del_strings
 
 
+def get_last_time_entry_string():
+
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('SELECT * FROM time_entries WHERE name_id = (SELECT MAX(name_id) FROM time_entries)')
+    entry_string = sql_tuples_to_delimited_strings(c.fetchall(), delim='\t')
+    conn.close()
+    return entry_string
+
+
+def delete_last_time_entry():
+
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('DELETE FROM time_entries WHERE name_id = (SELECT MAX(name_id) FROM time_entries)')
+    conn.commit()
+    conn.close()
