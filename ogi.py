@@ -73,6 +73,7 @@ def parse_list(subparsers_object):
     subparser.add_argument('list_type', choices=list_options)
 
     subparser.add_argument('--summary', '-s', help='Show a condensed format', action='store_true')
+    subparser.add_argument('--limited', '-l', help='Show only time entries', action='store_true')
     subparser.add_argument('--start_date', help='Custom start date for date_range')
     subparser.add_argument('--end_date', help='Custom end date for date_range')
     subparser.add_argument('--number', '-n', help='Number of entires for prev_days option', type=int)

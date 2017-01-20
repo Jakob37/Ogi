@@ -154,7 +154,7 @@ class TimeEntry:
                     project=self.project)
 
     @staticmethod
-    def parse_log_to_entries(project=None, start_date=None, end_date=None):
+    def get_time_entries(project=None, start_date=None, end_date=None):
 
         """Return list of entries based on log file"""
 

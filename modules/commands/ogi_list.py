@@ -35,12 +35,14 @@ def main(args):
     else:
         end_date = date_utils.get_current_date()
 
-    time_entries = TimeEntry.parse_log_to_entries(start_date=start_date, end_date=end_date)
+    time_entries = TimeEntry.get_time_entries(start_date=start_date, end_date=end_date)
 
     print("Number time entries: {}".format(len(time_entries)))
 
     if args.summary:
         list_project_summary(time_entries, start_date, end_date)
+    elif args.limited:
+        list_date_range_entries_only(start_date, end_date)
     else:
         list_date_range(start_date, end_date)
 
@@ -103,9 +105,25 @@ def list_date_range(start_date, end_date):
             print("Project: {} ({})".format(proj.name, proj_tot_time))
             time_entries = proj.get_entries(start_date, end_date)
 
-            for entry in sorted(time_entries, key=lambda x: x.date + x.time):
-                nice_time = date_utils.get_nice_time_string(entry.duration)
-                print("* {}\t{}\t{}\t{}".format(nice_time, entry.date, entry.time, entry.message).expandtabs(10))
+            print_time_sorted_entries(time_entries)
+
+
+def list_date_range_entries_only(start_date, end_date):
+
+    """Output list of entries within target range, without grouping on project"""
+
+    print("Logged entries in date range {} to {}".format(start_date, end_date))
+    time_entries = TimeEntry.get_time_entries(start_date=start_date, end_date=end_date)
+    print_time_sorted_entries(time_entries)
+
+
+def print_time_sorted_entries(time_entries):
+
+    """Output given list of time entries in time sorted format"""
+
+    for entry in sorted(time_entries, key=lambda x: x.date + x.time):
+        nice_time = date_utils.get_nice_time_string(entry.duration)
+        print("* {}\t{}\t{}\t{}".format(nice_time, entry.date, entry.time, entry.message).expandtabs(10))
 
 
 def list_projects():

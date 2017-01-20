@@ -21,7 +21,7 @@ class ProjectEntry:
         self.entries = []
 
     def load_entries(self):
-        self.entries = TimeEntry.parse_log_to_entries(project=self.name)
+        self.entries = TimeEntry.get_time_entries(project=self.name)
 
     def get_entries(self, start_date=None, end_date=None):
         if len(self.entries) == 0:
