@@ -8,6 +8,7 @@ from modules.commands import ogi_new
 from modules.commands import ogi_setup
 from modules.commands import ogi_list
 from modules.commands import ogi_write
+from modules.commands import ogi_edit
 
 CONF_NAME = "ogi.conf"
 sysdir = os.path.dirname(os.path.realpath(__file__))
@@ -30,6 +31,7 @@ def parse_arguments():
     parse_new(subparsers)
     parse_setup(subparsers)
     parse_write(subparsers)
+    parse_edit(subparsers)
 
     args = parser.parse_args()
 
@@ -126,6 +128,22 @@ def parse_setup(subparsers_object):
     subparser.add_argument('--dry_run', action='store_true')
     subparser.add_argument('--database_test', action='store_true')
     subparser.add_argument('--database_from_tsvs', action='store_true')
+
+
+def parse_edit(subparsers_object):
+
+    """Setup command"""
+
+    def ogi_edit_func(args):
+        ogi_edit.main(args)
+
+    subparser = subparsers_object.add_parser('edit')
+    subparser.set_defaults(func=ogi_edit_func)
+
+    edit_options = ['amend_last_entry']
+    subparser.add_argument('edit_type', choices=edit_options)
+
+    subparser.add_argument('--dry_run', action='store_true')
 
 
 if __name__ == "__main__":

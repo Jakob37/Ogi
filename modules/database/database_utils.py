@@ -181,7 +181,7 @@ def get_last_time_entry_string():
     c.execute('SELECT * FROM time_entries WHERE name_id = (SELECT MAX(name_id) FROM time_entries)')
     entry_string = sql_tuples_to_delimited_strings(c.fetchall(), delim='\t')
     conn.close()
-    return entry_string
+    return entry_string[0]
 
 
 def delete_last_time_entry():
