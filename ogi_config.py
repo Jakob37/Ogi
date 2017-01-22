@@ -1,5 +1,6 @@
 import os
 import configparser
+import sys
 
 CONF_NAME = "ogi.conf"
 
@@ -17,6 +18,24 @@ if config_exists:
 def check_config_exists():
 
     return config_exists
+
+
+def check_database_exists():
+
+    if not check_config_exists():
+        print("Config file not found, not able to check database")
+        sys.exit(1)
+
+    db_path = config.get('file_paths', 'sql_path')
+
+    db_exists = os.path.isfile(db_path)
+
+    if db_exists:
+        return True
+    else:
+        print('Database not found at specified path: {}'.format(db_path))
+        print('Please setup this properly by running the \'ogi setup\' command')
+        sys.exit(1)
 
 
 def get_config_path():
