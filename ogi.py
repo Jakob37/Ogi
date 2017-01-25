@@ -42,6 +42,8 @@ def parse_arguments():
 
 def verify_files_setup(args):
 
+    print("In verify")
+
     conf_exists = ogi_config.check_config_exists()
     conf_path = ogi_config.get_config_path()
 
@@ -50,7 +52,19 @@ def verify_files_setup(args):
         print("You need to set this up, either manually or by running the command './ogi setup'")
         sys.exit(1)
 
+    expected_field_not_present = ogi_config.get_expected_field_not_present()
+
+    if len(expected_field_not_present) > 0:
+        print("Configuration file lacks following required fields")
+        for field in expected_field_not_present:
+            print("Category: {} Value: {}".format(field[0], field[1]))
+        sys.exit(1)
+
+
     print(conf_exists)
+
+    # -> Check config file is valid - Containing required fields
+    # -> Check that the database is set up - That the file actually exists
 
     return False
 
@@ -148,7 +162,11 @@ def parse_setup(subparsers_object):
 
     subparser.add_argument('--dry_run', action='store_true')
     subparser.add_argument('--database_test', action='store_true')
+
     subparser.add_argument('--database_from_tsvs', action='store_true')
+    subparser.add_argument('--time_entries')
+    subparser.add_argument('--project_entries')
+    subparser.add_argument('--category_entries')
 
 
 def parse_edit(subparsers_object):

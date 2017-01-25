@@ -20,19 +20,6 @@ def main(args):
     if args.dry_run:
         print("DRY RUN - Simulated run, but nothing written")
 
-    if args.database_test:
-        print("Database test only")
-
-        conf = ogi_config.get_config()
-        test_path = conf.get('file_paths', 'sql_path')
-        database_utils.setup_database(test_path)
-
-        print("Test done, exiting...")
-        sys.exit(0)
-
-    global DRY_RUN
-    DRY_RUN = args.dry_run
-
     check_config_exists()
 
     save_base_dir = get_save_directory()
@@ -41,6 +28,30 @@ def main(args):
     create_symlink()
 
     setup_config_file(save_base_dir)
+
+    print("Setting up database...")
+    conf = ogi_config.get_config(force_reload=True)
+    database_path = conf.get('file_paths', 'sql_path')
+    database_utils.setup_database(database_path)
+
+    if args.database_from_tsvs:
+        te = args.time_entries
+        pe = args.project_entries
+        ce = args.category_entries
+
+        if te is not None and pe is not None and ce is not None:
+            print("Loading previous entries from tsvs")
+            load_entries_from_tsvs(te, pe, ce)
+
+            time_entries = len(TimeEntry.get_time_entries())
+            proj_entries = len(ProjectEntry.get_project_list())
+            cat_entries = len(CategoryEntry.get_category_list())
+            print("{} time entries, {} project entries and {} category entries loaded"
+                  .format(time_entries, proj_entries, cat_entries))
+        else:
+            print("You need to specify --time_entries, --project_entries and --category_entries"
+                  " to load data from TSV files")
+            sys.exit(1)
 
     print("All done!")
 
@@ -89,7 +100,7 @@ def ensure_dir(dir_path):
 def create_symlink():
 
     symlink_message = "\nProvide directory for symlink for easy access to 'ogi' command. " \
-                      "Leave empty if not desired (or on Windows system, for which symlinks aren't implemented yet. " \
+                      "Leave empty if not desired (or on Windows system, for which symlinks aren't implemented yet.) " \
                       "Symlink path: "
 
     symlink_path = prompt_utils.prompt_for_path(symlink_message, return_none_for_empty=True)
@@ -110,12 +121,11 @@ def setup_config_file(base_save_dir, dry_run=False):
     config = configparser.RawConfigParser()
 
     config.add_section('file_paths')
-    config.set('file_paths', 'data_base', base_save_dir)
-    config.set('file_paths', 'data', '%(data_base)s/ogi_data.tsv')
-    config.set('file_paths', 'projects', '%(data_base)s/projects.tsv')
-    config.set('file_paths', 'categories', '%(data_base)s/categories.tsv')
-
-    config.set('file_paths', 'database', '%(data_base)s/ogi_data.sqlite')
+    config.set('file_paths', 'sql_path', '%(output_base)s/ogi_data.sqlite')
+    config.set('file_paths', 'output_base', base_save_dir)
+    # config.set('file_paths', 'data', '%(data_base)s/ogi_data.tsv')
+    # config.set('file_paths', 'projects', '%(data_base)s/projects.tsv')
+    # config.set('file_paths', 'categories', '%(data_base)s/categories.tsv')
 
     setup_config_file_settings(config)
     ogi_base_dir = ogi_config.get_base_dir()
@@ -166,10 +176,22 @@ def load_entries_from_tsvs(time_entry_tsv, project_tsv, category_tsv):
             time_entry = TimeEntry.load_from_string(line)
             database_utils.insert_time_entry_into_database(time_entry)
 
-    proj_entries = ProjectEntry.get_project_list()
-    for proj in proj_entries:
-        database_utils.insert_project_into_database(proj)
+    with open(project_tsv) as in_fh:
+        for line in in_fh:
+            line = line.rstrip()
+            proj_entry = ProjectEntry.load_from_string(line)
+            database_utils.insert_project_into_database(proj_entry)
 
-    cat_entries = CategoryEntry.get_category_list()
-    for cat in cat_entries:
-        database_utils.insert_category_into_database(cat)
+    with open(category_tsv) as in_fh:
+        for line in in_fh:
+            line = line.rstrip()
+            cat_entry = CategoryEntry.load_from_string(line)
+            database_utils.insert_category_into_database(cat_entry)
+
+    # proj_entries = ProjectEntry.get_project_list()
+    # for proj in proj_entries:
+    #     database_utils.insert_project_into_database(proj)
+    #
+    # cat_entries = CategoryEntry.get_category_list()
+    # for cat in cat_entries:
+    #     database_utils.insert_category_into_database(cat)

@@ -89,7 +89,10 @@ def insert_category_into_database(category_entry):
     command_str = 'INSERT INTO {table_name} VALUES (?)'\
         .format(table_name=CATEGORY_TABLE)
 
-    params = (category_entry,)
+    params = (category_entry.name,)
+
+    print(command_str)
+    print(params)
 
     cursor.execute(command_str, params)
     conn.commit()

@@ -20,6 +20,17 @@ class ProjectEntry:
         self.category = category
         self.entries = []
 
+    @classmethod
+    def load_from_string(cls, project_string):
+
+        """Generate object from tab-delimited string"""
+
+        fields = project_string.split('\t')
+        project_name = fields[0]
+        category = fields[1]
+        new_obj = cls(project_name, category=category)
+        return new_obj
+
     def load_entries(self):
         self.entries = TimeEntry.get_time_entries(project=self.name)
 
