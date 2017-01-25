@@ -55,8 +55,6 @@ def prompt_for_path(prompt_text, prompt_confirmation=True, return_none_for_empty
     choice = prompt_for_string(prompt_text, return_none_for_empty=return_none_for_empty)
 
     if choice is None and return_none_for_empty:
-
-        print("Returning none for empty")
         return None
 
     full_path = os.path.abspath(choice)
@@ -80,8 +78,6 @@ def prompt_for_string(prompt_text, return_none_for_empty=False, default=None):
     if choice == '':
 
         if return_none_for_empty:
-
-            print("return none for empty")
             return None
 
         elif default is None:

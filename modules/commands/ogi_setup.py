@@ -6,13 +6,13 @@ import configparser
 
 from modules.utils import prompt_utils
 
-DRY_RUN = False
-
 from modules.database import database_utils
 from modules.entries.time_entry import TimeEntry
 from modules.entries.project_entry import ProjectEntry
 from modules.entries.category_entry import CategoryEntry
 import ogi_config
+
+DRY_RUN = False
 
 
 def main(args):
@@ -26,32 +26,11 @@ def main(args):
     ensure_dir(save_base_dir)
 
     create_symlink()
-
     setup_config_file(save_base_dir)
-
-    print("Setting up database...")
-    conf = ogi_config.get_config(force_reload=True)
-    database_path = conf.get('file_paths', 'sql_path')
-    database_utils.setup_database(database_path)
+    setup_database()
 
     if args.database_from_tsvs:
-        te = args.time_entries
-        pe = args.project_entries
-        ce = args.category_entries
-
-        if te is not None and pe is not None and ce is not None:
-            print("Loading previous entries from tsvs")
-            load_entries_from_tsvs(te, pe, ce)
-
-            time_entries = len(TimeEntry.get_time_entries())
-            proj_entries = len(ProjectEntry.get_project_list())
-            cat_entries = len(CategoryEntry.get_category_list())
-            print("{} time entries, {} project entries and {} category entries loaded"
-                  .format(time_entries, proj_entries, cat_entries))
-        else:
-            print("You need to specify --time_entries, --project_entries and --category_entries"
-                  " to load data from TSV files")
-            sys.exit(1)
+        enter_tsvs_to_database(args)
 
     print("All done!")
 
@@ -123,9 +102,6 @@ def setup_config_file(base_save_dir, dry_run=False):
     config.add_section('file_paths')
     config.set('file_paths', 'sql_path', '%(output_base)s/ogi_data.sqlite')
     config.set('file_paths', 'output_base', base_save_dir)
-    # config.set('file_paths', 'data', '%(data_base)s/ogi_data.tsv')
-    # config.set('file_paths', 'projects', '%(data_base)s/projects.tsv')
-    # config.set('file_paths', 'categories', '%(data_base)s/categories.tsv')
 
     setup_config_file_settings(config)
     ogi_base_dir = ogi_config.get_base_dir()
@@ -143,7 +119,7 @@ def setup_config_file(base_save_dir, dry_run=False):
 def setup_config_file_settings(config):
 
     log_type_string = "\nWhat is your preferred default logging unit? pomo (25 minutes) or block (custom length): "
-    chosen_log_type = prompt_utils.prompt_for_name(log_type_string)
+    chosen_log_type = prompt_utils.prompt_for_name(log_type_string, return_none_for_empty=True)
 
     if chosen_log_type not in ['pomo', 'block']:
         print("Only valid are 'pomo' and 'block', set to block for now")
@@ -188,10 +164,38 @@ def load_entries_from_tsvs(time_entry_tsv, project_tsv, category_tsv):
             cat_entry = CategoryEntry.load_from_string(line)
             database_utils.insert_category_into_database(cat_entry)
 
-    # proj_entries = ProjectEntry.get_project_list()
-    # for proj in proj_entries:
-    #     database_utils.insert_project_into_database(proj)
-    #
-    # cat_entries = CategoryEntry.get_category_list()
-    # for cat in cat_entries:
-    #     database_utils.insert_category_into_database(cat)
+
+def setup_database():
+
+    """Setup SQLite database with tables used by Ogi at path specified by config file"""
+
+    print("Setting up database...")
+    conf = ogi_config.get_config(force_reload=True)
+    database_path = conf.get('file_paths', 'sql_path')
+    database_utils.setup_database(database_path)
+    print("Database written to {}".format(database_path))
+
+
+def enter_tsvs_to_database(args):
+
+    """Insert entries from tsv-files to database"""
+
+    te = args.time_entries
+    pe = args.project_entries
+    ce = args.category_entries
+
+    if te is not None and pe is not None and ce is not None:
+        print("Loading previous entries from tsvs")
+        load_entries_from_tsvs(te, pe, ce)
+
+        time_entries = len(TimeEntry.get_time_entries())
+        proj_entries = len(ProjectEntry.get_project_list())
+        cat_entries = len(CategoryEntry.get_category_list())
+        print("{} time entries, {} project entries and {} category entries loaded"
+              .format(time_entries, proj_entries, cat_entries))
+    else:
+        print("You need to specify --time_entries, --project_entries and --category_entries"
+              " to load data from TSV files")
+        sys.exit(1)
+
+

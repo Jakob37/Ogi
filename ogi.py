@@ -20,7 +20,9 @@ sysdir = os.path.dirname(os.path.realpath(__file__))
 def parse_arguments():
 
     def default_func(args):
-        print("Must specify tool (ogi <tool>)")
+        print("Must specify tool (ogi <tool>)"
+              "\nIf it is the first time you run Ogi, it is recommended to run the 'ogi setup' command to set up a "
+              "config file and to initialize the SQLite database.\n")
         parser.print_help()
         exit(1)
 
@@ -59,9 +61,6 @@ def verify_files_setup(args):
         for field in expected_field_not_present:
             print("Category: {} Value: {}".format(field[0], field[1]))
         sys.exit(1)
-
-
-    print(conf_exists)
 
     # -> Check config file is valid - Containing required fields
     # -> Check that the database is set up - That the file actually exists
