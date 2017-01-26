@@ -69,7 +69,7 @@ class ProjectEntry:
 
         return project_name in project_names
 
-    def get_total_time(self, start_date=None, end_date=None):
+    def get_total_time(self, start_date=None, end_date=None, in_hours=False):
 
         if len(self.entries) == 0:
             self.load_entries()
@@ -85,7 +85,12 @@ class ProjectEntry:
             if start_date <= entry.date <= end_date:
                 time_entries.append(entry)
 
-        return sum([entry.duration for entry in time_entries])
+        minutes = sum([entry.duration for entry in time_entries])
+
+        if in_hours:
+            return float("{0:.2f}".format(minutes / 60))
+        else:
+            return minutes
 
     def __str__(self):
         return self.str(delim="\t")

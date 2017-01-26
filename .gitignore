@@ -5,6 +5,7 @@
 *.old
 *.sqlite
 *.sqlite3
+*.png
 
 # Directories
 data/
