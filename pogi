@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+
+import argparse
+import os
+import sys
+
+# from modules.commands import ogi_log
+# from modules.commands import ogi_new
+# from modules.commands import ogi_setup
+# from modules.commands import ogi_list
+# from modules.commands import ogi_write
+# from modules.commands import ogi_edit
+
+from modules.commands import pogi_test
+
+import ogi_config
+
+CONF_NAME = "ogi.conf"
+sysdir = os.path.dirname(os.path.realpath(__file__))
+
+
+def parse_arguments():
+
+    def default_func(args):
+        print("Must specify tool (ogi <tool>)"
+              "\nIf it is the first time you run Ogi, it is recommended to run the 'ogi setup' command to set up a "
+              "config file and to initialize the SQLite database.\n")
+        parser.print_help()
+        exit(1)
+
+    parser = argparse.ArgumentParser()
+    parser.set_defaults(func=default_func)
+
+    subparsers = parser.add_subparsers(help='Commands:')
+
+    parse_test(subparsers)
+
+    args = parser.parse_args()
+    args.func(args)
+
+
+def parse_test(subparsers_object):
+
+    """Subparser for new command"""
+
+    def ogi_new_func(args):
+        pogi_test.main(args)
+
+    subparser = subparsers_object.add_parser('test')
+    subparser.set_defaults(func=ogi_new_func, which='test')
+
+    # subparser.add_argument('object_type', choices=['first', 'second'], default='first')
+    subparser.add_argument('--dry_run', action='store_true')
+
+if __name__ == "__main__":
+    parse_arguments()
