@@ -11,7 +11,7 @@ import sys
 # from modules.commands import ogi_write
 # from modules.commands import ogi_edit
 
-from modules.commands import pogi_test
+from modules.commands import pogi_show_week
 
 import ogi_config
 
@@ -33,25 +33,25 @@ def parse_arguments():
 
     subparsers = parser.add_subparsers(help='Commands:')
 
-    parse_test(subparsers)
+    parse_show_week(subparsers)
 
     args = parser.parse_args()
     args.func(args)
 
 
-def parse_test(subparsers_object):
+def parse_show_week(subparsers_object):
 
     """Subparser for new command"""
 
     def ogi_new_func(args):
-        pogi_test.main(args)
+        pogi_show_week.main(args)
 
-    subparser = subparsers_object.add_parser('test')
-    subparser.set_defaults(func=ogi_new_func, which='test')
+    subparser = subparsers_object.add_parser('show_week')
+    subparser.set_defaults(func=ogi_new_func, which='show_week')
 
-    # subparser.add_argument('object_type', choices=['first', 'second'], default='first')
+    # subparser.add_argument('object_type', choices=['show_week'])
     subparser.add_argument('--dry_run', action='store_true')
-    subparser.add_argument('--open_in_browser', action='store_true')
+    subparser.add_argument('--do_not_show', action='store_true')
 
 
 if __name__ == "__main__":
