@@ -103,6 +103,9 @@ def setup_config_file(base_save_dir, dry_run=False):
     config.set('file_paths', 'sql_path', '%(output_base)s/ogi_data.sqlite')
     config.set('file_paths', 'output_base', base_save_dir)
 
+    config.set('file_paths', 'figures', '%(output_base)s/figures')
+    config.set('file_paths', 'html', '%(output_base)s/ogi.html')
+
     setup_config_file_settings(config)
     ogi_base_dir = ogi_config.get_base_dir()
     conf_path = '{}/{}'.format(ogi_base_dir, 'ogi.conf')

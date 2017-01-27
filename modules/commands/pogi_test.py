@@ -3,19 +3,29 @@ import webbrowser
 import pandas as pd
 import sys
 
+import ogi_config
+
 
 from modules.entries.project_entry import ProjectEntry
-
 
 
 def main(args):
 
     print("Hello world!")
 
-    generate_plot()
+    conf = ogi_config.get_config()
+
+    barplot_path = '{}/{}'.format(conf.get('file_paths', 'figures'), 'barplot.png')
+    generate_plot(barplot_path)
+
+    html_path = conf.get('file_paths', 'html')
+    generate_html(html_path, barplot_path)
+
+    if args.open_in_browser:
+        open_in_browser(html_path)
 
 
-def generate_plot():
+def generate_plot(output_path):
 
     proj_list = ProjectEntry.get_project_list()
 
@@ -49,17 +59,29 @@ def generate_plot():
     print(box)
 
     barplot_fig = barplot.get_figure()
-    barplot_fig.savefig('test.png')
+    barplot_fig.savefig(output_path)
 
 
+def generate_html(output_fp, plot_fp):
+
+    html_string = """
+<html>
+<head>
+<title>Ogi title!</title>
+</head>
+<body>
+<p>Hello world!</p>
+<img src="{barplot}">
+</body>
+</html>
+        """.format(barplot=plot_fp)
+
+    with open(output_fp, 'w') as out_fh:
+
+        print(html_string, file=out_fh)
 
 
-def generate_html():
-
-    pass
-
-
-def open_in_browser():
+def open_in_browser(html_path):
 
     """
     For documentation of the webbrowser module,
@@ -67,11 +89,13 @@ def open_in_browser():
     """
     new = 2  # open in a new tab, if possible
 
+    webbrowser.open(html_path, new=new)
+
     # open a public URL, in this case, the webbrowser docs
-    url = "http://docs.python.org/library/webbrowser.html"
-    webbrowser.open(url, new=new)
+    # url = "http://docs.python.org/library/webbrowser.html"
+    # webbrowser.open(url, new=new)
 
     # open an HTML file on my own (Windows) computer
-    url = "file://X:/MiscDev/language_links.html"
-    webbrowser.open(url, new=new)
+    # url = "file://X:/MiscDev/language_links.html"
+    # webbrowser.open(url, new=new)
 

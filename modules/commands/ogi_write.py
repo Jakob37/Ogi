@@ -2,6 +2,7 @@ from modules.entries.time_entry import TimeEntry
 from modules.entries.project_entry import ProjectEntry
 from modules.entries.category_entry import CategoryEntry
 
+
 def main(args):
 
     print('hello!')

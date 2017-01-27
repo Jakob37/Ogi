@@ -51,6 +51,8 @@ def parse_test(subparsers_object):
 
     # subparser.add_argument('object_type', choices=['first', 'second'], default='first')
     subparser.add_argument('--dry_run', action='store_true')
+    subparser.add_argument('--open_in_browser', action='store_true')
+
 
 if __name__ == "__main__":
     parse_arguments()
