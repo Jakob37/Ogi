@@ -96,7 +96,6 @@ def list_date_range(start_date, end_date):
     print("Logged entries in date range {} to {}".format(start_date, end_date))
 
     projects = ProjectEntry.get_project_list()
-
     for proj in sorted(projects, key=lambda x: x.get_total_time(start_date, end_date), reverse=True):
 
         if proj.get_total_time(start_date, end_date) > 0:
