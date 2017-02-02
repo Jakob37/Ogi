@@ -13,6 +13,15 @@ a printed TimeEntry-object
 """
 
 
+class Dummy:
+
+    def __init__(self, content):
+        self.content = content
+
+    def __str__(self):
+        return self.content
+
+
 class TimeEntry:
 
     VALID_LOG_TYPES = ['pomo', 'block', 'session']
@@ -160,7 +169,8 @@ class TimeEntry:
         return time_entries
 
     def __str__(self):
-        self.str(delim="\t")
+
+        return self.str(delim="\t")
 
     def str(self, delim="\t"):
 

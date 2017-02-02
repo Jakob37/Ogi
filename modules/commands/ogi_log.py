@@ -9,8 +9,13 @@ from modules.entries.project_entry import ProjectEntry
 from modules.utils import prompt_utils
 from modules.database import database_utils
 
+from modules.entries.time_entry import Dummy
+
 
 def main(args):
+
+    my_dummy = Dummy("teststr")
+    print(my_dummy)
 
     conf = ogi_config.get_config()
 
@@ -21,11 +26,11 @@ def main(args):
 
     time_entry = TimeEntry(log_type,
                            args.message,
-                           args.focus,
-                           args.date,
-                           args.time,
-                           args.project,
-                           args.duration)
+                           focus=args.focus,
+                           date_str=args.date,
+                           time_str=args.time,
+                           project=args.project,
+                           duration=args.duration)
 
     project_exists = ProjectEntry.check_project_exists(time_entry.project)
     if not project_exists:
