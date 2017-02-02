@@ -4,14 +4,8 @@ import argparse
 import os
 import sys
 
-# from modules.commands import ogi_log
-# from modules.commands import ogi_new
-# from modules.commands import ogi_setup
-# from modules.commands import ogi_list
-# from modules.commands import ogi_write
-# from modules.commands import ogi_edit
-
 from modules.commands import pogi_show_week
+from modules.commands import pogi_week_summaries
 
 import ogi_config
 
@@ -34,6 +28,7 @@ def parse_arguments():
     subparsers = parser.add_subparsers(help='Commands:')
 
     parse_show_week(subparsers)
+    parse_week_summaries(subparsers)
 
     args = parser.parse_args()
     args.func(args)
@@ -43,15 +38,26 @@ def parse_show_week(subparsers_object):
 
     """Subparser for new command"""
 
-    def ogi_new_func(args):
+    def ogi_show_week_func(args):
         pogi_show_week.main(args)
 
     subparser = subparsers_object.add_parser('show_week')
-    subparser.set_defaults(func=ogi_new_func, which='show_week')
+    subparser.set_defaults(func=ogi_show_week_func, which='show_week')
 
     # subparser.add_argument('object_type', choices=['show_week'])
     subparser.add_argument('--dry_run', action='store_true')
     subparser.add_argument('--do_not_show', action='store_true')
+
+
+def parse_week_summaries(subparsers_object):
+
+    """Print brief week summary"""
+
+    def pogi_week_summaries_func(args):
+        pogi_week_summaries.main(args)
+
+    subparser = subparsers_object.add_parser('week_summaries')
+    subparser.set_defaults(func=pogi_week_summaries_func)
 
 
 if __name__ == "__main__":

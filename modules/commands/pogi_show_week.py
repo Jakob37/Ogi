@@ -4,6 +4,7 @@ import ogi_config
 from modules.plotting import barplots
 from modules.plotting import web_utils
 from modules.entries.time_entry import TimeEntry
+from modules.entries.project_entry import ProjectEntry
 from modules.utils import date_utils
 
 
@@ -51,3 +52,14 @@ def get_week_entries_html_lines():
         html_lines.append(entry_line_string)
 
     return html_lines
+
+
+
+
+
+
+
+
+
+
+
