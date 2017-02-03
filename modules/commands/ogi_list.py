@@ -9,6 +9,8 @@ from modules.entries.project_entry import TimeEntry
 from modules.entries.project_entry import ProjectEntry
 from modules.entries.category_entry import CategoryEntry
 
+from modules.utils import calc_utils
+
 
 def main(args):
 
@@ -81,8 +83,11 @@ def list_project_summary(time_entries, start_date, end_date):
         else:
             proj_dict[entry.project] += entry.duration
 
+    homogeneity = calc_utils.calculate_homogeneity_measure(start_date=start_date, end_date=end_date)
+
     print("Project summary for date range {} to {}".format(start_date, end_date))
-    print("Projects\tTime".expandtabs(20))
+    print("Time period homogeneity: {:.3f}".format(homogeneity))
+    print("\nProjects\tTime".expandtabs(20))
     print("-" * 30)
     for proj in sorted(proj_dict, key=lambda x: proj_dict[x], reverse=True):
 
