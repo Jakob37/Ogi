@@ -83,7 +83,8 @@ def new_category(category_name, dry_run=False, silent_fail=False):
         print("Adding new category {}".format(category_name))
 
         if not dry_run:
-            database_utils.insert_category_into_database(category_name)
+            new_category_entry = CategoryEntry(category_name)
+            database_utils.insert_category_into_database(new_category_entry)
         else:
             print("{}: {}".format("Dry run", category_name))
 
