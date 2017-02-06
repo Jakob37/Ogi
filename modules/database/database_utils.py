@@ -12,7 +12,8 @@ ENTRY_FIELDS = [('date_stamp', 'TEXT'),
                 ('focus', 'INTEGER'),
                 ('duration', 'INTEGER'),
                 ('message', 'TEXT'),
-                ('project', 'TEXT')]
+                ('project', 'TEXT'),
+                ('work_type', 'TEXT')]
 
 PROJECT_FIELDS = [('name', 'TEXT PRIMARY KEY'),
                   ('category', 'TEXT')]
@@ -119,8 +120,15 @@ def insert_time_entry_into_database(time_entry, verbose=False):
     conn = get_connection()
     cursor = conn.cursor()
 
-    params = (time_entry.date, time_entry.time, time_entry.log_type, time_entry.focus, time_entry.duration, time_entry.message, time_entry.project)
-    command_str = 'INSERT INTO {table_name} VALUES (?, ?, ?, ?, ?, ?, ?, NULL)'.format(table_name=ENTRY_TABLE)
+    params = (time_entry.date,
+              time_entry.time,
+              time_entry.log_type,
+              time_entry.focus,
+              time_entry.duration,
+              time_entry.message,
+              time_entry.project,
+              time_entry.work_type,)
+    command_str = 'INSERT INTO {table_name} VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL)'.format(table_name=ENTRY_TABLE)
 
     if verbose:
         print("Command to be executed: '{}'".format(command_str))
