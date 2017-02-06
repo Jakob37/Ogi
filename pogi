@@ -48,6 +48,8 @@ def parse_show_week(subparsers_object):
     subparser.add_argument('--dry_run', action='store_true')
     subparser.add_argument('--do_not_show', action='store_true')
 
+    subparser.add_argument('--open_new_window', action='store_true')
+
 
 def parse_week_summaries(subparsers_object):
 

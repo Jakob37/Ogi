@@ -23,13 +23,19 @@ def generate_html(output_fp, plot_fp, week_entries_html):
         print(html_string, file=out_fh)
 
 
-def open_in_browser(html_path):
+def open_in_browser(html_path, open_new_window=False):
 
     """
     For documentation of the webbrowser module,
     see http://docs.python.org/library/webbrowser.html
     """
-    new = 2  # open in a new tab, if possible
+
+    if open_new_window:
+        print('prevent new tab')
+        new = 1
+    else:
+        print('new tab')
+        new = 2  # open in a new tab, if possible
 
     webbrowser.open(html_path, new=new)
 

@@ -26,13 +26,12 @@ def main(args):
     web_utils.generate_html(html_path, barplot_path, week_entries_html)
 
     if not args.do_not_show:
-        web_utils.open_in_browser(html_path)
+        web_utils.open_in_browser(html_path, open_new_window=args.open_new_window)
 
 
 def get_week_entries_html_lines():
 
     entry_lines = list()
-
     time_entries = TimeEntry.get_time_entries(start_date=date_utils.get_start_of_week())
 
     for e in sorted(time_entries, key=lambda x: x.date + x.time):
