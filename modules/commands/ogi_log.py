@@ -30,7 +30,8 @@ def main(args):
                            date_str=args.date,
                            time_str=args.time,
                            project=args.project,
-                           duration=args.duration)
+                           duration=args.duration,
+                           work_type=args.work_type)
 
     project_exists = ProjectEntry.check_project_exists(time_entry.project)
     if not project_exists:

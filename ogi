@@ -89,8 +89,8 @@ def parse_log(subparsers_object):
                            help="Format: YYYYMMDD, defaults to current date")
     subparser.add_argument('-f', '--focus', default=100, type=int)
     subparser.add_argument('-u', '--duration', default=None)
-
     subparser.add_argument('-p', '--project', required=True)
+    subparser.add_argument('-w', '--work_type', default=None)
 
     subparser.add_argument('--testrun', action='store_true')
     subparser.add_argument('--dry_run', action='store_true')

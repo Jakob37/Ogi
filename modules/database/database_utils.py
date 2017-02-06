@@ -128,7 +128,7 @@ def insert_time_entry_into_database(time_entry, verbose=False):
               time_entry.message,
               time_entry.project,
               time_entry.work_type,)
-    command_str = 'INSERT INTO {table_name} VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL)'.format(table_name=ENTRY_TABLE)
+    command_str = 'INSERT INTO {table_name} VALUES (?, ?, ?, ?, ?, ?, ?, NULL, ?)'.format(table_name=ENTRY_TABLE)
 
     if verbose:
         print("Command to be executed: '{}'".format(command_str))
