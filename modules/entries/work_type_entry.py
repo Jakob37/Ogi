@@ -24,7 +24,15 @@ class WorkTypeEntry:
         return new_obj
 
     @staticmethod
+    def check_work_type_exists(work_type_name):
+
+        work_types = WorkTypeEntry.get_work_type_list()
+        work_type_names = [w.name for w in work_types]
+        return work_type_name in work_type_names
+
+    @staticmethod
     def get_work_type_list():
 
-        work_types = database_utils.get_work_types_as_strings()
+        work_type_strings = database_utils.get_work_types_as_strings()
+        work_types = [WorkTypeEntry(string) for string in work_type_strings]
         return work_types

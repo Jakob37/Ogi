@@ -148,6 +148,12 @@ def insert_work_type_entry_into_database(work_type_entry):
     command_str = 'INSERT INTO {table_name} VALUES (?)' \
         .format(table_name=WORK_TYPE_TABLE)
 
+    print(work_type_entry)
+    print(work_type_entry.name)
+
+    # import sys
+    # sys.exit(1)
+
     params = (work_type_entry.name,)
 
     print(command_str)

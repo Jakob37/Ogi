@@ -44,8 +44,6 @@ def parse_arguments():
 
 def verify_files_setup(args):
 
-    print("In verify")
-
     conf_exists = ogi_config.check_config_exists()
     conf_path = ogi_config.get_config_path()
 
