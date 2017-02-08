@@ -6,16 +6,12 @@ import ogi_config
 from modules.commands import ogi_new
 from modules.entries.time_entry import TimeEntry
 from modules.entries.project_entry import ProjectEntry
+from modules.entries.work_type_entry import WorkTypeEntry
 from modules.utils import prompt_utils
 from modules.database import database_utils
 
-from modules.entries.time_entry import Dummy
-
 
 def main(args):
-
-    my_dummy = Dummy("teststr")
-    print(my_dummy)
 
     conf = ogi_config.get_config()
 
@@ -30,7 +26,19 @@ def main(args):
                            date_str=args.date,
                            time_str=args.time,
                            project=args.project,
-                           duration=args.duration)
+                           duration=args.duration,
+                           work_type=args.work_type)
+
+    check_project(time_entry, dry_run=args.dry_run)
+    check_work_type(time_entry, dry_run=args.dry_run)
+
+    if not args.dry_run:
+        write_time_entry(time_entry, conf, write_to_database=True, dry_run=args.dry_run)
+    else:
+        print("DR, would write {}".format(time_entry))
+
+
+def check_project(time_entry, dry_run=False):
 
     project_exists = ProjectEntry.check_project_exists(time_entry.project)
     if not project_exists:
@@ -46,15 +54,29 @@ def main(args):
         if category is None:
             category = "uncategorized"
 
-        if not args.dry_run:
+        if not dry_run:
             ogi_new.new_project(category=category, project_name=time_entry.project)
         else:
             print("Dry run, would write project {} with category {}".format(time_entry.project, category))
 
-    if not args.dry_run:
-        write_time_entry(time_entry, conf, write_to_database=True, dry_run=args.dry_run)
-    else:
-        print("DR, would write {}".format(time_entry))
+
+def check_work_type(time_entry, dry_run=False):
+
+    """Verify whether assigned work type exists, and if not, ask if it should be added"""
+
+    worktype_exists = WorkTypeEntry.check_work_type_exists(time_entry.work_type)
+    if not worktype_exists:
+        create_string = "{} does not exist, do you want to create it? ".format(time_entry.work_type)
+        create_wt = prompt_utils.prompt_yes_no(create_string, yes_default=True)
+
+        if not create_wt:
+            print("User aborted, try again")
+            sys.exit(0)
+
+        if not dry_run:
+            ogi_new.new_work_type(work_type_name=time_entry.work_type)
+        else:
+            print("Dry run, would write work type {}".format(time_entry.work_type))
 
 
 def setup_log_type(conf, args_log_type=None):
@@ -87,6 +109,6 @@ def write_time_entry(time_entry, conf, write_to_database=False, dry_run=False):
             print("Following entry written to {}".format(output_path))
             print(time_entry)
     else:
-        print('Writing new time entry to project "{}" at time {} with message "{}"'
-              .format(time_entry.project, time_entry.time, time_entry.message))
+        print('Writing new time entry to project "{}" at time {} with message "{}" and work type "{}"'
+              .format(time_entry.project, time_entry.time, time_entry.message, time_entry.work_type))
         database_utils.insert_time_entry_into_database(time_entry)

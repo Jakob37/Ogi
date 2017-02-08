@@ -30,10 +30,11 @@ class TimeEntry:
     DATE_PATTERN = r'^\d{8}$'
     TIME_PATTERN = r'^\d{4}$'
     PROJECT_PATTERN = r'^.+$'
+    WORK_TYPE_PATTERN = r'^.+$'
     HEADER = ['Date', 'Time', 'Type', 'Focus', 'Duration', 'Message', 'Project']
 
     def __init__(self, log_type, message, focus=100, date_str=None,
-                 time_str=None, project=None, duration=None, quiet=False):
+                 time_str=None, project=None, duration=None, quiet=False, work_type=None):
 
         self.conf = ogi_config.get_config()
 
@@ -43,6 +44,7 @@ class TimeEntry:
         self.date = self.setup_date(date_str)
         self.time = self.setup_time(time_str)
         self.project = project
+        self.work_type = work_type
 
         self.duration = self.get_duration(log_type, duration, quiet=quiet)
 
@@ -151,6 +153,10 @@ class TimeEntry:
             raise Exception("Project must fulfil pattern: {}, found: {}"
                             .format(self.PROJECT_PATTERN, self.project))
 
+        if not re.match(self.WORK_TYPE_PATTERN, str(self.work_type)):
+            raise Exception("Work type must fulfil pattern: {}, found: {}"
+                            .format(self.WORK_TYPE_PATTERN, self.work_type))
+
     @staticmethod
     def get_time_entries(project=None, start_date=None, end_date=None):
 
@@ -174,7 +180,7 @@ class TimeEntry:
 
     def str(self, delim="\t"):
 
-        return '{date}{d}{time}{d}{log_type}{d}{focus}{d}{duration}{d}{message}{d}{project}' \
+        return '{date}{d}{time}{d}{log_type}{d}{focus}{d}{duration}{d}{message}{d}{project}{d}{work_type}' \
             .format(date=self.date,
                     time=self.time,
                     log_type=self.log_type,
@@ -182,4 +188,5 @@ class TimeEntry:
                     duration=self.duration,
                     message=self.message,
                     project=self.project,
+                    work_type=self.work_type,
                     d=delim)

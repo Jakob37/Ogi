@@ -5,6 +5,7 @@ import ogi_config
 ENTRY_TABLE = 'time_entries'
 PROJECT_TABLE = 'projects'
 CATEGORY_TABLE = 'categories'
+WORK_TYPE_TABLE = 'work_types'
 
 ENTRY_FIELDS = [('date_stamp', 'TEXT'),
                 ('time_stamp', 'TEXT'),
@@ -12,12 +13,12 @@ ENTRY_FIELDS = [('date_stamp', 'TEXT'),
                 ('focus', 'INTEGER'),
                 ('duration', 'INTEGER'),
                 ('message', 'TEXT'),
-                ('project', 'TEXT')]
-
+                ('project', 'TEXT'),
+                ('work_type', 'TEXT')]
 PROJECT_FIELDS = [('name', 'TEXT PRIMARY KEY'),
                   ('category', 'TEXT')]
-
 CATEGORY_FIELDS = [('name', 'TEXT PRIMARY KEY')]
+WORK_TYPE_FIELDS = [('name', 'TEXT PRIMARY KEY')]
 
 
 def setup_database(database_path, dry_run=False):
@@ -30,10 +31,12 @@ def setup_database(database_path, dry_run=False):
     create_entry_table = get_create_table_command(ENTRY_TABLE, ENTRY_FIELDS, primary_key='name_id')
     create_category_table = get_create_table_command(CATEGORY_TABLE, CATEGORY_FIELDS)
     create_project_table = get_create_table_command(PROJECT_TABLE, PROJECT_FIELDS)
+    create_work_type_table = get_create_table_command(WORK_TYPE_TABLE, WORK_TYPE_FIELDS)
 
     c.execute(create_entry_table)
     c.execute(create_category_table)
     c.execute(create_project_table)
+    c.execute(create_work_type_table)
 
     if not dry_run:
         conn.commit()
@@ -119,11 +122,42 @@ def insert_time_entry_into_database(time_entry, verbose=False):
     conn = get_connection()
     cursor = conn.cursor()
 
-    params = (time_entry.date, time_entry.time, time_entry.log_type, time_entry.focus, time_entry.duration, time_entry.message, time_entry.project)
-    command_str = 'INSERT INTO {table_name} VALUES (?, ?, ?, ?, ?, ?, ?, NULL)'.format(table_name=ENTRY_TABLE)
+    params = (time_entry.date,
+              time_entry.time,
+              time_entry.log_type,
+              time_entry.focus,
+              time_entry.duration,
+              time_entry.message,
+              time_entry.project,
+              time_entry.work_type,)
+    command_str = 'INSERT INTO {table_name} VALUES (?, ?, ?, ?, ?, ?, ?, NULL, ?)'.format(table_name=ENTRY_TABLE)
 
     if verbose:
         print("Command to be executed: '{}'".format(command_str))
+
+    cursor.execute(command_str, params)
+    conn.commit()
+    conn.close()
+
+
+def insert_work_type_entry_into_database(work_type_entry):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    command_str = 'INSERT INTO {table_name} VALUES (?)' \
+        .format(table_name=WORK_TYPE_TABLE)
+
+    print(work_type_entry)
+    print(work_type_entry.name)
+
+    # import sys
+    # sys.exit(1)
+
+    params = (work_type_entry.name,)
+
+    print(command_str)
+    print(params)
 
     cursor.execute(command_str, params)
     conn.commit()
@@ -143,7 +177,18 @@ def get_categories_as_strings(sep="\t"):
     c = conn.cursor()
     c.execute('SELECT * FROM categories')
     category_strings = sql_tuples_to_delimited_strings(c.fetchall(), delim=sep)
+    conn.close()
     return category_strings
+
+
+def get_work_types_as_strings(sep="\t"):
+
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('SELECT * FROM work_types')
+    work_type_strings = sql_tuples_to_delimited_strings(c.fetchall(), delim=sep)
+    conn.close()
+    return work_type_strings
 
 
 def get_projects_as_strings(sep="\t"):

@@ -44,8 +44,6 @@ def parse_arguments():
 
 def verify_files_setup(args):
 
-    print("In verify")
-
     conf_exists = ogi_config.check_config_exists()
     conf_path = ogi_config.get_config_path()
 
@@ -89,8 +87,8 @@ def parse_log(subparsers_object):
                            help="Format: YYYYMMDD, defaults to current date")
     subparser.add_argument('-f', '--focus', default=100, type=int)
     subparser.add_argument('-u', '--duration', default=None)
-
     subparser.add_argument('-p', '--project', required=True)
+    subparser.add_argument('-w', '--work_type', default=None)
 
     subparser.add_argument('--testrun', action='store_true')
     subparser.add_argument('--dry_run', action='store_true')
@@ -126,7 +124,7 @@ def parse_new(subparsers_object):
     subparser = subparsers_object.add_parser('new')
     subparser.set_defaults(func=ogi_new_func, which='new')
 
-    subparser.add_argument('object_type', choices=['project', 'category'])
+    subparser.add_argument('object_type', choices=['project', 'category', 'work_type'])
     subparser.add_argument('-n', '--name')
     subparser.add_argument('-c', '--category')
     subparser.add_argument('--dry_run', action='store_true')
