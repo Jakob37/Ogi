@@ -31,10 +31,12 @@ def setup_database(database_path, dry_run=False):
     create_entry_table = get_create_table_command(ENTRY_TABLE, ENTRY_FIELDS, primary_key='name_id')
     create_category_table = get_create_table_command(CATEGORY_TABLE, CATEGORY_FIELDS)
     create_project_table = get_create_table_command(PROJECT_TABLE, PROJECT_FIELDS)
+    create_work_type_table = get_create_table_command(WORK_TYPE_TABLE, WORK_TYPE_FIELDS)
 
     c.execute(create_entry_table)
     c.execute(create_category_table)
     c.execute(create_project_table)
+    c.execute(create_work_type_table)
 
     if not dry_run:
         conn.commit()

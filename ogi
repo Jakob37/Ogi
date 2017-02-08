@@ -126,7 +126,7 @@ def parse_new(subparsers_object):
     subparser = subparsers_object.add_parser('new')
     subparser.set_defaults(func=ogi_new_func, which='new')
 
-    subparser.add_argument('object_type', choices=['project', 'category'])
+    subparser.add_argument('object_type', choices=['project', 'category', 'work_type'])
     subparser.add_argument('-n', '--name')
     subparser.add_argument('-c', '--category')
     subparser.add_argument('--dry_run', action='store_true')

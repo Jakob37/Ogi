@@ -6,6 +6,7 @@ from modules.utils import prompt_utils
 import ogi_config
 from modules.entries.project_entry import ProjectEntry
 from modules.entries.category_entry import CategoryEntry
+from modules.entries.work_type_entry import WorkTypeEntry
 from modules.database import database_utils
 
 
@@ -22,6 +23,12 @@ def main(args):
             print("--category flag ignored as it only is applicable for projects")
 
         new_category(args.name, dry_run=args.dry_run)
+
+    elif args.object_type == "work_type":
+        new_work_type(args.name, dry_run=args.dry_run)
+
+    else:
+        print("Unknown object type: {}".format(args.object_type))
 
 
 def new_project(project_name=None, category=None, dry_run=False):
@@ -65,6 +72,31 @@ def write_new_project(project_name, category_name, dry_run=False):
         database_utils.insert_project_into_database(proj_entry)
     else:
         print("{}: {}".format("Dry run", out_string))
+
+
+def new_work_type(work_type_name, dry_run=False, silent_fail=False):
+
+    """Add new worktype to database"""
+
+    current_worktypes = WorkTypeEntry.get_work_type_list()
+
+    if work_type_name is None:
+        wt_string = "Enter work type (empty to abort): "
+        work_type_name = prompt_utils.prompt_for_name(wt_string)
+
+    if work_type_name in current_worktypes:
+        if not silent_fail:
+            print("Work type already exists!")
+            sys.exit(0)
+    else:
+        print("Adding new work type {}".format(work_type_name))
+
+        entry = WorkTypeEntry(work_type_name)
+
+        if not dry_run:
+            database_utils.insert_work_type_entry_into_database(entry)
+        else:
+            print("{}: {}".format("Dry run", entry))
 
 
 def new_category(category_name, dry_run=False, silent_fail=False):
