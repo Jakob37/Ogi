@@ -5,6 +5,7 @@ import ogi_config
 ENTRY_TABLE = 'time_entries'
 PROJECT_TABLE = 'projects'
 CATEGORY_TABLE = 'categories'
+WORK_TYPE_TABLE = 'work_types'
 
 ENTRY_FIELDS = [('date_stamp', 'TEXT'),
                 ('time_stamp', 'TEXT'),
@@ -14,11 +15,10 @@ ENTRY_FIELDS = [('date_stamp', 'TEXT'),
                 ('message', 'TEXT'),
                 ('project', 'TEXT'),
                 ('work_type', 'TEXT')]
-
 PROJECT_FIELDS = [('name', 'TEXT PRIMARY KEY'),
                   ('category', 'TEXT')]
-
 CATEGORY_FIELDS = [('name', 'TEXT PRIMARY KEY')]
+WORK_TYPE_FIELDS = [('name', 'TEXT PRIMARY KEY')]
 
 
 def setup_database(database_path, dry_run=False):
@@ -138,6 +138,24 @@ def insert_time_entry_into_database(time_entry, verbose=False):
     conn.close()
 
 
+def insert_work_type_entry_into_database(work_type_entry):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    command_str = 'INSERT INTO {table_name} VALUES (?)' \
+        .format(table_name=WORK_TYPE_TABLE)
+
+    params = (work_type_entry.name,)
+
+    print(command_str)
+    print(params)
+
+    cursor.execute(command_str, params)
+    conn.commit()
+    conn.close()
+
+
 def list_entries_in_table(cursor, table_name):
 
     for row in cursor.execute('SELECT * FROM {}'.format(table_name)):
@@ -151,7 +169,18 @@ def get_categories_as_strings(sep="\t"):
     c = conn.cursor()
     c.execute('SELECT * FROM categories')
     category_strings = sql_tuples_to_delimited_strings(c.fetchall(), delim=sep)
+    conn.close()
     return category_strings
+
+
+def get_work_types_as_strings(sep="\t"):
+
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('SELECT * FROM work_types')
+    work_type_strings = sql_tuples_to_delimited_strings(c.fetchall(), delim=sep)
+    conn.close()
+    return work_type_strings
 
 
 def get_projects_as_strings(sep="\t"):
