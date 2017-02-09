@@ -8,6 +8,7 @@ from modules.utils import date_utils
 from modules.entries.project_entry import TimeEntry
 from modules.entries.project_entry import ProjectEntry
 from modules.entries.category_entry import CategoryEntry
+from modules.entries.work_type_entry import WorkTypeEntry
 
 from modules.utils import calc_utils
 
@@ -19,6 +20,9 @@ def main(args):
         sys.exit(0)
     elif args.list_type == 'categories':
         list_categories()
+        sys.exit(0)
+    elif args.list_type == 'work_types':
+        list_work_types()
         sys.exit(0)
     elif args.list_type == 'date_range':
 
@@ -144,12 +148,13 @@ def list_projects():
 
 def list_categories():
 
-    print("list_categories")
-
     category_list = CategoryEntry.get_category_list()
-
-    print(category_list)
-
     for cat in category_list:
         print(cat)
 
+
+def list_work_types():
+
+    work_type_list = WorkTypeEntry.get_work_type_list()
+    for wt in work_type_list:
+        print(wt)
