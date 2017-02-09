@@ -42,7 +42,7 @@ def check_project(time_entry, dry_run=False):
 
     project_exists = ProjectEntry.check_project_exists(time_entry.project)
     if not project_exists:
-        create_string = "{} does not exist, do you want to create it? ".format(time_entry.project)
+        create_string = "Project {} does not exist, do you want to create it? ".format(time_entry.project)
         create_project = prompt_utils.prompt_yes_no(create_string, yes_default=True)
 
         if not create_project:
@@ -55,7 +55,7 @@ def check_project(time_entry, dry_run=False):
             category = "uncategorized"
 
         if not dry_run:
-            ogi_new.new_project(category=category, project_name=time_entry.project)
+            ogi_new.new_project(category=category, project_name=time_entry.project, print_current=True)
         else:
             print("Dry run, would write project {} with category {}".format(time_entry.project, category))
 
@@ -66,7 +66,10 @@ def check_work_type(time_entry, dry_run=False):
 
     worktype_exists = WorkTypeEntry.check_work_type_exists(time_entry.work_type)
     if not worktype_exists:
-        create_string = "{} does not exist, do you want to create it? ".format(time_entry.work_type)
+        create_string = "Work type \"{}\" does not exist, do you want to create it? ".format(time_entry.work_type)
+
+        current_worktypes = WorkTypeEntry.get_work_type_list()
+        print("Existing categories: {}".format(" ".join([wt.name for wt in current_worktypes])))
         create_wt = prompt_utils.prompt_yes_no(create_string, yes_default=True)
 
         if not create_wt:

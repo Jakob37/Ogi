@@ -16,13 +16,13 @@ def main(args):
         print("DRY RUN - Simulated run, but nothing written")
 
     if args.object_type == "project":
-        new_project(args.name, args.category, dry_run=args.dry_run)
+        new_project(args.name, args.category, dry_run=args.dry_run, print_current=True)
 
     elif args.object_type == "category":
         if args.category:
             print("--category flag ignored as it only is applicable for projects")
 
-        new_category(args.name, dry_run=args.dry_run)
+        new_category(args.name, dry_run=args.dry_run, print_current=True)
 
     elif args.object_type == "work_type":
         new_work_type(args.name, dry_run=args.dry_run)
@@ -31,7 +31,11 @@ def main(args):
         print("Unknown object type: {}".format(args.object_type))
 
 
-def new_project(project_name=None, category=None, dry_run=False):
+def new_project(project_name=None, category=None, dry_run=False, print_current=False):
+
+    if print_current:
+        existing_projects = ProjectEntry.get_project_list()
+        print("Existing categories: {}".format(" ".join(existing_projects)))
 
     if project_name is None:
         proj_string = "Enter project name (empty to abort): "
@@ -99,9 +103,12 @@ def new_work_type(work_type_name, dry_run=False, silent_fail=False):
             print("{}: {}".format("Dry run", entry))
 
 
-def new_category(category_name, dry_run=False, silent_fail=False):
+def new_category(category_name, dry_run=False, silent_fail=False, print_current=False):
     
     current_categories = database_utils.get_categories_as_strings()
+
+    if print_current:
+        print("Existing categories: {}".format(" ".join(current_categories)))
 
     if category_name is None:
         cat_string = "Enter category name (empty to abort): "
