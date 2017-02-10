@@ -17,13 +17,21 @@ def main(args):
     # barplot_path = '{}/{}'.format(conf.get('file_paths', 'figures'), 'barplot.png')
     # generate_project_summary_plot(barplot_path)
 
-    barplot_path = '{}/{}'.format(conf.get('file_paths', 'figures'), 'barplot.png')
-    barplots.generate_day_summary_plot(barplot_path)
+    proj_barplot_path = '{}/{}'.format(conf.get('file_paths', 'figures'), 'proj_barplot.png')
+    barplots.generate_day_summary_plot(proj_barplot_path, summarize_on='project')
+
+    cat_barplot_path = '{}/{}'.format(conf.get('file_paths', 'figures'), 'cat_barplot.png')
+    barplots.generate_day_summary_plot(cat_barplot_path, summarize_on='category')
+
+    wt_barplot_path = '{}/{}'.format(conf.get('file_paths', 'figures'), 'wt_barplot.png')
+    barplots.generate_day_summary_plot(wt_barplot_path, summarize_on='work_type')
 
     week_entries_html = get_week_entries_html_lines()
 
+    barplots_paths = [proj_barplot_path, cat_barplot_path, wt_barplot_path]
+
     html_path = conf.get('file_paths', 'html')
-    web_utils.generate_html(html_path, barplot_path, week_entries_html)
+    web_utils.generate_html(html_path, barplots_paths, week_entries_html)
 
     if not args.do_not_show:
         web_utils.open_in_browser(html_path, open_new_window=args.open_new_window)

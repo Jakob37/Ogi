@@ -4,6 +4,8 @@
 Main class representing a project entry
 """
 
+import sys
+
 # from modules.utils import utils
 import ogi_config
 
@@ -60,6 +62,16 @@ class ProjectEntry:
             projects.append(proj_entry)
 
         return projects
+
+    @staticmethod
+    def get_project_with_name(proj_name):
+
+        projects = ProjectEntry.get_project_list()
+        for proj in projects:
+            if proj.name == proj_name:
+                return proj
+        print("Failed to find project: {}".format(proj_name))
+        sys.exit(1)
 
     @staticmethod
     def check_project_exists(project_name):

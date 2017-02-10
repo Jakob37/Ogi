@@ -13,6 +13,9 @@ a printed TimeEntry-object
 """
 
 
+# from modules.entries.project_entry import ProjectEntry
+
+
 class Dummy:
 
     def __init__(self, content):
@@ -64,6 +67,7 @@ class TimeEntry:
         duration = int(fields[4])
         message = fields[5]
         project = fields[6]
+        work_type = fields[8]
 
         new_obj = cls(log_type, message,
                       focus=focus,
@@ -71,6 +75,7 @@ class TimeEntry:
                       time_str=time,
                       project=project,
                       duration=duration,
+                      work_type=work_type,
                       quiet=True)
         return new_obj
 

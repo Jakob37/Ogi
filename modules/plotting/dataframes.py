@@ -12,13 +12,21 @@ def get_time_entry_dataframe(start_date=None, end_date=None):
     project = list()
     duration = list()
     date = list()
+    category = list()
+    work_type = list()
 
     for entry in time_entries:
         project.append(entry.project)
         duration.append(entry.duration)
         date.append(entry.date)
+        category.append(ProjectEntry.get_project_with_name(entry.project).category)
+        work_type.append(entry.work_type)
 
-    entry_df = pd.DataFrame({'project': project, 'duration': duration, 'date': date})
+    entry_df = pd.DataFrame({'project': project,
+                             'duration': duration,
+                             'date': date,
+                             'category': category,
+                             'work_type': work_type})
     return entry_df
 
 

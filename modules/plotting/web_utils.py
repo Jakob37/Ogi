@@ -1,7 +1,7 @@
 import webbrowser
 
 
-def generate_html(output_fp, plot_fp, week_entries_html):
+def generate_html(output_fp, plot_fps, week_entries_html):
 
     week_entries_string = '<table>{}</table>'.format('\n'.join(week_entries_html))
 
@@ -12,11 +12,17 @@ def generate_html(output_fp, plot_fp, week_entries_html):
 </head>
 <body>
 <p>Hello world!</p>
-<img src="{barplot}">
+<img src="{barplot1}">
+<img src="{barplot2}">
+<img src="{barplot3}">
 {entry_lines}
 </body>
 </html>
-        """.format(barplot=plot_fp, entry_lines=week_entries_string)
+        """.format(
+                    barplot1=plot_fps[0],
+                    barplot2=plot_fps[1],
+                    barplot3=plot_fps[2],
+                    entry_lines=week_entries_string)
 
     with open(output_fp, 'w') as out_fh:
 
