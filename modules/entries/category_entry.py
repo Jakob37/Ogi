@@ -26,5 +26,5 @@ class CategoryEntry:
     @staticmethod
     def get_category_list():
 
-        categories = database_utils.get_categories_as_strings()
+        categories = [CategoryEntry(cat_str) for cat_str in database_utils.get_categories_as_strings()]
         return categories

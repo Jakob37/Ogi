@@ -15,6 +15,9 @@ from modules.utils import calc_utils
 
 def main(args):
 
+    if args.list_type == 'all':
+        list_all()
+        sys.exit(0)
     if args.list_type == 'projects':
         list_projects()
         sys.exit(0)
@@ -51,6 +54,21 @@ def main(args):
         list_date_range_entries_only(start_date, end_date)
     else:
         list_date_range(start_date, end_date)
+
+
+def list_all():
+
+    categories = CategoryEntry.get_category_list()
+    work_types = WorkTypeEntry.get_work_type_list()
+    projects = ProjectEntry.get_project_list()
+
+    cat_strs = sorted([cat.name for cat in categories])
+    wt_strs = sorted([wt.name for wt in work_types])
+    proj_strs = sorted([proj.name for proj in projects])
+
+    print("Categories: {}".format(" ".join(cat_strs)))
+    print("Work types: {}".format(" ".join(wt_strs)))
+    print("Projects: {}".format(" ".join(proj_strs)))
 
 
 def get_date_range_start(args):

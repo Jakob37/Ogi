@@ -105,7 +105,7 @@ def parse_list(subparsers_object):
 
     list_options = ['day', 'week', 'month', 'year',
                     'projects', 'categories', 'date_range', 'prev_days',
-                    'work_types']
+                    'work_types', 'all']
     subparser.add_argument('list_type', choices=list_options)
 
     subparser.add_argument('--summary', '-s', help='Show a condensed format', action='store_true')
