@@ -66,9 +66,9 @@ def list_all():
     wt_strs = sorted([wt.name for wt in work_types])
     proj_strs = sorted([proj.name for proj in projects])
 
-    print("Categories: {}".format(" ".join(cat_strs)))
-    print("Work types: {}".format(" ".join(wt_strs)))
-    print("Projects: {}".format(" ".join(proj_strs)))
+    print("--- Projects ---\n{}".format(" ".join(proj_strs)))
+    print("--- Categories ---\n{}".format(" ".join(cat_strs)))
+    print("--- Work types ---\n{}".format(" ".join(wt_strs)))
 
 
 def get_date_range_start(args):
