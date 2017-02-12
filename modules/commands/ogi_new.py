@@ -34,7 +34,7 @@ def main(args):
 def new_project(project_name=None, category=None, dry_run=False, print_current=False):
 
     if print_current:
-        existing_projects = ProjectEntry.get_project_list()
+        existing_projects = [proj.name for proj in ProjectEntry.get_project_list()]
         print("Existing categories: {}".format(" ".join(existing_projects)))
 
     if project_name is None:
@@ -51,9 +51,9 @@ def new_project(project_name=None, category=None, dry_run=False, print_current=F
         cat_string = "Enter category for {} (empty for 'uncategorized'): ".format(project_name)
         category = prompt_utils.prompt_for_name(cat_string, default='uncategorized')
 
-    cats = CategoryEntry.get_category_list()
+    cat_names = [cat.name for cat in CategoryEntry.get_category_list()]
 
-    if category not in cats:
+    if category not in cat_names:
 
         create_cat_string = "Category does not exist, do you want to create it? "
         create_cat = prompt_utils.prompt_yes_no(create_cat_string, yes_default=True)
