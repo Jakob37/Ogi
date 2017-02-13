@@ -59,7 +59,7 @@ class ProjectEntry:
             project, category = line.split('\t')
             proj_entry = ProjectEntry(project, category)
 
-            if category is None or category == filter_category:
+            if filter_category is None or category == filter_category:
                 projects.append(proj_entry)
 
         return projects
