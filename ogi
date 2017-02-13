@@ -3,6 +3,7 @@
 import argparse
 import os
 import sys
+import re
 
 from modules.commands import ogi_log
 from modules.commands import ogi_new
@@ -82,8 +83,7 @@ def parse_log(subparsers_object):
     subparser = subparsers_object.add_parser('log')
     subparser.set_defaults(func=ogi_log_func, which='log')
 
-    subparser.add_argument('log_type', choices=['pomo', 'block', 'session'],
-                           nargs='?')
+    subparser.add_argument('log_type', nargs='?')
     subparser.add_argument('-m', '--message',
                            help='Description of performed task during logged time',
                            default="", required=message_mandatory)

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+import re
 
 import ogi_config
 from modules.commands import ogi_new
@@ -18,7 +19,14 @@ def main(args):
     if args.dry_run:
         print("DRY RUN - Simulated run, but nothing written")
 
-    log_type = setup_log_type(conf, args.log_type)
+    parse_log_type = setup_log_type(conf, args.log_type)
+
+    if parse_log_type == 'custom_session':
+        log_type = 'session'
+        duration = int(args.log_type)
+    else:
+        log_type = parse_log_type
+        duration = args.duration
 
     time_entry = TimeEntry(log_type,
                            args.message,
@@ -26,7 +34,7 @@ def main(args):
                            date_str=args.date,
                            time_str=args.time,
                            project=args.project,
-                           duration=args.duration,
+                           duration=duration,
                            work_type=args.work_type)
 
     check_project(time_entry, dry_run=args.dry_run)
@@ -84,17 +92,29 @@ def check_work_type(time_entry, dry_run=False):
 
 def setup_log_type(conf, args_log_type=None):
 
+    print(args_log_type)
+
+    int_pattern = r'\d+'
+
+    exception_string = "Log type in config \"{{}}\" not valid log type. " \
+                       "Valid types are {valid_types} or numeric (i.e. \"15\")"\
+        .format(valid_types=str(", ".join(TimeEntry.VALID_LOG_TYPES)))
+
     if args_log_type is None:
 
         conf_log_type = conf.get('settings', 'default_log_type')
 
         if conf_log_type not in TimeEntry.VALID_LOG_TYPES:
-            raise Exception("Log type in config ({}) not valid log type ({})"
-                            .format(conf_log_type, TimeEntry.VALID_LOG_TYPES))
+            raise Exception(exception_string.format(conf_log_type))
         else:
             return conf_log_type
     else:
-        return args_log_type
+        if re.match(int_pattern, str(args_log_type)):
+            return 'custom_session'
+        elif args_log_type not in TimeEntry.VALID_LOG_TYPES:
+            raise Exception(exception_string.format(args_log_type))
+        else:
+            return args_log_type
 
 
 def write_time_entry(time_entry, conf, write_to_database=False, dry_run=False):
