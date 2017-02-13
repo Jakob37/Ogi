@@ -146,6 +146,10 @@ def setup_config_file_settings(config):
     config.set('settings', 'default_log_type', chosen_log_type)
     config.set('settings', 'block_duration', work_length)
 
+    config.set('settings', 'project_mandatory', True)
+    config.set('settings', 'message_mandatory', True)
+    config.set('settings', 'work_type_mandatory', True)
+
 
 def load_entries_from_tsvs(time_entry_tsv, project_tsv, category_tsv):
 

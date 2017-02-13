@@ -72,6 +72,13 @@ def parse_log(subparsers_object):
         verify_files_setup(args)
         ogi_log.main(args)
 
+    conf = ogi_config.get_config()
+    proj_mandatory = conf.getboolean('settings', 'project_mandatory')
+    message_mandatory = conf.getboolean('settings', 'message_mandatory')
+    work_type_mandatory = conf.getboolean('settings', 'work_type_mandatory')
+
+    print('proj_mandatory: {}'.format(proj_mandatory))
+
     subparser = subparsers_object.add_parser('log')
     subparser.set_defaults(func=ogi_log_func, which='log')
 
@@ -79,7 +86,7 @@ def parse_log(subparsers_object):
                            nargs='?')
     subparser.add_argument('-m', '--message',
                            help='Description of performed task during logged time',
-                           default="")
+                           default="", required=message_mandatory)
 
     subparser.add_argument('-t', '--time', default=None,
                            help="Format: HHMM, defaults to current time")
@@ -87,8 +94,8 @@ def parse_log(subparsers_object):
                            help="Format: YYYYMMDD, defaults to current date")
     subparser.add_argument('-f', '--focus', default=100, type=int)
     subparser.add_argument('-u', '--duration', default=None)
-    subparser.add_argument('-p', '--project', required=True)
-    subparser.add_argument('-w', '--work_type', required=True)
+    subparser.add_argument('-p', '--project', required=proj_mandatory, default='uncategorized')
+    subparser.add_argument('-w', '--work_type', required=work_type_mandatory, default='uncategorized')
 
     subparser.add_argument('--testrun', action='store_true')
     subparser.add_argument('--dry_run', action='store_true')
