@@ -178,6 +178,11 @@ def list_categories():
 
 def list_work_types():
 
-    work_type_list = WorkTypeEntry.get_work_type_list()
-    for wt in work_type_list:
-        print(wt)
+    wt_list = WorkTypeEntry.get_work_type_list()
+
+    print('{}\t{}'.format('Work type', 'Spent time').expandtabs(20))
+    print('-' * 50)
+
+    for wt in sorted(wt_list, key=lambda x: x.get_total_time(), reverse=True):
+        time_string = date_utils.get_nice_time_string(wt.get_total_time())
+        print("{}\t{}".format(wt.name, time_string).expandtabs(20))
