@@ -50,7 +50,7 @@ class ProjectEntry:
         return filtered_list
 
     @staticmethod
-    def get_project_list():
+    def get_project_list(filter_category=None):
 
         projects = list()
         project_str = database_utils.get_projects_as_strings()
@@ -59,7 +59,8 @@ class ProjectEntry:
             project, category = line.split('\t')
             proj_entry = ProjectEntry(project, category)
 
-            projects.append(proj_entry)
+            if category is None or category == filter_category:
+                projects.append(proj_entry)
 
         return projects
 

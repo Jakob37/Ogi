@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from modules.database import database_utils
+from modules.entries.project_entry import ProjectEntry
 
 
 class CategoryEntry:
@@ -28,3 +29,8 @@ class CategoryEntry:
 
         categories = [CategoryEntry(cat_str) for cat_str in database_utils.get_categories_as_strings()]
         return categories
+
+    def get_total_time(self):
+
+        projs = ProjectEntry.get_project_list(filter_category=self.name)
+        return sum([proj.get_total_time() for proj in projs])

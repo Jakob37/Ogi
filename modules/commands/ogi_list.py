@@ -167,8 +167,13 @@ def list_projects():
 def list_categories():
 
     category_list = CategoryEntry.get_category_list()
-    for cat in category_list:
-        print(cat)
+
+    print('{}\t{}'.format('Category', 'Spent time'))
+    print('-' * 50)
+
+    for cat in sorted(category_list, key=lambda x: x.get_total_time(), reverse=True):
+        time_string = date_utils.get_nice_time_string(cat.get_total_time())
+        print("{}\t{}".format(cat.name, time_string).expandtabs(20))
 
 
 def list_work_types():
