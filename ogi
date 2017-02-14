@@ -12,6 +12,7 @@ from modules.commands import ogi_list
 from modules.commands import ogi_write
 from modules.commands import ogi_edit
 
+from modules.utils import text_utils
 import ogi_config
 
 CONF_NAME = "ogi.conf"
@@ -23,14 +24,16 @@ def parse_arguments():
     def default_func(args):
         print("Must specify tool (ogi <tool>)"
               "\nIf it is the first time you run Ogi, it is recommended to run the 'ogi setup' command to set up a "
-              "config file and to initialize the SQLite database.\n")
+              "config file and to initialize the SQLite database.")
         parser.print_help()
+
+        print(text_utils.ogi_main_text)
         exit(1)
 
     parser = argparse.ArgumentParser()
     parser.set_defaults(func=default_func)
 
-    subparsers = parser.add_subparsers(help='Commands:')
+    subparsers = parser.add_subparsers()
 
     parse_setup(subparsers)
 
