@@ -32,10 +32,11 @@ def parse_arguments():
 
     subparsers = parser.add_subparsers(help='Commands:')
 
+    parse_setup(subparsers)
+
     parse_log(subparsers)
     parse_list(subparsers)
     parse_new(subparsers)
-    parse_setup(subparsers)
     parse_write(subparsers)
     parse_edit(subparsers)
 
@@ -73,10 +74,15 @@ def parse_log(subparsers_object):
         verify_files_setup(args)
         ogi_log.main(args)
 
-    conf = ogi_config.get_config()
-    proj_mandatory = conf.getboolean('settings', 'project_mandatory')
-    message_mandatory = conf.getboolean('settings', 'message_mandatory')
-    work_type_mandatory = conf.getboolean('settings', 'work_type_mandatory')
+    if ogi_config.config_exists:
+        conf = ogi_config.get_config()
+        proj_mandatory = conf.getboolean('settings', 'project_mandatory')
+        message_mandatory = conf.getboolean('settings', 'message_mandatory')
+        work_type_mandatory = conf.getboolean('settings', 'work_type_mandatory')
+    else:
+        proj_mandatory = True
+        message_mandatory = True
+        work_type_mandatory = True
 
     print('proj_mandatory: {}'.format(proj_mandatory))
 
@@ -161,6 +167,9 @@ def parse_setup(subparsers_object):
     """Setup command"""
 
     def ogi_setup_func(args):
+
+        print("in setup")
+
         ogi_setup.main(args)
 
     subparser = subparsers_object.add_parser('setup')
