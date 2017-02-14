@@ -14,6 +14,7 @@ ENTRY_FIELDS = [('date_stamp', 'TEXT'),
                 ('duration', 'INTEGER'),
                 ('message', 'TEXT'),
                 ('project', 'TEXT'),
+                ('name_id', 'INTEGER PRIMARY KEY'),
                 ('work_type', 'TEXT')]
 PROJECT_FIELDS = [('name', 'TEXT PRIMARY KEY'),
                   ('category', 'TEXT')]
@@ -28,7 +29,8 @@ def setup_database(database_path, dry_run=False):
     conn = sqlite3.connect(database_path)
     c = conn.cursor()
 
-    create_entry_table = get_create_table_command(ENTRY_TABLE, ENTRY_FIELDS, primary_key='name_id')
+    # create_entry_table = get_create_table_command(ENTRY_TABLE, ENTRY_FIELDS, primary_key='name_id')
+    create_entry_table = get_create_table_command(ENTRY_TABLE, ENTRY_FIELDS)
     create_category_table = get_create_table_command(CATEGORY_TABLE, CATEGORY_FIELDS)
     create_project_table = get_create_table_command(PROJECT_TABLE, PROJECT_FIELDS)
     create_work_type_table = get_create_table_command(WORK_TYPE_TABLE, WORK_TYPE_FIELDS)
@@ -63,7 +65,7 @@ def close_connection(conn, commit_changes):
     conn.close()
 
 
-def get_create_table_command(table_name, field_tuples, primary_key=None):
+def get_create_table_command(table_name, field_tuples):
 
     """
     Expects an open SQLite cursor, table name and a list of name/type tuples
@@ -76,8 +78,8 @@ def get_create_table_command(table_name, field_tuples, primary_key=None):
 
     field_strings = ['{} {}'.format(field[0], field[1]) for field in field_tuples]
 
-    if primary_key is not None:
-        field_strings.append('{} INTEGER PRIMARY KEY'.format(primary_key))
+    # if primary_key is not None:
+    #     field_strings.append('{} INTEGER PRIMARY KEY'.format(primary_key))
 
     field_str = ', '.join(field_strings)
 
