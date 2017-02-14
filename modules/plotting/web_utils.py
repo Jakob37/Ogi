@@ -1,9 +1,15 @@
 import webbrowser
 
 
-def generate_html(output_fp, plot_fps, week_entries_html):
+def generate_html(output_fp, plot_fps, week_entries_html=None):
 
-    week_entries_string = '<table>{}</table>'.format('\n'.join(week_entries_html))
+    if week_entries_html is not None:
+        week_entries_string = '<table>{}</table>'.format('\n'.join(week_entries_html))
+    else:
+        week_entries_string = 'No time entries to show'
+
+    barplot_scrs_base = '<img src="{}">' * len(plot_fps)
+    barplot_html_string = barplot_scrs_base.format(*plot_fps)
 
     html_string = """
 <html>
@@ -12,20 +18,15 @@ def generate_html(output_fp, plot_fps, week_entries_html):
 </head>
 <body>
 <p>Hello world!</p>
-<img src="{barplot1}">
-<img src="{barplot2}">
-<img src="{barplot3}">
+{barplots}
 {entry_lines}
 </body>
 </html>
         """.format(
-                    barplot1=plot_fps[0],
-                    barplot2=plot_fps[1],
-                    barplot3=plot_fps[2],
+                    barplots=barplot_html_string,
                     entry_lines=week_entries_string)
 
     with open(output_fp, 'w') as out_fh:
-
         print(html_string, file=out_fh)
 
 

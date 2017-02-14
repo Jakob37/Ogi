@@ -1,4 +1,6 @@
 
+import sys
+
 from modules.plotting import dataframes
 from modules.plotting import plot_utils
 from modules.utils import date_utils
@@ -20,7 +22,7 @@ def generate_project_summary_plot(output_path, title="no title", time_thres=2):
     barplot_fig.savefig(output_path)
 
 
-def generate_day_summary_plot(output_path, summarize_on='project'):
+def generate_date_range_summary_plot(output_path, summarize_on='project', date_range='week'):
 
     """Vertical stacked barplots for each day"""
 
@@ -28,7 +30,15 @@ def generate_day_summary_plot(output_path, summarize_on='project'):
     if summarize_on not in allowed_summarize_on:
         print("Target summarize_on not valid: {}".format(summarize_on))
 
-    te_df = dataframes.get_time_entry_dataframe(start_date=date_utils.get_start_of_week())
+    if date_range == 'week':
+        start_date = date_utils.get_start_of_week()
+    elif date_range == 'month':
+        start_date = date_utils.get_start_of_month()
+    else:
+        print("Unknown date range: {}".format(date_range))
+        sys.exit(1)
+
+    te_df = dataframes.get_time_entry_dataframe(start_date=start_date)
 
     sub_df1 = te_df.groupby(['date', summarize_on]).sum().unstack()
 

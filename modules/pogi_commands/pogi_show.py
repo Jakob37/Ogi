@@ -10,21 +10,33 @@ from modules.utils import date_utils
 
 def main(args):
 
-    print("Hello world!")
-
     conf = ogi_config.get_config()
 
-    # barplot_path = '{}/{}'.format(conf.get('file_paths', 'figures'), 'barplot.png')
-    # generate_project_summary_plot(barplot_path)
+    if args.show_type == 'week':
+        show_days(args, conf, date_range='week')
+    elif args.show_type == 'month':
+        show_days(args, conf, date_range='month')
+    else:
+        raise ValueError("Unknown show type: {}".format(args.show_type))
+
+
+def show_days(args, conf, date_range='week'):
+
+    ok_ranges = ['week', 'month']
+    if date_range not in ok_ranges:
+        raise ValueError("Range '{}' must be one of '{}'".format(date_range, ok_ranges))
 
     proj_barplot_path = '{}/{}'.format(conf.get('file_paths', 'figures'), 'proj_barplot.png')
-    barplots.generate_day_summary_plot(proj_barplot_path, summarize_on='project')
+    barplots.generate_date_range_summary_plot(proj_barplot_path, summarize_on='project',
+                                              date_range=date_range)
 
     cat_barplot_path = '{}/{}'.format(conf.get('file_paths', 'figures'), 'cat_barplot.png')
-    barplots.generate_day_summary_plot(cat_barplot_path, summarize_on='category')
+    barplots.generate_date_range_summary_plot(cat_barplot_path, summarize_on='category',
+                                              date_range=date_range)
 
     wt_barplot_path = '{}/{}'.format(conf.get('file_paths', 'figures'), 'wt_barplot.png')
-    barplots.generate_day_summary_plot(wt_barplot_path, summarize_on='work_type')
+    barplots.generate_date_range_summary_plot(wt_barplot_path, summarize_on='work_type',
+                                              date_range=date_range)
 
     week_entries_html = get_week_entries_html_lines()
 
@@ -34,7 +46,23 @@ def main(args):
     web_utils.generate_html(html_path, barplots_paths, week_entries_html)
 
     if not args.do_not_show:
-        web_utils.open_in_browser(html_path, open_new_window=args.open_new_window)
+        web_utils.open_in_browser(html_path)
+
+
+# def show_month(args, conf):
+#
+#     figures_path = conf.get('file_paths', 'figures')
+#
+#     day_proj_barplot_path = '{}/{}'.format(figures_path, 'test_barplot.png')
+#
+#     # What interval?
+#     barplots.generate_date_range_summary_plot(day_proj_barplot_path, summarize_on='project', date_range='month')
+#
+#     html_path = conf.get('file_paths', 'html')
+#     web_utils.generate_html(html_path, [day_proj_barplot_path])
+#
+#     if not args.do_not_show:
+#         web_utils.open_in_browser(html_path)
 
 
 def get_week_entries_html_lines():
@@ -59,9 +87,6 @@ def get_week_entries_html_lines():
         html_lines.append(entry_line_string)
 
     return html_lines
-
-
-
 
 
 

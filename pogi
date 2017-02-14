@@ -2,12 +2,9 @@
 
 import argparse
 import os
-import sys
 
-from modules.commands import pogi_show_week
-from modules.commands import pogi_week_summaries
-
-import ogi_config
+from modules.pogi_commands import pogi_week_summaries
+from modules.pogi_commands import pogi_show, pogi_week_summaries
 
 CONF_NAME = "ogi.conf"
 sysdir = os.path.dirname(os.path.realpath(__file__))
@@ -27,22 +24,24 @@ def parse_arguments():
 
     subparsers = parser.add_subparsers(help='Commands:')
 
-    parse_show_week(subparsers)
+    parse_show(subparsers)
     parse_week_summaries(subparsers)
 
     args = parser.parse_args()
     args.func(args)
 
 
-def parse_show_week(subparsers_object):
+def parse_show(subparsers_object):
 
     """Subparser for new command"""
 
-    def ogi_show_week_func(args):
-        pogi_show_week.main(args)
+    def ogi_show_func(args):
+        pogi_show.main(args)
 
-    subparser = subparsers_object.add_parser('show_week')
-    subparser.set_defaults(func=ogi_show_week_func, which='show_week')
+    subparser = subparsers_object.add_parser('show')
+    subparser.set_defaults(func=ogi_show_func, which='show')
+
+    subparser.add_argument('show_type', nargs='?', choices=['week', 'month'])
 
     # subparser.add_argument('object_type', choices=['show_week'])
     subparser.add_argument('--dry_run', action='store_true')
