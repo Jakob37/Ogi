@@ -179,7 +179,7 @@ class TimeEntry:
         for line in time_entries_str:
             entry = TimeEntry.load_from_string(line)
             if project is None or project == entry.project:
-                if category is None or category == entry.project.category:
+                if category is None or category == entry.get_category():
                     if work_type is None or work_type == entry.work_type:
                         if date_utils.is_date_in_range(entry.date, start_date, end_date):
                             time_entries.append(entry)

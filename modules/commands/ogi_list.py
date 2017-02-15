@@ -47,7 +47,8 @@ def main(args):
     time_entries = TimeEntry.get_time_entries(start_date=start_date,
                                               end_date=end_date,
                                               project=args.project,
-                                              work_type=args.work_type)
+                                              work_type=args.work_type,
+                                              category=args.category)
 
     print("Number time entries: {}".format(len(time_entries)))
 
@@ -101,7 +102,6 @@ def get_date_range_start(args):
 def list_project_summary(time_entries, start_date, end_date):
 
     proj_dict = dict()
-
     for entry in time_entries:
         if proj_dict.get(entry.project) is None:
             proj_dict[entry.project] = entry.duration
@@ -114,8 +114,8 @@ def list_project_summary(time_entries, start_date, end_date):
     print("Time period homogeneity: {:.3f}".format(homogeneity))
     print("\nProjects\tTime".expandtabs(20))
     print("-" * 30)
-    for proj in sorted(proj_dict, key=lambda x: proj_dict[x], reverse=True):
 
+    for proj in sorted(proj_dict, key=lambda x: proj_dict[x], reverse=True):
         time = proj_dict[proj]
         time_string = date_utils.get_nice_time_string(time)
         print('{}\t{}'.format(proj, time_string).expandtabs(20))

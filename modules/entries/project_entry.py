@@ -79,8 +79,7 @@ class ProjectEntry:
         for proj in projects:
             if proj.name == proj_name:
                 return proj
-        print("Failed to find project: {}".format(proj_name))
-        sys.exit(1)
+        print("WARNING - Failed to find entry for following project name: {}".format(proj_name))
 
     @staticmethod
     def check_project_exists(project_name):
