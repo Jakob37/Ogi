@@ -43,7 +43,7 @@ def main(args):
     if not args.dry_run:
         write_time_entry(time_entry, conf, write_to_database=True, dry_run=args.dry_run)
     else:
-        print("DR, would write {}".format(time_entry))
+        print("Dry run, would write {}".format(time_entry))
 
 
 def check_project(time_entry, dry_run=False):
@@ -91,8 +91,6 @@ def check_work_type(time_entry, dry_run=False):
 
 
 def setup_log_type(conf, args_log_type=None):
-
-    print(args_log_type)
 
     int_pattern = r'\d+'
 

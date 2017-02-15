@@ -87,8 +87,6 @@ def parse_log(subparsers_object):
         message_mandatory = True
         work_type_mandatory = True
 
-    print('proj_mandatory: {}'.format(proj_mandatory))
-
     subparser = subparsers_object.add_parser('log')
     subparser.set_defaults(func=ogi_log_func, which='log')
 
