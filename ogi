@@ -130,6 +130,10 @@ def parse_list(subparsers_object):
     subparser.add_argument('--end_date', help='Custom end date for date_range')
     subparser.add_argument('--number', '-n', help='Number of entires for prev_days option', type=int)
 
+    subparser.add_argument('--project', '-p', help='Only list entries in project')
+    subparser.add_argument('--category', '-c', help='Only list entries in category')
+    subparser.add_argument('--work_type', '-w', help='Only list entries in work type')
+
 
 def parse_new(subparsers_object):
 

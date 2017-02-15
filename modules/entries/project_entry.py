@@ -9,8 +9,10 @@ import sys
 # from modules.utils import utils
 import ogi_config
 
-from modules.entries.time_entry import TimeEntry
+# from modules.entries.time_entry import TimeEntry
 from modules.database import database_utils
+
+from modules.utils import entry_utils
 
 
 class ProjectEntry:
@@ -34,9 +36,11 @@ class ProjectEntry:
         return new_obj
 
     def load_entries(self):
+        from modules.entries.time_entry import TimeEntry
         self.entries = TimeEntry.get_time_entries(project=self.name)
 
-    def get_entries(self, start_date=None, end_date=None):
+    def get_entries(self, start_date=None, end_date=None, work_type=None):
+
         if len(self.entries) == 0:
             self.load_entries()
 
@@ -47,6 +51,10 @@ class ProjectEntry:
             end_date = "9999999999"
 
         filtered_list = [entry for entry in self.entries if start_date <= entry.date <= end_date]
+
+        if work_type is not None:
+            filtered_list = [entry for entry in filtered_list if entry.work_type == work_type]
+
         return filtered_list
 
     @staticmethod
@@ -82,7 +90,7 @@ class ProjectEntry:
 
         return project_name in project_names
 
-    def get_total_time(self, start_date=None, end_date=None, in_hours=False):
+    def get_total_time(self, start_date=None, end_date=None, in_hours=False, work_type=None):
 
         if len(self.entries) == 0:
             self.load_entries()
@@ -96,7 +104,8 @@ class ProjectEntry:
         time_entries = list()
         for entry in self.entries:
             if start_date <= entry.date <= end_date:
-                time_entries.append(entry)
+                if work_type is None or work_type == entry.work_type:
+                    time_entries.append(entry)
 
         minutes = sum([entry.duration for entry in time_entries])
 

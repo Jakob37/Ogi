@@ -162,8 +162,14 @@ class TimeEntry:
             raise Exception("Work type must fulfil pattern: {}, found: {}"
                             .format(self.WORK_TYPE_PATTERN, self.work_type))
 
+    def get_category(self):
+
+        from modules.entries.project_entry import ProjectEntry
+        proj = ProjectEntry.get_project_with_name(self.project)
+        return proj.category
+
     @staticmethod
-    def get_time_entries(project=None, work_type=None, start_date=None, end_date=None):
+    def get_time_entries(project=None, work_type=None, category=None, start_date=None, end_date=None):
 
         """Return list of entries based on log file"""
 
@@ -173,9 +179,10 @@ class TimeEntry:
         for line in time_entries_str:
             entry = TimeEntry.load_from_string(line)
             if project is None or project == entry.project:
-                if work_type is None or work_type == entry.work_type:
-                    if date_utils.is_date_in_range(entry.date, start_date, end_date):
-                        time_entries.append(entry)
+                if category is None or category == entry.project.category:
+                    if work_type is None or work_type == entry.work_type:
+                        if date_utils.is_date_in_range(entry.date, start_date, end_date):
+                            time_entries.append(entry)
 
         return time_entries
 

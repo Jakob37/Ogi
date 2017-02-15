@@ -5,7 +5,7 @@ import sys
 import ogi_config
 
 from modules.utils import date_utils
-from modules.entries.project_entry import TimeEntry
+from modules.entries.time_entry import TimeEntry
 from modules.entries.project_entry import ProjectEntry
 from modules.entries.category_entry import CategoryEntry
 from modules.entries.work_type_entry import WorkTypeEntry
@@ -44,16 +44,19 @@ def main(args):
     else:
         end_date = date_utils.get_current_date()
 
-    time_entries = TimeEntry.get_time_entries(start_date=start_date, end_date=end_date)
+    time_entries = TimeEntry.get_time_entries(start_date=start_date,
+                                              end_date=end_date,
+                                              project=args.project,
+                                              work_type=args.work_type)
 
     print("Number time entries: {}".format(len(time_entries)))
 
     if args.summary:
         list_project_summary(time_entries, start_date, end_date)
     elif args.limited:
-        list_date_range_entries_only(start_date, end_date)
+        list_date_range_entries_only(time_entries, start_date, end_date)
     else:
-        list_date_range(start_date, end_date)
+        list_date_range(start_date, end_date, args)
 
 
 def list_all():
@@ -118,28 +121,33 @@ def list_project_summary(time_entries, start_date, end_date):
         print('{}\t{}'.format(proj, time_string).expandtabs(20))
 
 
-def list_date_range(start_date, end_date):
+def list_date_range(start_date, end_date, args):
 
     print("Logged entries in date range {} to {}".format(start_date, end_date))
 
-    projects = ProjectEntry.get_project_list()
-    for proj in sorted(projects, key=lambda x: x.get_total_time(start_date, end_date), reverse=True):
+    if args.project is None and args.category is None:
+        projects = ProjectEntry.get_project_list()
+    elif args.category is None:
+        projects = [ProjectEntry.get_project_with_name(args.project)]
+    else:
+        projects = ProjectEntry.get_project_list(filter_category=args.category)
 
-        if proj.get_total_time(start_date, end_date) > 0:
+    for proj in sorted(projects, key=lambda x: x.get_total_time(start_date, end_date, work_type=args.work_type), reverse=True):
 
-            proj_tot_time = date_utils.get_nice_time_string(proj.get_total_time(start_date, end_date))
+        if proj.get_total_time(start_date, end_date, work_type=args.work_type) > 0:
+
+            proj_tot_time = date_utils.get_nice_time_string(proj.get_total_time(start_date, end_date, work_type=args.work_type))
             print("Project: {} ({})".format(proj.name, proj_tot_time))
-            time_entries = proj.get_entries(start_date, end_date)
+            time_entries = proj.get_entries(start_date, end_date, work_type=args.work_type)
 
             print_time_sorted_entries(time_entries)
 
 
-def list_date_range_entries_only(start_date, end_date):
+def list_date_range_entries_only(time_entries, start_date, end_date):
 
     """Output list of entries within target range, without grouping on project"""
 
     print("Logged entries in date range {} to {}".format(start_date, end_date))
-    time_entries = TimeEntry.get_time_entries(start_date=start_date, end_date=end_date)
     print_time_sorted_entries(time_entries)
 
 
