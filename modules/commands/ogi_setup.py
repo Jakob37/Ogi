@@ -29,6 +29,8 @@ def main(args):
     setup_config_file(save_base_dir)
     setup_database()
 
+    setup_folders_and_files()
+
     if args.database_from_tsvs:
         enter_tsvs_to_database(args)
 
@@ -118,6 +120,8 @@ def setup_config_file(base_save_dir, dry_run=False):
         else:
             print(config)
 
+    return config
+
 
 def setup_config_file_settings(config):
 
@@ -206,3 +210,11 @@ def enter_tsvs_to_database(args):
         sys.exit(1)
 
 
+def setup_folders_and_files():
+
+    conf = ogi_config.get_config(force_reload=True)
+
+    figure_dir_path = conf.get('file_paths', 'figures')
+
+    if not os.path.exists(figure_dir_path):
+        os.makedirs(figure_dir_path)
