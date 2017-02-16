@@ -53,11 +53,11 @@ def main(args):
     print("Number time entries: {}".format(len(time_entries)))
 
     if args.summary:
-        list_project_summary(time_entries, start_date, end_date)
+        list_project_summary(time_entries, start_date, end_date, list_alpha=args.list_alpha)
     elif args.limited:
         list_date_range_entries_only(time_entries, start_date, end_date)
     else:
-        list_date_range(start_date, end_date, args)
+        list_date_range(start_date, end_date, args, list_alpha=args.list_alpha)
 
 
 def list_all():
@@ -99,7 +99,7 @@ def get_date_range_start(args):
         sys.exit(1)
 
 
-def list_project_summary(time_entries, start_date, end_date):
+def list_project_summary(time_entries, start_date, end_date, list_alpha=False):
 
     proj_dict = dict()
     for entry in time_entries:
@@ -115,13 +115,18 @@ def list_project_summary(time_entries, start_date, end_date):
     print("\nProjects\tTime".expandtabs(20))
     print("-" * 30)
 
-    for proj in sorted(proj_dict, key=lambda x: proj_dict[x], reverse=True):
+    if not list_alpha:
+        def sort_func(x): return proj_dict[x]
+    else:
+        def sort_func(x): return x
+
+    for proj in sorted(proj_dict, key=sort_func, reverse=not list_alpha):
         time = proj_dict[proj]
         time_string = date_utils.get_nice_time_string(time)
         print('{}\t{}'.format(proj, time_string).expandtabs(20))
 
 
-def list_date_range(start_date, end_date, args):
+def list_date_range(start_date, end_date, args, list_alpha=False):
 
     print("Logged entries in date range {} to {}".format(start_date, end_date))
 
@@ -132,11 +137,16 @@ def list_date_range(start_date, end_date, args):
     else:
         projects = ProjectEntry.get_project_list(filter_category=args.category)
 
-    for proj in sorted(projects, key=lambda x: x.get_total_time(start_date, end_date, work_type=args.work_type), reverse=True):
+    if not list_alpha:
+        def sort_func(x): return x.get_total_time(start_date, end_date, work_type=args.work_type)
+    else:
+        def sort_func(x): return x.name
+
+    for proj in sorted(projects, key=sort_func, reverse=not list_alpha):
 
         if proj.get_total_time(start_date, end_date, work_type=args.work_type) > 0:
-
-            proj_tot_time = date_utils.get_nice_time_string(proj.get_total_time(start_date, end_date, work_type=args.work_type))
+            proj_tot_time = date_utils.get_nice_time_string(proj.get_total_time(start_date, end_date,
+                                                                                work_type=args.work_type))
             print("Project: {} ({})".format(proj.name, proj_tot_time))
             time_entries = proj.get_entries(start_date, end_date, work_type=args.work_type)
 

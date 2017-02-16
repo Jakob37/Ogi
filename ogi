@@ -132,6 +132,8 @@ def parse_list(subparsers_object):
     subparser.add_argument('--category', '-c', help='Only list entries in category')
     subparser.add_argument('--work_type', '-w', help='Only list entries in work type')
 
+    subparser.add_argument('--list_alpha', '-a', help='Order alphabetically', action='store_true')
+
 
 def parse_new(subparsers_object):
 
