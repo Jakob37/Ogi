@@ -18,7 +18,10 @@ def main(args):
     if args.list_type == 'all':
         list_all()
         sys.exit(0)
-    if args.list_type == 'projects':
+    elif args.list_type == 'last':
+        list_last(args.number)
+        sys.exit(0)
+    elif args.list_type == 'projects':
         list_projects()
         sys.exit(0)
     elif args.list_type == 'categories':
@@ -161,13 +164,30 @@ def list_date_range_entries_only(time_entries, start_date, end_date):
     print_time_sorted_entries(time_entries)
 
 
-def print_time_sorted_entries(time_entries):
+def list_last(number=None):
+
+    if number is None:
+        number = 1
+
+    time_entries = TimeEntry.get_time_entries()
+    print_time_sorted_entries(time_entries, last_n=number)
+
+
+def print_time_sorted_entries(time_entries, last_n=None):
 
     """Output given list of time entries in time sorted format"""
 
+    print_strings = list()
+
     for entry in sorted(time_entries, key=lambda x: x.date + x.time):
         nice_time = date_utils.get_nice_time_string(entry.duration)
-        print("* {}\t{}\t{}\t{}".format(nice_time, entry.date, entry.time, entry.message).expandtabs(10))
+        print_strings.append("* {}\t{}\t{}\t{}".format(nice_time, entry.date, entry.time, entry.message).expandtabs(10))
+
+    if last_n is not None:
+        print_strings = print_strings[-last_n:]
+
+    for print_string in print_strings:
+        print(print_string)
 
 
 def list_projects():

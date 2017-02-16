@@ -93,7 +93,6 @@ def check_work_type(time_entry, dry_run=False):
 def setup_log_type(conf, args_log_type=None):
 
     int_pattern = r'\d+'
-
     exception_string = "Log type in config \"{{}}\" not valid log type. " \
                        "Valid types are {valid_types} or numeric (i.e. \"15\")"\
         .format(valid_types=str(", ".join(TimeEntry.VALID_LOG_TYPES)))
@@ -118,7 +117,6 @@ def setup_log_type(conf, args_log_type=None):
 def write_time_entry(time_entry, conf, write_to_database=False, dry_run=False):
 
     if not write_to_database:
-
         output_path = conf.get('file_paths', 'sql_path')
         with open(output_path, 'a') as append_fh:
 
