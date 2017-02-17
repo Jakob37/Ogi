@@ -103,6 +103,7 @@ def parse_log(subparsers_object):
     subparser.add_argument('-u', '--duration', default=None)
     subparser.add_argument('-p', '--project', required=proj_mandatory, default='uncategorized')
     subparser.add_argument('-w', '--work_type', required=work_type_mandatory, default='uncategorized')
+    subparser.add_argument('--override_last', action='store_true')
 
     subparser.add_argument('--testrun', action='store_true')
     subparser.add_argument('--dry_run', action='store_true')

@@ -10,6 +10,7 @@ from modules.entries.project_entry import ProjectEntry
 from modules.entries.work_type_entry import WorkTypeEntry
 from modules.utils import prompt_utils
 from modules.database import database_utils
+from modules.commands import ogi_edit
 
 
 def main(args):
@@ -20,6 +21,9 @@ def main(args):
         print("DRY RUN - Simulated run, but nothing written")
 
     parse_log_type = setup_log_type(conf, args.log_type)
+
+    if args.override_last:
+        ogi_edit.amend_last_entry(dry_run=args.dry_run)
 
     if parse_log_type == 'custom_session':
         log_type = 'session'
