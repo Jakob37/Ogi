@@ -105,15 +105,18 @@ def get_date_range_start(args):
 def list_project_summary(time_entries, start_date, end_date, list_alpha=False):
 
     proj_dict = dict()
+    total_duration = 0
     for entry in time_entries:
         if proj_dict.get(entry.project) is None:
             proj_dict[entry.project] = entry.duration
         else:
             proj_dict[entry.project] += entry.duration
+        total_duration += entry.duration
 
     homogeneity = calc_utils.calculate_homogeneity_measure(start_date=start_date, end_date=end_date)
 
     print("Project summary for date range {} to {}".format(start_date, end_date))
+    print("Total time spent: {}".format(date_utils.get_nice_time_string(total_duration)))
     print("Time period homogeneity: {:.3f}".format(homogeneity))
     print("\nProjects\tTime".expandtabs(20))
     print("-" * 30)

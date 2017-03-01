@@ -8,3 +8,7 @@ output_base=/path/to/ogi/data
 [settings]
 default_log_type=block
 block_duration=40
+project_mandatory=True
+category_mandatory=True
+work_type_mandatory=True
+message_mandatory=True
