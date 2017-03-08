@@ -99,3 +99,23 @@ def get_nice_time_string(minutes):
         prec = 1
 
     return '{time:.{prec}f}{unit}'.format(time=show_time, prec=prec, unit=unit)
+
+
+def setup_date_for_entry(date_str=None):
+
+    """Get current date, or return existing string"""
+
+    if date_str is None:
+        return "{0:%Y%m%d}".format(datetime.datetime.now())
+    else:
+        return date_str
+
+
+def setup_time_for_entry(time_str=None):
+
+    """Get current time, or return existing string"""
+
+    if time_str is None:
+        return "{0:%H%M}".format(datetime.datetime.now())
+    else:
+        return time_str
