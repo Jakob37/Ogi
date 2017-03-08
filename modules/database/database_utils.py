@@ -6,6 +6,7 @@ ENTRY_TABLE = 'time_entries'
 PROJECT_TABLE = 'projects'
 CATEGORY_TABLE = 'categories'
 WORK_TYPE_TABLE = 'work_types'
+DAY_TABLE = 'days'
 
 ENTRY_FIELDS = [('date_stamp', 'TEXT'),
                 ('time_stamp', 'TEXT'),
@@ -20,6 +21,19 @@ PROJECT_FIELDS = [('name', 'TEXT PRIMARY KEY'),
                   ('category', 'TEXT')]
 CATEGORY_FIELDS = [('name', 'TEXT PRIMARY KEY')]
 WORK_TYPE_FIELDS = [('name', 'TEXT PRIMARY KEY')]
+DAY_FIELDS = [('name_id', 'INTEGER PRIMARY KEY'),
+              ('description', 'TEXT'),
+              ('alertness', 'INTEGER'),
+              ('sleep_time', 'NUMERIC'),
+              ('external_pressure', 'INTEGER'),
+              ('internal_pressure', 'INTEGER')]
+
+
+# self.description = description
+# self.alertness = alertness
+# self.sleep_time = sleep_time
+# self.external_pressure = external_pressure
+# self.internal_pressure = internal_pressure
 
 
 def setup_database(database_path, dry_run=False):
@@ -34,11 +48,13 @@ def setup_database(database_path, dry_run=False):
     create_category_table = get_create_table_command(CATEGORY_TABLE, CATEGORY_FIELDS)
     create_project_table = get_create_table_command(PROJECT_TABLE, PROJECT_FIELDS)
     create_work_type_table = get_create_table_command(WORK_TYPE_TABLE, WORK_TYPE_FIELDS)
+    create_day_table = get_create_table_command(DAY_TABLE, DAY_FIELDS)
 
     c.execute(create_entry_table)
     c.execute(create_category_table)
     c.execute(create_project_table)
     c.execute(create_work_type_table)
+    c.execute(create_day_table)
 
     if not dry_run:
         conn.commit()
@@ -155,6 +171,23 @@ def insert_work_type_entry_into_database(work_type_entry):
     cursor.execute(command_str, params)
     conn.commit()
     conn.close()
+
+
+def insert_day_entry_into_database(day_entry):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    command_str = 'INSERT INTO {table_name} VALUES (?, ?, ?, ?, ?)'.format(table_name=DAY_TABLE)
+
+    params = (day_entry.description,
+              day_entry.alertness,
+              day_entry.sleep_time,
+              day_entry.external_pressure,
+              day_entry.internal_pressure)
+
+    cursor.execute(command_str, params)
+    conn.commit()
 
 
 def list_entries_in_table(cursor, table_name):

@@ -66,20 +66,20 @@ class DayEntry:
     def verify_entry(self):
 
         if not re.match(self.ALERTNESS_PATTERN, str(self.alertness)):
-            raise Exception("Focus must fulfil pattern: {}, found: {}"
-                            .format(self.ALERTNESS_PATTERN, self.alertness))
+            raise ValueError("Focus must fulfil pattern: {}, found: {}"
+                             .format(self.ALERTNESS_PATTERN, self.alertness))
 
         if not re.match(self.SLEEP_TIME, str(self.sleep_time)):
-            raise Exception("Focus must fulfil pattern: {}, found: {}"
-                            .format(self.SLEEP_TIME, self.sleep_time))
+            raise ValueError("Focus must fulfil pattern: {}, found: {}"
+                             .format(self.SLEEP_TIME, self.sleep_time))
 
         if not re.match(self.EXTERNAL_PRESSURE, str(self.external_pressure)):
-            raise Exception("Focus must fulfil pattern: {}, found: {}"
-                            .format(self.EXTERNAL_PRESSURE, self.external_pressure))
+            raise ValueError("Focus must fulfil pattern: {}, found: {}"
+                             .format(self.EXTERNAL_PRESSURE, self.external_pressure))
 
         if not re.match(self.INTERNAL_PRESSURE, str(self.internal_pressure)):
-            raise Exception("Focus must fulfil pattern: {}, found: {}"
-                            .format(self.INTERNAL_PRESSURE, self.internal_pressure))
+            raise ValueError("Focus must fulfil pattern: {}, found: {}"
+                             .format(self.INTERNAL_PRESSURE, self.internal_pressure))
 
     def __str__(self):
 

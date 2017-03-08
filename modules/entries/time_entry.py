@@ -140,27 +140,27 @@ class TimeEntry:
     def verify_entry(self):
 
         if self.log_type not in self.VALID_LOG_TYPES and self.log_type != 'session':
-            raise Exception("Invalid log type encountered: {}".format(self.log_type))
+            raise ValueError("Invalid log type encountered: {}".format(self.log_type))
 
         if not re.match(self.FOCUS_PATTERN, str(self.focus)):
-            raise Exception("Focus must fulfil pattern: {}, found: {}"
-                            .format(self.FOCUS_PATTERN, self.focus))
+            raise ValueError("Focus must fulfil pattern: {}, found: {}"
+                             .format(self.FOCUS_PATTERN, self.focus))
 
         if not re.match(self.DATE_PATTERN, str(self.date)):
-            raise Exception("Date must fulfil pattern: {}, found: {}"
-                            .format(self.DATE_PATTERN, self.date))
+            raise ValueError("Date must fulfil pattern: {}, found: {}"
+                             .format(self.DATE_PATTERN, self.date))
 
         if not re.match(self.TIME_PATTERN, str(self.time)):
-            raise Exception("Time must fulfil pattern: {}, found: {}"
-                            .format(self.TIME_PATTERN, self.time))
+            raise ValueError("Time must fulfil pattern: {}, found: {}"
+                             .format(self.TIME_PATTERN, self.time))
 
         if not re.match(self.PROJECT_PATTERN, str(self.project)):
-            raise Exception("Project must fulfil pattern: {}, found: {}"
-                            .format(self.PROJECT_PATTERN, self.project))
+            raise ValueError("Project must fulfil pattern: {}, found: {}"
+                             .format(self.PROJECT_PATTERN, self.project))
 
         if not re.match(self.WORK_TYPE_PATTERN, str(self.work_type)):
-            raise Exception("Work type must fulfil pattern: {}, found: {}"
-                            .format(self.WORK_TYPE_PATTERN, self.work_type))
+            raise ValueError("Work type must fulfil pattern: {}, found: {}"
+                             .format(self.WORK_TYPE_PATTERN, self.work_type))
 
     def get_category(self):
 
