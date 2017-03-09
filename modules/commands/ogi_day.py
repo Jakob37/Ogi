@@ -10,6 +10,8 @@ def main(args):
         new_entry(args)
     elif args.day_option == 'list':
         list_entries(args)
+    elif args.day_option == 'status':
+        print_day_status_for_terminal(args)
     else:
         raise ValueError("Unknown option: {}".format(args.day_option))
 
@@ -44,3 +46,13 @@ def new_entry(args):
 def list_entries(args):
 
     print('Will load day entries and print')
+
+
+def print_day_status_for_terminal(args):
+
+    day_entries = database_utils.get_today_day_entries()
+
+    if len(day_entries) == 0:
+        print('No day entry found today - Run \'ogi day new\'')
+
+    # print(len(day_entries))

@@ -2,6 +2,8 @@ import sqlite3
 
 import ogi_config
 
+from modules.utils import date_utils
+
 ENTRY_TABLE = 'time_entries'
 PROJECT_TABLE = 'projects'
 CATEGORY_TABLE = 'categories'
@@ -264,3 +266,18 @@ def delete_last_time_entry():
     c.execute('DELETE FROM time_entries WHERE name_id = (SELECT MAX(name_id) FROM time_entries)')
     conn.commit()
     conn.close()
+
+
+def get_today_day_entries():
+
+    current_date = date_utils.get_current_date()
+
+    today_entries = list()
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('SELECT * FROM days WHERE date_stamp = {}'.format(current_date))
+    for entry in c:
+        today_entries.append(entry)
+    conn.commit()
+    conn.close()
+    return today_entries
