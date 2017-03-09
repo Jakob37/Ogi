@@ -6,8 +6,18 @@ from modules.entries.day_entry import DayEntry
 
 def main(args):
 
-    descr = prompt_utils.prompt_for_string('Description: ', default='')
-    focus = prompt_utils.prompt_for_string('Focus: ', default='')
+    if args.day_option == 'new':
+        new_entry(args)
+    elif args.day_option == 'list':
+        list_entries(args)
+    else:
+        raise ValueError("Unknown option: {}".format(args.day_option))
+
+
+def new_entry(args):
+
+    focus = prompt_utils.prompt_for_string('Focus project: ', default='')
+    descr = prompt_utils.prompt_for_string('Task description: ', default='')
     alertness = prompt_utils.prompt_for_number('Alertness (percentage): ', require_int=True)
     sleep_time = prompt_utils.prompt_for_string('Sleep time (hours): ')
     life_intensity = prompt_utils.prompt_for_number('Life intensity (percentage): ', require_int=True)
@@ -30,3 +40,7 @@ def main(args):
         print('Would have inserted following to database:')
         print(day_entry)
 
+
+def list_entries(args):
+
+    print('Will load day entries and print')

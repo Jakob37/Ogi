@@ -217,7 +217,7 @@ def parse_day(subparsers_object):
 
     subparser = subparsers_object.add_parser('day')
     subparser.set_defaults(func=ogi_edit_func, which='day')
-    subparser.add_argument('day_option', choices=['new'])
+    subparser.add_argument('day_option', choices=['new', 'list'])
 
     subparser.add_argument('--dry_run', action='store_true')
 

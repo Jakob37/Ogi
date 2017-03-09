@@ -22,20 +22,14 @@ PROJECT_FIELDS = [('name', 'TEXT PRIMARY KEY'),
 CATEGORY_FIELDS = [('name', 'TEXT PRIMARY KEY')]
 WORK_TYPE_FIELDS = [('name', 'TEXT PRIMARY KEY')]
 DAY_FIELDS = [('name_id', 'INTEGER PRIMARY KEY'),
+              ('date_stamp', 'TEXT'),
               ('description', 'TEXT'),
-              ('focus', 'TEXT'),
+              ('focus_project', 'TEXT'),
               ('alertness', 'INTEGER'),
               ('sleep_time', 'NUMERIC'),
               ('external_pressure', 'INTEGER'),
               ('internal_pressure', 'INTEGER'),
               ('clarity', 'INTEGER')]
-
-
-# self.description = description
-# self.alertness = alertness
-# self.sleep_time = sleep_time
-# self.external_pressure = external_pressure
-# self.internal_pressure = internal_pressure
 
 
 def setup_database(database_path, dry_run=False):
@@ -180,9 +174,10 @@ def insert_day_entry_into_database(day_entry):
     conn = get_connection()
     cursor = conn.cursor()
 
-    command_str = 'INSERT INTO {table_name} VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)'.format(table_name=DAY_TABLE)
+    command_str = 'INSERT INTO {table_name} VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)'.format(table_name=DAY_TABLE)
 
-    params = (day_entry.description,
+    params = (day_entry.date,
+              day_entry.description,
               day_entry.focus,
               day_entry.alertness,
               day_entry.sleep_time,
