@@ -11,6 +11,7 @@ from modules.commands import ogi_setup
 from modules.commands import ogi_list
 from modules.commands import ogi_write
 from modules.commands import ogi_edit
+from modules.commands import ogi_day
 
 from modules.utils import text_utils
 import ogi_config
@@ -42,6 +43,7 @@ def parse_arguments():
     parse_new(subparsers)
     parse_write(subparsers)
     parse_edit(subparsers)
+    parse_day(subparsers)
 
     args = parser.parse_args()
     args.func(args)
@@ -194,8 +196,6 @@ def parse_setup(subparsers_object):
 
 def parse_edit(subparsers_object):
 
-    """Setup command"""
-
     def ogi_edit_func(args):
         verify_files_setup(args)
         ogi_edit.main(args)
@@ -205,6 +205,19 @@ def parse_edit(subparsers_object):
 
     edit_options = ['amend_last_entry']
     subparser.add_argument('edit_type', choices=edit_options)
+
+    subparser.add_argument('--dry_run', action='store_true')
+
+
+def parse_day(subparsers_object):
+
+    def ogi_edit_func(args):
+        verify_files_setup(args)
+        ogi_day.main(args)
+
+    subparser = subparsers_object.add_parser('day')
+    subparser.set_defaults(func=ogi_edit_func, which='day')
+    subparser.add_argument('day_option', choices=['new'])
 
     subparser.add_argument('--dry_run', action='store_true')
 

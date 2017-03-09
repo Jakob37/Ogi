@@ -74,7 +74,6 @@ def prompt_for_path(prompt_text, prompt_confirmation=True, return_none_for_empty
 def prompt_for_string(prompt_text, return_none_for_empty=False, default=None):
 
     choice = input(prompt_text)
-
     if choice == '':
 
         if return_none_for_empty:
@@ -87,3 +86,24 @@ def prompt_for_string(prompt_text, return_none_for_empty=False, default=None):
             choice = default
 
     return choice
+
+
+def prompt_for_number(prompt_text, return_none_for_empty=False, default=None, require_int=False):
+
+    choice = input(prompt_text)
+    if choice == '':
+
+        if return_none_for_empty:
+            return None
+
+        elif default is None:
+            print("No input provided, aborted")
+            sys.exit(0)
+        else:
+            choice = default
+
+    if not require_int:
+        return float(choice)
+    else:
+        return int(choice)
+

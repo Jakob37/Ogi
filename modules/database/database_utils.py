@@ -23,10 +23,12 @@ CATEGORY_FIELDS = [('name', 'TEXT PRIMARY KEY')]
 WORK_TYPE_FIELDS = [('name', 'TEXT PRIMARY KEY')]
 DAY_FIELDS = [('name_id', 'INTEGER PRIMARY KEY'),
               ('description', 'TEXT'),
+              ('focus', 'TEXT'),
               ('alertness', 'INTEGER'),
               ('sleep_time', 'NUMERIC'),
               ('external_pressure', 'INTEGER'),
-              ('internal_pressure', 'INTEGER')]
+              ('internal_pressure', 'INTEGER'),
+              ('clarity', 'INTEGER')]
 
 
 # self.description = description
@@ -178,13 +180,15 @@ def insert_day_entry_into_database(day_entry):
     conn = get_connection()
     cursor = conn.cursor()
 
-    command_str = 'INSERT INTO {table_name} VALUES (?, ?, ?, ?, ?)'.format(table_name=DAY_TABLE)
+    command_str = 'INSERT INTO {table_name} VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)'.format(table_name=DAY_TABLE)
 
     params = (day_entry.description,
+              day_entry.focus,
               day_entry.alertness,
               day_entry.sleep_time,
               day_entry.external_pressure,
-              day_entry.internal_pressure)
+              day_entry.internal_pressure,
+              day_entry.clarity)
 
     cursor.execute(command_str, params)
     conn.commit()

@@ -22,8 +22,8 @@ class DayEntry:
     EXTERNAL_PRESSURE = r'^\d+'
     INTERNAL_PRESSURE = r'^\d+'
 
-    def __init__(self, description, alertness, sleep_time, external_pressure, internal_pressure,
-                 date_str=None, time_str=None):
+    def __init__(self, description, focus, alertness, sleep_time, external_pressure, internal_pressure,
+                 clarity, date_str=None, time_str=None):
 
         self.conf = ogi_config.get_config()
 
@@ -31,37 +31,39 @@ class DayEntry:
         self.time = date_utils.setup_time_for_entry(time_str)
 
         self.description = description
+        self.focus = focus
         self.alertness = alertness
         self.sleep_time = sleep_time
         self.external_pressure = external_pressure
         self.internal_pressure = internal_pressure
+        self.clarity = clarity
         self.verify_entry()
 
-    @classmethod
-    def load_from_string(cls, ogi_string):
-
-        """Generate object from printed string"""
-
-        fields = ogi_string.split('\t')
-
-        date = fields[0]
-        time = fields[1]
-        log_type = fields[2]
-        focus = fields[3]
-        duration = int(fields[4])
-        message = fields[5]
-        project = fields[6]
-        work_type = fields[8]
-
-        new_obj = cls(log_type, message,
-                      focus=focus,
-                      date_str=date,
-                      time_str=time,
-                      project=project,
-                      duration=duration,
-                      work_type=work_type,
-                      quiet=True)
-        return new_obj
+    # @classmethod
+    # def load_from_string(cls, ogi_string):
+    #
+    #     """Generate object from printed string"""
+    #
+    #     fields = ogi_string.split('\t')
+    #
+    #     date = fields[0]
+    #     time = fields[1]
+    #     log_type = fields[2]
+    #     focus = fields[3]
+    #     duration = int(fields[4])
+    #     message = fields[5]
+    #     project = fields[6]
+    #     work_type = fields[8]
+    #
+    #     new_obj = cls(log_type, message,
+    #                   focus=focus,
+    #                   date_str=date,
+    #                   time_str=time,
+    #                   project=project,
+    #                   duration=duration,
+    #                   work_type=work_type,
+    #                   quiet=True)
+    #     return new_obj
 
     def verify_entry(self):
 
@@ -87,12 +89,14 @@ class DayEntry:
 
     def str(self, delim="\t"):
 
-        return '{date}{d}{time}{d}{descr}{d}{alert}{d}{sleep}{d}{external}{d}{internal}' \
+        return '{date}{d}{time}{d}{descr}{d}{focus}{d}{alert}{d}{sleep}{d}{external}{d}{internal}' \
             .format(date=self.date,
                     time=self.time,
                     descr=self.description,
+                    focus=self.focus,
                     alert=self.alertness,
                     sleep=self.sleep_time,
                     external=self.external_pressure,
                     internal=self.internal_pressure,
+                    clarity=self.clarity,
                     d=delim)
