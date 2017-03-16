@@ -34,6 +34,43 @@ DAY_FIELDS = [('name_id', 'INTEGER PRIMARY KEY'),
               ('clarity', 'INTEGER')]
 
 
+# ENTRY_FIELDS = [
+#                 ('id', 'INTEGER PRIMARY KEY'),
+#                 ('date_stamp', 'TEXT'),
+#                 ('time_stamp', 'TEXT'),
+#                 ('log_type', 'TEXT'),
+#                 ('focus', 'INTEGER'),
+#                 ('duration', 'INTEGER'),
+#                 ('message', 'TEXT'),
+#                 ('project', 'TEXT'),
+#                 ('work_type', 'TEXT')
+#                 ]
+# PROJECT_FIELDS = [
+#                   ('id', 'INTEGER PRIMARY KEY'),
+#                   ('name', 'TEXT PRIMARY KEY'),
+#                   ('category', 'TEXT')
+#                  ]
+# CATEGORY_FIELDS = [
+#                    ('id', 'INTEGER PRIMARY KEY'),
+#                    ('name', 'TEXT PRIMARY KEY')
+#                   ]
+# WORK_TYPE_FIELDS = [
+#                     ('id', 'INTEGER PRIMARY KEY'),
+#                     ('name', 'TEXT PRIMARY KEY')
+#                    ]
+# DAY_FIELDS = [
+#               ('id', 'INTEGER PRIMARY KEY'),
+#               ('date_stamp', 'TEXT'),
+#               ('description', 'TEXT'),
+#               ('focus_project', 'TEXT'),
+#               ('alertness', 'INTEGER'),
+#               ('sleep_time', 'NUMERIC'),
+#               ('external_pressure', 'INTEGER'),
+#               ('internal_pressure', 'INTEGER'),
+#               ('clarity', 'INTEGER')
+#               ]
+
+
 def setup_database(database_path, dry_run=False):
 
     print("Hello database!")
@@ -281,3 +318,27 @@ def get_today_day_entries():
     conn.commit()
     conn.close()
     return today_entries
+
+
+def update_project_name(original_name, updated_name):
+
+# UPDATE users SET role=99 WHERE name='Fred'
+
+    raise NotImplementedError('Tables needs to be set up with numbers as primary tables')
+
+    alter_proj_command = 'ALTER PROJECT at {proj_table} WHERE name_id = {orig_name}'
+    alter_time_entry_command = 'UPDATE {time_entry_table} SET project={new_name} WHERE project = {orig_name}'
+
+    conn = get_connection()
+    c = conn.cursor()
+
+    c.execute(alter_proj_command)
+    c.execute(alter_time_entry_command)
+
+    conn.commit()
+    conn.close()
+
+
+
+
+

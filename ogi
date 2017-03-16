@@ -207,6 +207,8 @@ def parse_edit(subparsers_object):
     subparser.add_argument('edit_type', choices=edit_options)
 
     subparser.add_argument('--dry_run', action='store_true')
+    subparser.add_argument('--target')
+    subparser.add_argument('--new')
 
 
 def parse_day(subparsers_object):

@@ -8,6 +8,9 @@ def main(args):
 
     if args.edit_type == 'amend_last_entry':
         amend_last_entry(dry_run=args.dry_run)
+    elif args.edit_type == 'project':
+        raise NotImplementedError('Needs some database rework before it can be properly implemented')
+        edit_project_name(args.target, args.new, dry_run=args.dry_run)
     else:
         print("No valid argument specified")
 
@@ -26,3 +29,12 @@ def amend_last_entry(dry_run=False):
             print("Would have deleted entry, stopping for dry-run")
     else:
         print("Stopped, not deleting")
+
+
+def edit_project_name(target_project, new_name, dry_run=False):
+
+    pass
+
+
+
+
